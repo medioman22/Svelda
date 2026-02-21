@@ -1,0 +1,4 @@
+.env
+svelda/
+__pycache__/
+*.pyc
