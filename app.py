@@ -1,6 +1,9 @@
 import sys
 import os
+import json
+import re
 import subprocess
+from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "libs"))
 from svelda import (
@@ -16,15 +19,16 @@ from PyQt6.QtWidgets import (
     QLabel, QPushButton, QButtonGroup, QRadioButton,
     QComboBox, QCheckBox, QProgressBar, QFileDialog, QGroupBox,
     QScrollArea, QFrame, QDialog, QGridLayout,
+    QTabWidget, QListWidget, QListWidgetItem, QLineEdit, QTextEdit,
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
-from PyQt6.QtGui import QPixmap, QCursor, QDragEnterEvent, QDropEvent
+from PyQt6.QtGui import QPixmap, QCursor, QDragEnterEvent, QDropEvent, QColor
 
 IMAGE_EXTS   = ('.png', '.jpg', '.jpeg')
 THUMB_SIZE   = 88
 RESULT_THUMB = 160
-PREVIEW_MAX  = 400      # max side length for hover preview popup
-CARD_THUMB   = 52       # thumbnail size inside job cards
+PREVIEW_MAX  = 400
+CARD_THUMB   = 52
 
 # ---------------------------------------------------------------------------
 # Prompt registry
@@ -39,6 +43,15 @@ for _src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCA
     for _key, _plist in _src.items():
         ALL_PROMPTS[_key] = _prepare(_key, _plist)
 
+# Ordered list of built-in keys (for stable display order)
+_BUILTIN_KEYS_ORDERED: list = []
+_BUILTIN_KEYS: set = set()
+for _src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
+    for _k in _src:
+        if _k not in _BUILTIN_KEYS:
+            _BUILTIN_KEYS_ORDERED.append(_k)
+            _BUILTIN_KEYS.add(_k)
+
 PROMPT_LABELS = {
     'NEUTRAL_WHITE':              'White BG — centered',
     'NEUTRAL_WHITE_FRAMING':      'White BG — preserve framing',
@@ -51,15 +64,59 @@ PROMPT_LABELS = {
     'UPSCALE':                    'Upscale to 8K',
 }
 
+# ---------------------------------------------------------------------------
+# Custom prompts persistence
+# ---------------------------------------------------------------------------
+CUSTOM_PROMPTS_FILE = Path(__file__).parent / "custom_prompts.json"
+CUSTOM_PROMPT_TEXTS: dict = {}   # key -> raw text (for tooltip lookups)
+
+
+def _load_custom_data() -> dict:
+    if CUSTOM_PROMPTS_FILE.exists():
+        try:
+            return json.loads(CUSTOM_PROMPTS_FILE.read_text())
+        except Exception:
+            pass
+    return {"label_overrides": {}, "custom_prompts": {}}
+
+
+def _save_custom_data(data: dict):
+    CUSTOM_PROMPTS_FILE.write_text(json.dumps(data, indent=2))
+
+
+def _apply_custom_data():
+    """Merge persisted custom data into ALL_PROMPTS / PROMPT_LABELS."""
+    data = _load_custom_data()
+    for key, label in data.get("label_overrides", {}).items():
+        if key in PROMPT_LABELS:
+            PROMPT_LABELS[key] = label
+    for key, d in data.get("custom_prompts", {}).items():
+        text  = d.get("text", "")
+        label = d.get("label", key)
+        ALL_PROMPTS[key]        = ([text], [key])
+        PROMPT_LABELS[key]      = label
+        CUSTOM_PROMPT_TEXTS[key] = text
+
+
+_apply_custom_data()
+
+
+def _get_builtin_text(key: str) -> str:
+    for src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
+        if key in src:
+            return "\n\n".join(src[key])
+    return ""
+
 
 def _prompt_tooltip(key: str) -> str:
-    """Return a readable tooltip for a prompt key (≤ 600 chars)."""
+    if key in CUSTOM_PROMPT_TEXTS:
+        text = CUSTOM_PROMPT_TEXTS[key]
+        return text[:600] + ("…" if len(text) > 600 else "")
     for src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
         if key not in src:
             continue
         items = src[key]
-        # For mosaics skip the "MAKE A MOSAIC" header, show first 2 scenes
-        text = "\n\n".join(items[1:3]) if len(items) > 1 else items[0]
+        text  = "\n\n".join(items[1:3]) if len(items) > 1 else items[0]
         return text[:600] + ("…" if len(text) > 600 else "")
     return ""
 
@@ -106,28 +163,24 @@ class ImagePreviewPopup(QWidget):
         self.raise_()
 
     def _reposition(self):
-        pos   = QCursor.pos()
+        pos    = QCursor.pos()
         screen = QApplication.screenAt(pos)
         if screen is None:
             screen = QApplication.primaryScreen()
         sg = screen.geometry()
-        x = pos.x() + 20
-        y = pos.y() + 20
+        x  = pos.x() + 20
+        y  = pos.y() + 20
         if x + self.width()  > sg.right():
-            x = pos.x() - self.width() - 12
+            x = pos.x() - self.width()  - 12
         if y + self.height() > sg.bottom():
             y = pos.y() - self.height() - 12
         self.move(x, y)
 
 
 # ---------------------------------------------------------------------------
-# Mixin: adds hover image preview to any QWidget subclass
+# Mixin: hover image preview
 # ---------------------------------------------------------------------------
 class HoverPreviewMixin:
-    """
-    Adds an image hover popup to a widget that has self.path (str).
-    Use as first base class:  class Foo(HoverPreviewMixin, QLabel): ...
-    """
     _DELAY_MS = 350
 
     def _init_hover(self):
@@ -155,7 +208,7 @@ class HoverPreviewMixin:
 # ---------------------------------------------------------------------------
 class Worker(QThread):
     progress     = pyqtSignal(int, int, str)
-    output_known = pyqtSignal(str)   # emitted once before processing starts
+    output_known = pyqtSignal(str)
     finished     = pyqtSignal(str)
     error        = pyqtSignal(str)
 
@@ -171,7 +224,6 @@ class Worker(QThread):
         try:
             prompts, codes = ALL_PROMPTS[self.prompt_key]
 
-            # Compute output dir upfront so the card can become clickable immediately
             if self.is_folder:
                 output_dir = os.path.join(self.path, f"processed_{codes[0]}")
             else:
@@ -203,7 +255,7 @@ class Worker(QThread):
 
 
 # ---------------------------------------------------------------------------
-# Clickable + hoverable thumbnail button (preview strip)
+# Thumbnail button (preview strip)
 # ---------------------------------------------------------------------------
 class ThumbButton(HoverPreviewMixin, QLabel):
     clicked_signal = pyqtSignal()
@@ -259,15 +311,15 @@ class SelectableThumbnailStrip(QScrollArea):
         self.setFixedHeight(THUMB_SIZE + 24)
 
         container = QWidget()
-        self._row = QHBoxLayout(container)
+        self._row  = QHBoxLayout(container)
         self._row.setSpacing(6)
         self._row.setContentsMargins(4, 4, 4, 4)
         self._row.addStretch()
         self.setWidget(container)
 
         self._folder_path: str | None = None
-        self._all_files:   list = []
-        self._buttons:     list = []
+        self._all_files:   list       = []
+        self._buttons:     list       = []
 
     def set_folder(self, folder_path: str, files: list):
         self._folder_path = folder_path
@@ -280,10 +332,9 @@ class SelectableThumbnailStrip(QScrollArea):
         self._rebuild()
 
     def select_file(self, path: str):
-        """Preselect a specific file by path (must already be loaded)."""
         try:
             idx = self._all_files.index(path)
-            self._on_click(idx + 1)  # +1 because 0 is "All"
+            self._on_click(idx + 1)
         except ValueError:
             pass
 
@@ -323,7 +374,7 @@ class SelectableThumbnailStrip(QScrollArea):
 
 
 # ---------------------------------------------------------------------------
-# Results dialog  (click image to open in macOS viewer, hover for preview)
+# Results dialog
 # ---------------------------------------------------------------------------
 class ResultImageCell(HoverPreviewMixin, QWidget):
     def __init__(self, path: str, parent=None):
@@ -368,7 +419,6 @@ class ResultsDialog(QDialog):
         layout = QVBoxLayout(self)
         layout.setSpacing(10)
 
-        # Clickable folder path — opens in Finder
         open_folder_btn = QPushButton(output_dir)
         open_folder_btn.setFlat(True)
         open_folder_btn.setStyleSheet(
@@ -381,10 +431,10 @@ class ResultsDialog(QDialog):
         open_folder_btn.clicked.connect(lambda: subprocess.run(["open", output_dir]))
         layout.addWidget(open_folder_btn)
 
-        scroll = QScrollArea()
+        scroll    = QScrollArea()
         scroll.setWidgetResizable(True)
         container = QWidget()
-        grid = QGridLayout(container)
+        grid      = QGridLayout(container)
         grid.setSpacing(12)
         grid.setContentsMargins(8, 8, 8, 8)
         scroll.setWidget(container)
@@ -435,14 +485,12 @@ class JobCard(QFrame):
         layout.setSpacing(4)
         layout.setContentsMargins(10, 8, 10, 8)
 
-        # Header
         header = QHBoxLayout()
-        label = PROMPT_LABELS.get(config['prompt_key'], config['prompt_key'])
-        src = (os.path.basename(config['path']) if config['is_folder']
-               else f"{len(config['path'])} image{'s' if len(config['path']) != 1 else ''}")
+        label  = PROMPT_LABELS.get(config['prompt_key'], config['prompt_key'])
+        src    = (os.path.basename(config['path']) if config['is_folder']
+                  else f"{len(config['path'])} image{'s' if len(config['path']) != 1 else ''}")
         self.title_lbl = QLabel(f"<b>{label}</b>  ·  {src}")
-
-        reprocess_btn = QPushButton("↺")
+        reprocess_btn  = QPushButton("↺")
         reprocess_btn.setFixedWidth(28)
         reprocess_btn.setToolTip("Load into form")
         reprocess_btn.clicked.connect(lambda: self.reprocess_requested.emit(self.config))
@@ -450,7 +498,6 @@ class JobCard(QFrame):
         header.addWidget(reprocess_btn)
         layout.addLayout(header)
 
-        # Body: left half = progress + status, right half = live result thumbnails
         body = QHBoxLayout()
         body.setSpacing(8)
 
@@ -462,14 +509,12 @@ class JobCard(QFrame):
         self.progress_bar.setFixedHeight(22)
         self.progress_bar.setValue(0)
         left_v.addWidget(self.progress_bar)
-
         self.status_lbl = QLabel("Starting…")
         self.status_lbl.setStyleSheet("color: grey; font-size: 11px;")
         left_v.addWidget(self.status_lbl)
         left_v.addStretch()
         body.addLayout(left_v, stretch=1)
 
-        # Mini live thumbnail strip
         self._thumb_scroll = QScrollArea()
         self._thumb_scroll.setFixedHeight(CARD_THUMB + 12)
         self._thumb_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -487,7 +532,6 @@ class JobCard(QFrame):
         layout.addLayout(body)
 
     def set_output_dir(self, output_dir: str):
-        """Called as soon as the output directory is known (before any image is done)."""
         self._output_dir = output_dir
         self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.setToolTip("Click to preview results")
@@ -512,7 +556,6 @@ class JobCard(QFrame):
         self.status_lbl.setStyleSheet("color: red; font-size: 11px;")
 
     def _refresh_thumbs(self):
-        """Scan output dir and add any new result images to the mini strip."""
         if not self._output_dir or not os.path.isdir(self._output_dir):
             return
         files = sorted([
@@ -533,7 +576,6 @@ class JobCard(QFrame):
                                  Qt.AspectRatioMode.KeepAspectRatio,
                                  Qt.TransformationMode.SmoothTransformation)
                 lbl.setPixmap(pix)
-            # Insert before the trailing stretch
             self._thumb_row.insertWidget(self._thumb_row.count() - 1, lbl)
 
     def mousePressEvent(self, event):
@@ -545,11 +587,11 @@ class JobCard(QFrame):
 
 
 # ---------------------------------------------------------------------------
-# Drop-target input area  — accepts folders AND image files
+# Drop-target input area
 # ---------------------------------------------------------------------------
 class DropFolderWidget(QGroupBox):
     folder_dropped = pyqtSignal(str)
-    image_dropped  = pyqtSignal(str)   # dropped a single image file
+    image_dropped  = pyqtSignal(str)
 
     def __init__(self, title="", parent=None):
         super().__init__(title, parent)
@@ -592,19 +634,29 @@ class SveldaApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Svelda")
-        self.setMinimumSize(940, 660)
+        self.setMinimumSize(960, 680)
         self._selection_path      = None
         self._selection_is_folder = True
+        self._editing_new_prompt  = False
         self._build_ui()
 
+    # ── Top-level layout (tabs) ───────────────────────────────────────────
+
     def _build_ui(self):
-        central = QWidget()
-        self.setCentralWidget(central)
-        main_row = QHBoxLayout(central)
+        tabs = QTabWidget()
+        self.setCentralWidget(tabs)
+        tabs.addTab(self._build_run_tab(),     "Run")
+        tabs.addTab(self._build_prompts_tab(), "Prompts")
+
+    # ── Run tab ──────────────────────────────────────────────────────────
+
+    def _build_run_tab(self) -> QWidget:
+        tab = QWidget()
+        main_row = QHBoxLayout(tab)
         main_row.setSpacing(12)
         main_row.setContentsMargins(16, 16, 16, 16)
 
-        # ── Left panel ───────────────────────────────────────────────────────
+        # Left panel
         left = QWidget()
         left.setFixedWidth(272)
         left_layout = QVBoxLayout(left)
@@ -625,32 +677,8 @@ class SveldaApp(QMainWindow):
         input_v.addWidget(folder_btn)
         left_layout.addWidget(input_group)
 
-        # Prompt (with full-text tooltips)
-        prompt_group = QGroupBox("Prompt")
-        prompt_group_layout = QVBoxLayout(prompt_group)
-        prompt_scroll = QScrollArea()
-        prompt_scroll.setWidgetResizable(True)
-        prompt_scroll.setFrameShape(QFrame.Shape.NoFrame)
-        prompt_scroll.setFixedHeight(210)
-        prompt_inner = QWidget()
-        prompt_v = QVBoxLayout(prompt_inner)
-        prompt_v.setSpacing(2)
-        prompt_v.setContentsMargins(0, 0, 0, 0)
-        prompt_scroll.setWidget(prompt_inner)
-        prompt_group_layout.addWidget(prompt_scroll)
+        left_layout.addWidget(self._build_prompt_radio_group())
 
-        self.prompt_buttons = QButtonGroup(self)
-        for key, label in PROMPT_LABELS.items():
-            rb = QRadioButton(label)
-            rb.setProperty("prompt_key", key)
-            rb.setToolTip(_prompt_tooltip(key))
-            self.prompt_buttons.addButton(rb)
-            prompt_v.addWidget(rb)
-            if key == "NEUTRAL_WHITE_FRAMING":
-                rb.setChecked(True)
-        left_layout.addWidget(prompt_group)
-
-        # Options
         opts_row = QHBoxLayout()
         opts_row.addWidget(QLabel("Size:"))
         self.size_combo = QComboBox()
@@ -679,7 +707,7 @@ class SveldaApp(QMainWindow):
         div.setFrameShadow(QFrame.Shadow.Sunken)
         main_row.addWidget(div)
 
-        # ── Right panel ──────────────────────────────────────────────────────
+        # Right panel
         right = QWidget()
         right_layout = QVBoxLayout(right)
         right_layout.setSpacing(10)
@@ -696,11 +724,11 @@ class SveldaApp(QMainWindow):
         jobs_group = QGroupBox("Jobs  —  click a card to view results")
         jobs_v = QVBoxLayout(jobs_group)
         jobs_v.setContentsMargins(6, 6, 6, 6)
-        self.jobs_scroll = QScrollArea()
+        self.jobs_scroll    = QScrollArea()
         self.jobs_scroll.setWidgetResizable(True)
         self.jobs_scroll.setFrameShape(QFrame.Shape.NoFrame)
         self.jobs_container = QWidget()
-        self.jobs_layout = QVBoxLayout(self.jobs_container)
+        self.jobs_layout    = QVBoxLayout(self.jobs_container)
         self.jobs_layout.setSpacing(8)
         self.jobs_layout.setContentsMargins(0, 0, 0, 0)
         self.jobs_layout.addStretch()
@@ -709,8 +737,259 @@ class SveldaApp(QMainWindow):
         right_layout.addWidget(jobs_group, stretch=1)
 
         main_row.addWidget(right, stretch=1)
+        return tab
 
-    # ── Input ────────────────────────────────────────────────────────────────
+    def _build_prompt_radio_group(self) -> QGroupBox:
+        prompt_group = QGroupBox("Prompt")
+        prompt_group_layout = QVBoxLayout(prompt_group)
+        prompt_scroll = QScrollArea()
+        prompt_scroll.setWidgetResizable(True)
+        prompt_scroll.setFrameShape(QFrame.Shape.NoFrame)
+        prompt_scroll.setFixedHeight(210)
+        self._prompt_inner = QWidget()
+        self._prompt_v     = QVBoxLayout(self._prompt_inner)
+        self._prompt_v.setSpacing(2)
+        self._prompt_v.setContentsMargins(0, 0, 0, 0)
+        prompt_scroll.setWidget(self._prompt_inner)
+        prompt_group_layout.addWidget(prompt_scroll)
+        self.prompt_buttons = QButtonGroup(self)
+        self._rebuild_prompt_radio_buttons()
+        return prompt_group
+
+    def _rebuild_prompt_radio_buttons(self, select_key="NEUTRAL_WHITE_FRAMING"):
+        for btn in list(self.prompt_buttons.buttons()):
+            self.prompt_buttons.removeButton(btn)
+        while self._prompt_v.count():
+            child = self._prompt_v.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+        for key, label in PROMPT_LABELS.items():
+            rb = QRadioButton(label)
+            rb.setProperty("prompt_key", key)
+            rb.setToolTip(_prompt_tooltip(key))
+            self.prompt_buttons.addButton(rb)
+            self._prompt_v.addWidget(rb)
+            if key == select_key:
+                rb.setChecked(True)
+        if not self.prompt_buttons.checkedButton():
+            btns = self.prompt_buttons.buttons()
+            if btns:
+                btns[0].setChecked(True)
+
+    # ── Prompts tab ──────────────────────────────────────────────────────
+
+    def _build_prompts_tab(self) -> QWidget:
+        tab = QWidget()
+        layout = QHBoxLayout(tab)
+        layout.setContentsMargins(16, 16, 16, 16)
+        layout.setSpacing(12)
+
+        # Left: list + New button
+        left = QWidget()
+        left.setFixedWidth(230)
+        left_v = QVBoxLayout(left)
+        left_v.setContentsMargins(0, 0, 0, 0)
+        left_v.setSpacing(8)
+
+        new_btn = QPushButton("+ New prompt")
+        new_btn.clicked.connect(self._new_custom_prompt)
+        left_v.addWidget(new_btn)
+
+        self.prompt_list_widget = QListWidget()
+        self.prompt_list_widget.currentItemChanged.connect(
+            lambda cur, _: self._on_prompt_list_select(cur)
+        )
+        left_v.addWidget(self.prompt_list_widget, stretch=1)
+        layout.addWidget(left)
+
+        div = QFrame()
+        div.setFrameShape(QFrame.Shape.VLine)
+        div.setFrameShadow(QFrame.Shadow.Sunken)
+        layout.addWidget(div)
+
+        # Right: editor form
+        right = QWidget()
+        right_v = QVBoxLayout(right)
+        right_v.setContentsMargins(0, 0, 0, 0)
+        right_v.setSpacing(8)
+
+        form = QGridLayout()
+        form.setSpacing(8)
+        form.setColumnMinimumWidth(0, 72)
+        form.setColumnStretch(1, 1)
+
+        form.addWidget(QLabel("Nickname:"), 0, 0)
+        self.edit_nickname = QLineEdit()
+        self.edit_nickname.setPlaceholderText("Display name in Run tab")
+        self.edit_nickname.textChanged.connect(self._auto_update_key)
+        form.addWidget(self.edit_nickname, 0, 1)
+
+        form.addWidget(QLabel("Key:"), 1, 0)
+        self.edit_key = QLineEdit()
+        self.edit_key.setPlaceholderText("AUTO_GENERATED")
+        form.addWidget(self.edit_key, 1, 1)
+
+        form.addWidget(QLabel("Prompt:"), 2, 0, Qt.AlignmentFlag.AlignTop)
+        self.edit_text = QTextEdit()
+        self.edit_text.setPlaceholderText("Enter prompt text…")
+        form.addWidget(self.edit_text, 2, 1)
+        form.setRowStretch(2, 1)
+
+        right_v.addLayout(form, stretch=1)
+
+        self.edit_builtin_note = QLabel("Built-in prompt — text is read-only. You can rename it.")
+        self.edit_builtin_note.setStyleSheet("color: grey; font-size: 11px;")
+        self.edit_builtin_note.hide()
+        right_v.addWidget(self.edit_builtin_note)
+
+        btn_row = QHBoxLayout()
+        self.prompt_save_btn = QPushButton("Save")
+        self.prompt_save_btn.clicked.connect(self._save_prompt_edit)
+        self.prompt_delete_btn = QPushButton("Delete")
+        self.prompt_delete_btn.setStyleSheet("QPushButton { color: red; }")
+        self.prompt_delete_btn.clicked.connect(self._delete_custom_prompt)
+        btn_row.addWidget(self.prompt_save_btn)
+        btn_row.addWidget(self.prompt_delete_btn)
+        btn_row.addStretch()
+        right_v.addLayout(btn_row)
+
+        layout.addWidget(right, stretch=1)
+
+        self._populate_prompt_list()
+        return tab
+
+    def _populate_prompt_list(self):
+        self.prompt_list_widget.clear()
+        # Built-in (greyed, in original order)
+        for key in _BUILTIN_KEYS_ORDERED:
+            label = PROMPT_LABELS.get(key, key)
+            item  = QListWidgetItem(f"{label}  ·  built-in")
+            item.setData(Qt.ItemDataRole.UserRole, key)
+            item.setForeground(QColor("#999"))
+            self.prompt_list_widget.addItem(item)
+        # Custom
+        data = _load_custom_data()
+        for key in data.get("custom_prompts", {}):
+            label = PROMPT_LABELS.get(key, key)
+            item  = QListWidgetItem(label)
+            item.setData(Qt.ItemDataRole.UserRole, key)
+            self.prompt_list_widget.addItem(item)
+
+    def _on_prompt_list_select(self, current):
+        if current is None:
+            return
+        self._editing_new_prompt = False
+        key        = current.data(Qt.ItemDataRole.UserRole)
+        is_builtin = key in _BUILTIN_KEYS
+
+        self.edit_nickname.blockSignals(True)
+        self.edit_nickname.setText(PROMPT_LABELS.get(key, key))
+        self.edit_nickname.blockSignals(False)
+
+        self.edit_key.setText(key)
+        self.edit_key.setReadOnly(True)
+
+        if is_builtin:
+            self.edit_text.setPlainText(_get_builtin_text(key))
+            self.edit_text.setReadOnly(True)
+            self.edit_builtin_note.show()
+            self.prompt_delete_btn.hide()
+        else:
+            data = _load_custom_data()
+            text = data.get("custom_prompts", {}).get(key, {}).get("text", "")
+            self.edit_text.setPlainText(text)
+            self.edit_text.setReadOnly(False)
+            self.edit_builtin_note.hide()
+            self.prompt_delete_btn.show()
+
+    def _new_custom_prompt(self):
+        self._editing_new_prompt = True
+        self.prompt_list_widget.clearSelection()
+        self.edit_key.setReadOnly(False)
+        self.edit_text.setReadOnly(False)
+        self.edit_builtin_note.hide()
+        self.prompt_delete_btn.hide()
+
+        self.edit_nickname.blockSignals(True)
+        self.edit_nickname.setText("New Prompt")
+        self.edit_nickname.blockSignals(False)
+        self.edit_key.setText("NEW_PROMPT")
+        self.edit_text.setPlainText("")
+        self.edit_nickname.setFocus()
+        self.edit_nickname.selectAll()
+
+    def _auto_update_key(self, text: str):
+        """Auto-fill key from nickname, but only while creating a new prompt."""
+        if self._editing_new_prompt and not self.edit_key.isReadOnly():
+            key = re.sub(r'[^A-Za-z0-9 ]', '', text).upper().replace(' ', '_') or "CUSTOM"
+            self.edit_key.setText(key)
+
+    def _save_prompt_edit(self):
+        nickname = self.edit_nickname.text().strip()
+        key      = re.sub(r'\s+', '_', self.edit_key.text().strip().upper())
+        if not key or not nickname:
+            return
+
+        is_builtin = key in _BUILTIN_KEYS
+        data       = _load_custom_data()
+
+        if is_builtin:
+            data.setdefault("label_overrides", {})[key] = nickname
+            PROMPT_LABELS[key] = nickname
+        else:
+            text = self.edit_text.toPlainText().strip()
+            data.setdefault("custom_prompts", {})[key] = {"label": nickname, "text": text}
+            ALL_PROMPTS[key]         = ([text], [key])
+            PROMPT_LABELS[key]       = nickname
+            CUSTOM_PROMPT_TEXTS[key] = text
+
+        _save_custom_data(data)
+        self._editing_new_prompt = False
+        self.edit_key.setReadOnly(True)
+        self.prompt_delete_btn.show()
+
+        current_run_key = self._selected_prompt_key() or key
+        self._rebuild_prompt_radio_buttons(select_key=current_run_key)
+        self._populate_prompt_list()
+
+        # Re-select the saved item in the list
+        for i in range(self.prompt_list_widget.count()):
+            if self.prompt_list_widget.item(i).data(Qt.ItemDataRole.UserRole) == key:
+                self.prompt_list_widget.blockSignals(True)
+                self.prompt_list_widget.setCurrentRow(i)
+                self.prompt_list_widget.blockSignals(False)
+                break
+
+    def _delete_custom_prompt(self):
+        item = self.prompt_list_widget.currentItem()
+        if item is None:
+            return
+        key = item.data(Qt.ItemDataRole.UserRole)
+        if key in _BUILTIN_KEYS:
+            return
+
+        data = _load_custom_data()
+        data.get("custom_prompts", {}).pop(key, None)
+        _save_custom_data(data)
+
+        ALL_PROMPTS.pop(key, None)
+        PROMPT_LABELS.pop(key, None)
+        CUSTOM_PROMPT_TEXTS.pop(key, None)
+
+        self._rebuild_prompt_radio_buttons(select_key="NEUTRAL_WHITE_FRAMING")
+        self._populate_prompt_list()
+        self._clear_editor()
+
+    def _clear_editor(self):
+        self.edit_nickname.blockSignals(True)
+        self.edit_nickname.clear()
+        self.edit_nickname.blockSignals(False)
+        self.edit_key.clear()
+        self.edit_text.clear()
+        self.edit_builtin_note.hide()
+        self.prompt_delete_btn.hide()
+
+    # ── Run tab — input ───────────────────────────────────────────────────
 
     def _browse_folder(self):
         folder = QFileDialog.getExistingDirectory(self, "Select image folder")
@@ -729,7 +1008,6 @@ class SveldaApp(QMainWindow):
         self.thumb_strip.set_folder(folder, files)
 
     def _set_image_from_drop(self, image_path: str):
-        """Open the image's parent folder, then preselect the dropped image."""
         folder = os.path.dirname(image_path)
         self._set_folder(folder)
         self.thumb_strip.select_file(image_path)
@@ -751,7 +1029,7 @@ class SveldaApp(QMainWindow):
         btn = self.prompt_buttons.checkedButton()
         return btn.property("prompt_key") if btn else None
 
-    # ── Run ──────────────────────────────────────────────────────────────────
+    # ── Run ──────────────────────────────────────────────────────────────
 
     def _run(self):
         if not self._selection_path:
@@ -799,7 +1077,7 @@ class SveldaApp(QMainWindow):
             f'subtitle "{os.path.basename(output_dir)}"'
         ])
 
-    # ── Reprocess ────────────────────────────────────────────────────────────
+    # ── Reprocess ────────────────────────────────────────────────────────
 
     def _load_into_form(self, config: dict):
         if config['is_folder']:
