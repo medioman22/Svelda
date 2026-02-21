@@ -1,8 +1,22 @@
+"""Svelda — PyQt6 desktop application for AI-powered product image processing.
+
+Processes product photos using the Gemini Vision API, applying photography-style
+prompts (neutral white background, studio lighting, upscaling, etc.) to batches
+of images. Results are shown as job cards with live thumbnail previews.
+
+Usage:
+    conda run -n svelda python _python/app.py
+"""
+
+from __future__ import annotations
+
 import sys
 import os
 import json
 import re
+import shutil
 import subprocess
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "libs"))
@@ -25,35 +39,48 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
 from PyQt6.QtGui import QPixmap, QCursor, QDragEnterEvent, QDropEvent, QColor
 
-IMAGE_EXTS   = ('.png', '.jpg', '.jpeg')
-THUMB_SIZE   = 88
-RESULT_THUMB = 160
-PREVIEW_MAX  = 400
-CARD_THUMB   = 52
+# ---------------------------------------------------------------------------
+# Constants
+# ---------------------------------------------------------------------------
+
+IMAGE_EXTS   = ('.png', '.jpg', '.jpeg')  # supported input formats
+THUMB_SIZE   = 88    # px — thumbnail strip cell size
+RESULT_THUMB = 160   # px — result grid cell size
+PREVIEW_MAX  = 400   # px — hover popup max dimension
+CARD_THUMB   = 52    # px — job card inline thumbnail size
+BA_IMG_MAX   = 480   # px — before/after dialog max image side
+MAX_HISTORY  = 50    # max job history entries to persist on disk
 
 # ---------------------------------------------------------------------------
 # Prompt registry
 # ---------------------------------------------------------------------------
-def _prepare(key, prompt_list):
+
+def _prepare(key: str, prompt_list: list[str]) -> tuple[list[str], list[str]]:
+    """Normalise a prompt source entry into a (prompts, codes) tuple.
+
+    Multi-part prompts are joined with double newlines so the Gemini API
+    receives a single combined instruction string.
+    """
     if len(prompt_list) > 1:
         return (["\n\n".join(prompt_list)], [key])
     return (prompt_list, [key])
 
-ALL_PROMPTS: dict = {}
+
+ALL_PROMPTS: dict[str, tuple[list[str], list[str]]] = {}
 for _src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
     for _key, _plist in _src.items():
         ALL_PROMPTS[_key] = _prepare(_key, _plist)
 
-# Ordered list of built-in keys (for stable display order)
-_BUILTIN_KEYS_ORDERED: list = []
-_BUILTIN_KEYS: set = set()
+# Ordered list of built-in keys (preserves source order, deduplicated)
+_BUILTIN_KEYS_ORDERED: list[str] = []
+_BUILTIN_KEYS: set[str] = set()
 for _src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
     for _k in _src:
         if _k not in _BUILTIN_KEYS:
             _BUILTIN_KEYS_ORDERED.append(_k)
             _BUILTIN_KEYS.add(_k)
 
-PROMPT_LABELS = {
+PROMPT_LABELS: dict[str, str] = {
     'NEUTRAL_WHITE':              'White BG — centered',
     'NEUTRAL_WHITE_FRAMING':      'White BG — preserve framing',
     'DARK_STUDIO':                'Dark studio — dramatic',
@@ -68,11 +95,16 @@ PROMPT_LABELS = {
 # ---------------------------------------------------------------------------
 # Custom prompts persistence
 # ---------------------------------------------------------------------------
-CUSTOM_PROMPTS_FILE  = Path(__file__).parent / "custom_prompts.json"
-CUSTOM_PROMPT_TEXTS: dict = {}   # key -> raw text (for tooltip lookups)
+
+CUSTOM_PROMPTS_FILE = Path(__file__).parent / "custom_prompts.json"
+CUSTOM_PROMPT_TEXTS: dict[str, str] = {}
 
 
 def _load_custom_data() -> dict:
+    """Load persisted label overrides and custom prompts from disk.
+
+    Returns an empty structure if the file is absent or corrupt.
+    """
     if CUSTOM_PROMPTS_FILE.exists():
         try:
             return json.loads(CUSTOM_PROMPTS_FILE.read_text())
@@ -81,12 +113,16 @@ def _load_custom_data() -> dict:
     return {"label_overrides": {}, "custom_prompts": {}}
 
 
-def _save_custom_data(data: dict):
+def _save_custom_data(data: dict) -> None:
+    """Serialise custom prompt data to disk as formatted JSON."""
     CUSTOM_PROMPTS_FILE.write_text(json.dumps(data, indent=2))
 
 
-def _apply_custom_data():
-    """Merge persisted custom data into ALL_PROMPTS / PROMPT_LABELS."""
+def _apply_custom_data() -> None:
+    """Merge persisted custom data into the in-memory prompt registries.
+
+    Called once at startup so the Run tab reflects any saved customisations.
+    """
     data = _load_custom_data()
     for key, label in data.get("label_overrides", {}).items():
         if key in PROMPT_LABELS:
@@ -103,6 +139,7 @@ _apply_custom_data()
 
 
 def _get_builtin_text(key: str) -> str:
+    """Return the raw prompt text for a built-in key, joined across parts."""
     for src in [NEUTRAL_WHITE_PROMPT, CATS_PROMPTS_STUDIO, CATS_PROMPTS_HOME, UPSCALE_PROMPT]:
         if key in src:
             return "\n\n".join(src[key])
@@ -110,6 +147,7 @@ def _get_builtin_text(key: str) -> str:
 
 
 def _prompt_tooltip(key: str) -> str:
+    """Return a truncated prompt snippet suitable for a tooltip (≤ 600 chars)."""
     if key in CUSTOM_PROMPT_TEXTS:
         text = CUSTOM_PROMPT_TEXTS[key]
         return text[:600] + ("…" if len(text) > 600 else "")
@@ -123,8 +161,34 @@ def _prompt_tooltip(key: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Job history persistence
+# ---------------------------------------------------------------------------
+
+JOBS_HISTORY_FILE = Path(__file__).parent / "jobs_history.json"
+
+
+def _load_jobs_history() -> list[dict]:
+    """Load the persisted job history from disk.
+
+    Returns an empty list if the file is absent or corrupt.
+    """
+    if JOBS_HISTORY_FILE.exists():
+        try:
+            return json.loads(JOBS_HISTORY_FILE.read_text())
+        except Exception:
+            pass
+    return []
+
+
+def _save_jobs_history(items: list[dict]) -> None:
+    """Persist job history to disk, keeping only the most recent MAX_HISTORY entries."""
+    JOBS_HISTORY_FILE.write_text(json.dumps(items[-MAX_HISTORY:], indent=2))
+
+
+# ---------------------------------------------------------------------------
 # Gemini prompt generator
 # ---------------------------------------------------------------------------
+
 _META_PROMPT = """\
 You are an AI prompt engineer for luxury product photography.
 
@@ -147,14 +211,21 @@ Respond ONLY with valid JSON — no markdown, no code fences, just the raw JSON 
 
 
 class PromptGeneratorWorker(QThread):
+    """Background thread that calls Gemini to generate a photography prompt.
+
+    Emits ``result`` with a parsed dict on success, or ``error`` with a
+    message string on failure.
+    """
+
     result = pyqtSignal(dict)
     error  = pyqtSignal(str)
 
-    def __init__(self, user_input: str):
+    def __init__(self, user_input: str) -> None:
         super().__init__()
         self.user_input = user_input
 
-    def run(self):
+    def run(self) -> None:
+        """Send the meta-prompt to Gemini and parse the JSON response."""
         try:
             contents = _META_PROMPT.format(user_input=self.user_input)
             response = _gemini_client.models.generate_content(
@@ -162,7 +233,7 @@ class PromptGeneratorWorker(QThread):
                 contents=contents,
             )
             text = response.text.strip()
-            # Strip markdown code fences if Gemini wraps the JSON anyway
+            # Strip markdown code fences if the model added them despite instructions
             if text.startswith("```"):
                 lines = text.splitlines()
                 text  = "\n".join(lines[1:-1]) if lines[-1].strip() == "```" else "\n".join(lines[1:])
@@ -175,16 +246,24 @@ class PromptGeneratorWorker(QThread):
 # ---------------------------------------------------------------------------
 # Hover image preview popup (singleton)
 # ---------------------------------------------------------------------------
+
 class ImagePreviewPopup(QWidget):
-    _instance = None
+    """Frameless tooltip-style popup showing a large image preview.
+
+    Implemented as a singleton — call ``ImagePreviewPopup.get()`` rather than
+    constructing directly.  Repositions itself to stay within screen bounds.
+    """
+
+    _instance: ImagePreviewPopup | None = None
 
     @classmethod
-    def get(cls):
+    def get(cls) -> ImagePreviewPopup:
+        """Return the shared singleton instance, creating it if necessary."""
         if cls._instance is None:
             cls._instance = cls()
         return cls._instance
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             None,
             Qt.WindowType.ToolTip | Qt.WindowType.FramelessWindowHint
@@ -199,7 +278,8 @@ class ImagePreviewPopup(QWidget):
         self._lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self._lbl)
 
-    def show_for(self, path: str):
+    def show_for(self, path: str) -> None:
+        """Display a scaled preview of the image at *path* near the cursor."""
         pix = QPixmap(path)
         if pix.isNull():
             return
@@ -213,7 +293,8 @@ class ImagePreviewPopup(QWidget):
         self.show()
         self.raise_()
 
-    def _reposition(self):
+    def _reposition(self) -> None:
+        """Move the popup so it stays within the current screen bounds."""
         pos    = QCursor.pos()
         screen = QApplication.screenAt(pos)
         if screen is None:
@@ -231,25 +312,34 @@ class ImagePreviewPopup(QWidget):
 # ---------------------------------------------------------------------------
 # Mixin: hover image preview
 # ---------------------------------------------------------------------------
-class HoverPreviewMixin:
-    _DELAY_MS = 350
 
-    def _init_hover(self):
+class HoverPreviewMixin:
+    """Mixin that adds delayed-hover image preview to any QWidget subclass.
+
+    The host widget must:
+    - Call ``_init_hover()`` in its ``__init__``.
+    - Expose a ``path`` attribute containing the image file path.
+    """
+
+    _DELAY_MS = 350  # milliseconds before the preview popup appears
+
+    def _init_hover(self) -> None:
+        """Initialise the hover timer.  Must be called from __init__."""
         self._hover_timer = QTimer(self)
         self._hover_timer.setSingleShot(True)
         self._hover_timer.timeout.connect(self._show_preview)
 
-    def enterEvent(self, event):
+    def enterEvent(self, event) -> None:
         if getattr(self, "path", None):
             self._hover_timer.start(self._DELAY_MS)
         super().enterEvent(event)
 
-    def leaveEvent(self, event):
+    def leaveEvent(self, event) -> None:
         self._hover_timer.stop()
         ImagePreviewPopup.get().hide()
         super().leaveEvent(event)
 
-    def _show_preview(self):
+    def _show_preview(self) -> None:
         if getattr(self, "path", None):
             ImagePreviewPopup.get().show_for(self.path)
 
@@ -257,13 +347,36 @@ class HoverPreviewMixin:
 # ---------------------------------------------------------------------------
 # Worker thread (image processing)
 # ---------------------------------------------------------------------------
+
 class Worker(QThread):
+    """Background thread that sends images to the Gemini Vision API.
+
+    Signals
+    -------
+    progress(current, total, filename):
+        Emitted after each image is processed.
+    output_known(output_dir):
+        Emitted before processing begins so the UI can make the job card
+        clickable as soon as the output directory is known.
+    finished(output_dir):
+        Emitted when all images have been processed successfully.
+    error(message):
+        Emitted if an unhandled exception occurs.
+    """
+
     progress     = pyqtSignal(int, int, str)
     output_known = pyqtSignal(str)
     finished     = pyqtSignal(str)
     error        = pyqtSignal(str)
 
-    def __init__(self, path, is_folder, prompt_key, image_size, replace):
+    def __init__(
+        self,
+        path: str | list[str],
+        is_folder: bool,
+        prompt_key: str,
+        image_size: str,
+        replace: bool,
+    ) -> None:
         super().__init__()
         self.path       = path
         self.is_folder  = is_folder
@@ -271,17 +384,20 @@ class Worker(QThread):
         self.image_size = image_size
         self.replace    = replace
 
-    def run(self):
+    def run(self) -> None:
+        """Process all images and emit progress/finished/error signals."""
         try:
             prompts, codes = ALL_PROMPTS[self.prompt_key]
 
+            # Determine output directory before any API calls so the UI can
+            # display a clickable card immediately.
             if self.is_folder:
                 output_dir = os.path.join(self.path, f"processed_{codes[0]}")
             else:
                 output_dir = os.path.join(os.path.dirname(self.path[0]), codes[0])
             self.output_known.emit(output_dir)
 
-            def on_progress(current, total, filename):
+            def on_progress(current: int, total: int, filename: str) -> None:
                 self.progress.emit(current, total, filename)
 
             if self.is_folder:
@@ -308,10 +424,18 @@ class Worker(QThread):
 # ---------------------------------------------------------------------------
 # Thumbnail button (preview strip)
 # ---------------------------------------------------------------------------
+
 class ThumbButton(HoverPreviewMixin, QLabel):
+    """Clickable thumbnail cell used inside SelectableThumbnailStrip."""
+
     clicked_signal = pyqtSignal()
 
-    def __init__(self, path="", label_text="", parent=None):
+    def __init__(
+        self,
+        path: str = "",
+        label_text: str = "",
+        parent: QWidget | None = None,
+    ) -> None:
         super().__init__(parent=parent)
         self.path = path
         self._init_hover()
@@ -332,11 +456,12 @@ class ThumbButton(HoverPreviewMixin, QLabel):
             else:
                 self.setText("?")
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event) -> None:
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked_signal.emit()
 
-    def set_selected(self, on: bool):
+    def set_selected(self, on: bool) -> None:
+        """Highlight or de-highlight this thumbnail cell."""
         if on:
             self.setStyleSheet(
                 "border: 2px solid #007AFF; border-radius: 4px; background: #ddeeff;"
@@ -344,54 +469,71 @@ class ThumbButton(HoverPreviewMixin, QLabel):
         else:
             self._unselect()
 
-    def _unselect(self):
+    def _unselect(self) -> None:
         self.setStyleSheet("border: 1px solid #ccc; border-radius: 4px;")
 
 
 # ---------------------------------------------------------------------------
 # Selectable thumbnail strip
 # ---------------------------------------------------------------------------
+
 class SelectableThumbnailStrip(QScrollArea):
+    """Horizontal scrollable strip of image thumbnails with selection state.
+
+    The first cell is always an "All (N)" button representing the whole
+    folder/file list.  Subsequent cells represent individual images.
+
+    Signals
+    -------
+    selection_changed(path_or_folder, is_folder):
+        Emitted when the user clicks a cell.  ``path_or_folder`` is either a
+        folder path string (is_folder=True) or a list of file paths.
+    """
+
     selection_changed = pyqtSignal(object, bool)
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setWidgetResizable(True)
         self.setFixedHeight(THUMB_SIZE + 24)
 
-        container = QWidget()
+        container  = QWidget()
         self._row  = QHBoxLayout(container)
         self._row.setSpacing(6)
         self._row.setContentsMargins(4, 4, 4, 4)
         self._row.addStretch()
         self.setWidget(container)
 
-        self._folder_path: str | None = None
-        self._all_files:   list       = []
-        self._buttons:     list       = []
+        self._folder_path: str | None       = None
+        self._all_files:   list[str]        = []
+        self._buttons:     list[ThumbButton] = []
 
-    def set_folder(self, folder_path: str, files: list):
+    def set_folder(self, folder_path: str, files: list[str]) -> None:
+        """Populate the strip from a folder; "All" emits the folder path."""
         self._folder_path = folder_path
         self._all_files   = files
         self._rebuild()
 
-    def set_files(self, files: list):
+    def set_files(self, files: list[str]) -> None:
+        """Populate the strip from an explicit file list."""
         self._folder_path = None
         self._all_files   = files
         self._rebuild()
 
-    def select_file(self, path: str):
+    def select_file(self, path: str) -> None:
+        """Programmatically select the cell for *path*, as if the user clicked it."""
         try:
             idx = self._all_files.index(path)
-            self._on_click(idx + 1)
+            self._on_click(idx + 1)  # +1 because index 0 is the "All" button
         except ValueError:
             pass
 
-    def _rebuild(self):
+    def _rebuild(self) -> None:
+        """Discard existing buttons and rebuild from the current file list."""
         self._buttons.clear()
-        while self._row.count() > 1:
+        while self._row.count() > 1:  # keep the trailing stretch item
             item = self._row.takeAt(0)
             if item.widget():
                 item.widget().deleteLater()
@@ -409,7 +551,7 @@ class SelectableThumbnailStrip(QScrollArea):
 
         self._highlight(0)
 
-    def _on_click(self, idx: int):
+    def _on_click(self, idx: int) -> None:
         self._highlight(idx)
         if idx == 0:
             if self._folder_path:
@@ -419,57 +561,211 @@ class SelectableThumbnailStrip(QScrollArea):
         else:
             self.selection_changed.emit([self._all_files[idx - 1]], False)
 
-    def _highlight(self, idx: int):
+    def _highlight(self, idx: int) -> None:
         for i, btn in enumerate(self._buttons):
             btn.set_selected(i == idx)
 
 
 # ---------------------------------------------------------------------------
-# Results dialog
+# Before / after split view dialog
 # ---------------------------------------------------------------------------
-class ResultImageCell(HoverPreviewMixin, QWidget):
-    def __init__(self, path: str, parent=None):
-        super().__init__(parent=parent)
-        self.path = path
-        self._init_hover()
-        self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.setToolTip("Click to open  •  hover for preview")
+
+class BeforeAfterDialog(QDialog):
+    """Side-by-side comparison dialog showing the original and processed image.
+
+    The original image is located by assuming svelda.py's naming convention:
+    output files have the same filename as their source, stored one directory
+    level below the processed subfolder:
+
+        <folder>/processed_<code>/<filename>  →  original at  <folder>/<filename>
+    """
+
+    def __init__(self, result_path: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        filename = os.path.basename(result_path)
+        self.setWindowTitle(f"{filename} — Before / After")
+        self.setMinimumSize(800, 500)
+
+        # Derive original path: go two levels up from the result file
+        original_path = os.path.normpath(
+            os.path.join(result_path, "..", "..", filename)
+        )
+        has_original = os.path.isfile(original_path)
 
         layout = QVBoxLayout(self)
-        layout.setSpacing(3)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(10)
+
+        body = QHBoxLayout()
+        body.setSpacing(12)
+
+        def _make_side(path: str, title: str, exists: bool) -> QWidget:
+            """Build one comparison panel (title + image + Finder button)."""
+            w  = QWidget()
+            vb = QVBoxLayout(w)
+            vb.setSpacing(4)
+            vb.setContentsMargins(0, 0, 0, 0)
+
+            hdr = QLabel(f"<b>{title}</b>")
+            hdr.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            vb.addWidget(hdr)
+
+            img_lbl = QLabel()
+            img_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            img_lbl.setMinimumSize(BA_IMG_MAX // 2, BA_IMG_MAX // 2)
+            if exists:
+                pix = QPixmap(path)
+                if not pix.isNull():
+                    pix = pix.scaled(BA_IMG_MAX, BA_IMG_MAX,
+                                     Qt.AspectRatioMode.KeepAspectRatio,
+                                     Qt.TransformationMode.SmoothTransformation)
+                    img_lbl.setPixmap(pix)
+            else:
+                img_lbl.setText("Original not found")
+                img_lbl.setStyleSheet("color: grey; font-size: 11px;")
+            vb.addWidget(img_lbl, stretch=1)
+
+            if exists:
+                open_btn = QPushButton("Open in Finder")
+                open_btn.setFlat(True)
+                open_btn.setStyleSheet(
+                    "QPushButton { color: grey; font-size: 11px; text-decoration: underline; border: none; }"
+                    "QPushButton:hover { color: #333; }"
+                )
+                open_btn.clicked.connect(lambda: subprocess.run(["open", path]))
+                vb.addWidget(open_btn)
+            return w
+
+        body.addWidget(_make_side(original_path, "Original", has_original), stretch=1)
+
+        div = QFrame()
+        div.setFrameShape(QFrame.Shape.VLine)
+        div.setFrameShadow(QFrame.Shadow.Sunken)
+        body.addWidget(div)
+
+        body.addWidget(_make_side(result_path, "Processed", True), stretch=1)
+        layout.addLayout(body, stretch=1)
+
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(self.close)
+        layout.addWidget(close_btn)
+
+
+# ---------------------------------------------------------------------------
+# Result image cell (grid item in ResultsDialog)
+# ---------------------------------------------------------------------------
+
+class ResultImageCell(HoverPreviewMixin, QWidget):
+    """A single processed-image cell within the ResultsDialog grid.
+
+    Features:
+    - Click on the image → opens BeforeAfterDialog (or falls back to Finder).
+    - Star button → toggles gold star and emits ``star_toggled`` signal.
+    - Hover → shows the full-size preview popup.
+    """
+
+    star_toggled = pyqtSignal(str, bool)  # (path, is_starred)
+
+    def __init__(self, path: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent=parent)
+        self.path     = path
+        self._starred = False
+        self._init_hover()
+        self.setToolTip("Click for before/after  •  hover for preview")
+
+        outer = QVBoxLayout(self)
+        outer.setSpacing(2)
+        outer.setContentsMargins(0, 0, 0, 0)
 
         img_lbl = QLabel()
         img_lbl.setFixedSize(RESULT_THUMB, RESULT_THUMB)
         img_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        img_lbl.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         pix = QPixmap(path)
         if not pix.isNull():
             pix = pix.scaled(RESULT_THUMB, RESULT_THUMB,
                              Qt.AspectRatioMode.KeepAspectRatio,
                              Qt.TransformationMode.SmoothTransformation)
             img_lbl.setPixmap(pix)
-        layout.addWidget(img_lbl)
+        outer.addWidget(img_lbl)
+
+        bottom_row = QHBoxLayout()
+        bottom_row.setContentsMargins(0, 0, 0, 0)
+        bottom_row.setSpacing(2)
 
         name_lbl = QLabel(os.path.basename(path))
-        name_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         name_lbl.setStyleSheet("font-size: 10px; color: grey;")
-        name_lbl.setFixedWidth(RESULT_THUMB)
+        name_lbl.setFixedWidth(RESULT_THUMB - 26)
         name_lbl.setWordWrap(True)
-        layout.addWidget(name_lbl)
+        bottom_row.addWidget(name_lbl, stretch=1)
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
+        self._star_btn = QPushButton("☆")
+        self._star_btn.setFixedSize(22, 22)
+        self._star_btn.setFlat(True)
+        self._star_btn.setStyleSheet("QPushButton { font-size: 14px; color: #bbb; border: none; padding: 0; }")
+        self._star_btn.clicked.connect(self._toggle_star)
+        bottom_row.addWidget(self._star_btn)
+
+        outer.addLayout(bottom_row)
+
+        # Attach click handler directly to the image label, not the whole cell,
+        # to avoid interfering with the star button.
+        img_lbl.mousePressEvent = self._on_img_click
+
+    def _on_img_click(self, event) -> None:
+        """Open before/after dialog on left-click; fall back to Finder."""
+        if event.button() != Qt.MouseButton.LeftButton:
+            return
+        original = os.path.normpath(
+            os.path.join(self.path, "..", "..", os.path.basename(self.path))
+        )
+        if os.path.isfile(original):
+            BeforeAfterDialog(self.path, self).exec()
+        else:
             subprocess.run(["open", self.path])
 
+    def _toggle_star(self) -> None:
+        """Toggle the starred state and emit ``star_toggled``."""
+        self._starred = not self._starred
+        if self._starred:
+            self._star_btn.setText("★")
+            self._star_btn.setStyleSheet(
+                "QPushButton { font-size: 14px; color: #FFC300; border: none; padding: 0; }"
+            )
+        else:
+            self._star_btn.setText("☆")
+            self._star_btn.setStyleSheet(
+                "QPushButton { font-size: 14px; color: #bbb; border: none; padding: 0; }"
+            )
+        self.star_toggled.emit(self.path, self._starred)
+
+
+# ---------------------------------------------------------------------------
+# Results dialog
+# ---------------------------------------------------------------------------
 
 class ResultsDialog(QDialog):
-    def __init__(self, output_dir: str, prompt_key: str, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle(f"Results — {PROMPT_LABELS.get(prompt_key, prompt_key)}")
-        self.setMinimumSize(600, 480)
-        layout = QVBoxLayout(self)
-        layout.setSpacing(10)
+    """Modal grid of processed images with star/picks and before/after support.
 
+    Header row shows the output folder path (clickable → Finder) and a
+    "Copy picks (N)" button that copies starred files to a ``picks/`` subfolder.
+    """
+
+    def __init__(
+        self,
+        output_dir: str,
+        prompt_key: str,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
+        self._output_dir      = output_dir
+        self._picks: set[str] = set()
+        self.setWindowTitle(f"Results — {PROMPT_LABELS.get(prompt_key, prompt_key)}")
+        self.setMinimumSize(640, 520)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(8)
+
+        # ── Header row: folder path + copy-picks button ──
+        header_row      = QHBoxLayout()
         open_folder_btn = QPushButton(output_dir)
         open_folder_btn.setFlat(True)
         open_folder_btn.setStyleSheet(
@@ -480,8 +776,21 @@ class ResultsDialog(QDialog):
         open_folder_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         open_folder_btn.setToolTip("Click to open folder in Finder")
         open_folder_btn.clicked.connect(lambda: subprocess.run(["open", output_dir]))
-        layout.addWidget(open_folder_btn)
+        header_row.addWidget(open_folder_btn, stretch=1)
 
+        self._copy_btn = QPushButton("Copy picks (0)")
+        self._copy_btn.setEnabled(False)
+        self._copy_btn.setToolTip("Copy starred images to picks/ subfolder")
+        self._copy_btn.clicked.connect(self._copy_picks)
+        header_row.addWidget(self._copy_btn)
+        layout.addLayout(header_row)
+
+        self._copy_status = QLabel("")
+        self._copy_status.setStyleSheet("color: green; font-size: 11px;")
+        self._copy_status.hide()
+        layout.addWidget(self._copy_status)
+
+        # ── Image grid ──
         scroll    = QScrollArea()
         scroll.setWidgetResizable(True)
         container = QWidget()
@@ -490,7 +799,7 @@ class ResultsDialog(QDialog):
         grid.setContentsMargins(8, 8, 8, 8)
         scroll.setWidget(container)
 
-        files = []
+        files: list[str] = []
         if os.path.isdir(output_dir):
             files = sorted([
                 os.path.join(output_dir, f)
@@ -500,7 +809,9 @@ class ResultsDialog(QDialog):
 
         cols = 3
         for i, path in enumerate(files):
-            grid.addWidget(ResultImageCell(path), i // cols, i % cols)
+            cell = ResultImageCell(path)
+            cell.star_toggled.connect(self._on_star_toggled)
+            grid.addWidget(cell, i // cols, i % cols)
 
         if not files:
             empty = QLabel("No output images yet.")
@@ -509,7 +820,11 @@ class ResultsDialog(QDialog):
 
         layout.addWidget(scroll)
 
-        hint = QLabel("Click image to open  •  hover for large preview  •  click folder path to open in Finder")
+        # ── Footer hint ──
+        hint = QLabel(
+            "Click image for before/after  •  ☆ to star  •  hover for preview"
+            "  •  click folder to open in Finder"
+        )
         hint.setStyleSheet("color: grey; font-size: 11px;")
         hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(hint)
@@ -518,28 +833,68 @@ class ResultsDialog(QDialog):
         close_btn.clicked.connect(self.close)
         layout.addWidget(close_btn)
 
+    def _on_star_toggled(self, path: str, starred: bool) -> None:
+        """Update the picks set and refresh the copy button label."""
+        if starred:
+            self._picks.add(path)
+        else:
+            self._picks.discard(path)
+        n = len(self._picks)
+        self._copy_btn.setText(f"Copy picks ({n})")
+        self._copy_btn.setEnabled(n > 0)
+        self._copy_status.hide()
+
+    def _copy_picks(self) -> None:
+        """Copy all starred files to ``<output_dir>/picks/``."""
+        picks_dir = os.path.join(self._output_dir, "picks")
+        os.makedirs(picks_dir, exist_ok=True)
+        for path in self._picks:
+            shutil.copy2(path, os.path.join(picks_dir, os.path.basename(path)))
+        n = len(self._picks)
+        self._copy_status.setText(f"Copied {n} file{'s' if n != 1 else ''} to picks/")
+        self._copy_status.show()
+
 
 # ---------------------------------------------------------------------------
 # Job card
 # ---------------------------------------------------------------------------
+
 class JobCard(QFrame):
+    """Card widget representing one processing job in the jobs list.
+
+    Layout::
+
+        ┌──────────────────────────────────────────────────┐
+        │ <prompt label>  ·  <source>              [↺]    │
+        │ [progress bar]              [live thumbnails]    │
+        │ <status text>                                    │
+        └──────────────────────────────────────────────────┘
+
+    The card becomes clickable as soon as the output directory is known
+    (emitted via ``Worker.output_known`` before any API calls complete).
+    """
+
     reprocess_requested = pyqtSignal(dict)
 
-    def __init__(self, config: dict, parent=None):
+    def __init__(self, config: dict, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.config       = config
-        self._output_dir: str | None = None
-        self._shown_files: set = set()
+        self.config        = config
+        self._output_dir: str | None  = None
+        self._shown_files: set[str]   = set()
+        self._is_done      = False
         self.setFrameShape(QFrame.Shape.StyledPanel)
 
         layout = QVBoxLayout(self)
         layout.setSpacing(4)
         layout.setContentsMargins(10, 8, 10, 8)
 
+        # ── Title row ──
         header = QHBoxLayout()
         label  = PROMPT_LABELS.get(config['prompt_key'], config['prompt_key'])
-        src    = (os.path.basename(config['path']) if config['is_folder']
-                  else f"{len(config['path'])} image{'s' if len(config['path']) != 1 else ''}")
+        src    = (
+            os.path.basename(config['path']) if config['is_folder']
+            else f"{len(config['path'])} image{'s' if len(config['path']) != 1 else ''}"
+        )
         self.title_lbl = QLabel(f"<b>{label}</b>  ·  {src}")
         reprocess_btn  = QPushButton("↺")
         reprocess_btn.setFixedWidth(28)
@@ -549,7 +904,8 @@ class JobCard(QFrame):
         header.addWidget(reprocess_btn)
         layout.addLayout(header)
 
-        body = QHBoxLayout()
+        # ── Body: progress (left) + live thumbnails (right) ──
+        body   = QHBoxLayout()
         body.setSpacing(8)
 
         left_v = QVBoxLayout()
@@ -566,6 +922,7 @@ class JobCard(QFrame):
         left_v.addStretch()
         body.addLayout(left_v, stretch=1)
 
+        # Right side: scrollable live thumbnail strip
         self._thumb_scroll = QScrollArea()
         self._thumb_scroll.setFixedHeight(CARD_THUMB + 12)
         self._thumb_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -582,19 +939,23 @@ class JobCard(QFrame):
 
         layout.addLayout(body)
 
-    def set_output_dir(self, output_dir: str):
+    def set_output_dir(self, output_dir: str) -> None:
+        """Record the output directory and make the card clickable."""
         self._output_dir = output_dir
         self.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.setToolTip("Click to preview results")
 
-    def update_progress(self, current, total, filename):
+    def update_progress(self, current: int, total: int, filename: str) -> None:
+        """Advance the progress bar and refresh the live thumbnail strip."""
         self.progress_bar.setMaximum(total)
         self.progress_bar.setValue(current)
         self.status_lbl.setText(f"Processing: {os.path.basename(filename)}")
         self._refresh_thumbs()
 
-    def mark_done(self, output_dir):
+    def mark_done(self, output_dir: str) -> None:
+        """Mark the job as complete and show a green status label."""
         self._output_dir = output_dir
+        self._is_done    = True
         self.progress_bar.setValue(self.progress_bar.maximum() or 1)
         self.status_lbl.setText("✓  Done — click to view results")
         self.status_lbl.setStyleSheet("color: green; font-size: 11px;")
@@ -602,11 +963,13 @@ class JobCard(QFrame):
         self.setToolTip("Click to view results")
         self._refresh_thumbs()
 
-    def mark_error(self, message):
+    def mark_error(self, message: str) -> None:
+        """Display an error message in red."""
         self.status_lbl.setText(f"✗  {message}")
         self.status_lbl.setStyleSheet("color: red; font-size: 11px;")
 
-    def _refresh_thumbs(self):
+    def _refresh_thumbs(self) -> None:
+        """Scan the output directory and append any new result thumbnails."""
         if not self._output_dir or not os.path.isdir(self._output_dir):
             return
         files = sorted([
@@ -629,26 +992,35 @@ class JobCard(QFrame):
                 lbl.setPixmap(pix)
             self._thumb_row.insertWidget(self._thumb_row.count() - 1, lbl)
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event) -> None:
         if event.button() == Qt.MouseButton.LeftButton and self._output_dir:
             self._open_results()
 
-    def _open_results(self):
+    def _open_results(self) -> None:
         ResultsDialog(self._output_dir, self.config['prompt_key'], self).exec()
 
 
 # ---------------------------------------------------------------------------
 # Drop-target input area
 # ---------------------------------------------------------------------------
+
 class DropFolderWidget(QGroupBox):
+    """QGroupBox that accepts drag-and-drop of folders and image files.
+
+    Signals
+    -------
+    folder_dropped(path): emitted when a directory is dropped.
+    image_dropped(path):  emitted when a supported image file is dropped.
+    """
+
     folder_dropped = pyqtSignal(str)
     image_dropped  = pyqtSignal(str)
 
-    def __init__(self, title="", parent=None):
+    def __init__(self, title: str = "", parent: QWidget | None = None) -> None:
         super().__init__(title, parent)
         self.setAcceptDrops(True)
 
-    def dragEnterEvent(self, event: QDragEnterEvent):
+    def dragEnterEvent(self, event: QDragEnterEvent) -> None:
         if event.mimeData().hasUrls():
             url  = event.mimeData().urls()[0]
             path = url.toLocalFile()
@@ -662,10 +1034,10 @@ class DropFolderWidget(QGroupBox):
                 return
         event.ignore()
 
-    def dragLeaveEvent(self, _event):
+    def dragLeaveEvent(self, _event) -> None:
         self.setStyleSheet("")
 
-    def dropEvent(self, event: QDropEvent):
+    def dropEvent(self, event: QDropEvent) -> None:
         self.setStyleSheet("")
         urls = event.mimeData().urls()
         if urls:
@@ -681,35 +1053,46 @@ class DropFolderWidget(QGroupBox):
 # ---------------------------------------------------------------------------
 # Main window
 # ---------------------------------------------------------------------------
+
 class SveldaApp(QMainWindow):
-    def __init__(self):
+    """Top-level application window containing Run and Prompts tabs."""
+
+    def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("Svelda")
         self.setMinimumSize(960, 700)
-        self._selection_path      = None
+
+        # Selection state: folder path string, or list of file paths
+        self._selection_path: str | list[str] | None = None
         self._selection_is_folder = True
-        self._editing_new_prompt  = False
-        self._pre_generate_state  = None
-        self._generate_worker     = None
+
+        # Prompts tab state
+        self._editing_new_prompt = False
+        self._pre_generate_state: dict | None = None
+        self._generate_worker: PromptGeneratorWorker | None = None
+
         self._build_ui()
+        self._restore_job_history()
 
-    # ── Top-level layout (tabs) ───────────────────────────────────────────
+    # ── Top-level layout (tabs) ─────────────────────────────────────────
 
-    def _build_ui(self):
+    def _build_ui(self) -> None:
+        """Construct the tab widget and populate each tab."""
         tabs = QTabWidget()
         self.setCentralWidget(tabs)
         tabs.addTab(self._build_run_tab(),     "Run")
         tabs.addTab(self._build_prompts_tab(), "Prompts")
 
-    # ── Run tab ──────────────────────────────────────────────────────────
+    # ── Run tab ────────────────────────────────────────────────────────
 
     def _build_run_tab(self) -> QWidget:
-        tab = QWidget()
+        """Build and return the Run tab widget."""
+        tab      = QWidget()
         main_row = QHBoxLayout(tab)
         main_row.setSpacing(12)
         main_row.setContentsMargins(16, 16, 16, 16)
 
-        # Left panel
+        # ── Left panel: input + prompt selector + options + run buttons ──
         left = QWidget()
         left.setFixedWidth(272)
         left_layout = QVBoxLayout(left)
@@ -751,8 +1134,14 @@ class SveldaApp(QMainWindow):
         self.run_btn.setFont(f)
         self.run_btn.clicked.connect(self._run)
         left_layout.addWidget(self.run_btn)
-        left_layout.addStretch()
 
+        self.test_btn = QPushButton("▶  Test on 1 image")
+        self.test_btn.setStyleSheet("QPushButton { color: #555; font-size: 12px; }")
+        self.test_btn.setToolTip("Process only the first image to preview the result")
+        self.test_btn.clicked.connect(self._run_test)
+        left_layout.addWidget(self.test_btn)
+
+        left_layout.addStretch()
         main_row.addWidget(left)
 
         div = QFrame()
@@ -760,23 +1149,38 @@ class SveldaApp(QMainWindow):
         div.setFrameShadow(QFrame.Shadow.Sunken)
         main_row.addWidget(div)
 
-        # Right panel
-        right = QWidget()
+        # ── Right panel: preview strip + jobs list ──
+        right        = QWidget()
         right_layout = QVBoxLayout(right)
         right_layout.setSpacing(10)
         right_layout.setContentsMargins(0, 0, 0, 0)
 
         preview_group = QGroupBox("Preview  —  click to select single image  •  hover for preview")
-        preview_v = QVBoxLayout(preview_group)
+        preview_v     = QVBoxLayout(preview_group)
         preview_v.setContentsMargins(6, 6, 6, 6)
         self.thumb_strip = SelectableThumbnailStrip()
         self.thumb_strip.selection_changed.connect(self._on_thumb_selection)
         preview_v.addWidget(self.thumb_strip)
         right_layout.addWidget(preview_group)
 
-        jobs_group = QGroupBox("Jobs  —  click a card to view results")
-        jobs_v = QVBoxLayout(jobs_group)
+        # Jobs header: title label + "Clear history" link
+        jobs_header = QHBoxLayout()
+        jobs_title  = QLabel("<b>Jobs</b>  —  click a card to view results")
+        jobs_header.addWidget(jobs_title, stretch=1)
+        clear_btn = QPushButton("Clear history")
+        clear_btn.setFlat(True)
+        clear_btn.setStyleSheet(
+            "QPushButton { color: grey; font-size: 11px; text-decoration: underline; border: none; }"
+        )
+        clear_btn.clicked.connect(self._clear_history)
+        jobs_header.addWidget(clear_btn)
+
+        jobs_group = QGroupBox()
+        jobs_v     = QVBoxLayout(jobs_group)
         jobs_v.setContentsMargins(6, 6, 6, 6)
+        jobs_v.setSpacing(4)
+        jobs_v.addLayout(jobs_header)
+
         self.jobs_scroll    = QScrollArea()
         self.jobs_scroll.setWidgetResizable(True)
         self.jobs_scroll.setFrameShape(QFrame.Shape.NoFrame)
@@ -793,9 +1197,10 @@ class SveldaApp(QMainWindow):
         return tab
 
     def _build_prompt_radio_group(self) -> QGroupBox:
-        prompt_group = QGroupBox("Prompt")
+        """Build the scrollable prompt-selection radio group for the Run tab."""
+        prompt_group        = QGroupBox("Prompt")
         prompt_group_layout = QVBoxLayout(prompt_group)
-        prompt_scroll = QScrollArea()
+        prompt_scroll       = QScrollArea()
         prompt_scroll.setWidgetResizable(True)
         prompt_scroll.setFrameShape(QFrame.Shape.NoFrame)
         prompt_scroll.setFixedHeight(210)
@@ -809,7 +1214,8 @@ class SveldaApp(QMainWindow):
         self._rebuild_prompt_radio_buttons()
         return prompt_group
 
-    def _rebuild_prompt_radio_buttons(self, select_key="NEUTRAL_WHITE_FRAMING"):
+    def _rebuild_prompt_radio_buttons(self, select_key: str = "NEUTRAL_WHITE_FRAMING") -> None:
+        """Repopulate the prompt radio buttons from the current PROMPT_LABELS registry."""
         for btn in list(self.prompt_buttons.buttons()):
             self.prompt_buttons.removeButton(btn)
         while self._prompt_v.count():
@@ -824,21 +1230,23 @@ class SveldaApp(QMainWindow):
             self._prompt_v.addWidget(rb)
             if key == select_key:
                 rb.setChecked(True)
+        # Ensure at least one button is always checked
         if not self.prompt_buttons.checkedButton():
             btns = self.prompt_buttons.buttons()
             if btns:
                 btns[0].setChecked(True)
 
-    # ── Prompts tab ──────────────────────────────────────────────────────
+    # ── Prompts tab ────────────────────────────────────────────────────
 
     def _build_prompts_tab(self) -> QWidget:
-        tab = QWidget()
+        """Build and return the Prompts tab widget."""
+        tab    = QWidget()
         layout = QHBoxLayout(tab)
         layout.setContentsMargins(16, 16, 16, 16)
         layout.setSpacing(12)
 
-        # Left: list + New button
-        left = QWidget()
+        # ── Left column: prompt list + New button ──
+        left   = QWidget()
         left.setFixedWidth(230)
         left_v = QVBoxLayout(left)
         left_v.setContentsMargins(0, 0, 0, 0)
@@ -860,8 +1268,8 @@ class SveldaApp(QMainWindow):
         div.setFrameShadow(QFrame.Shadow.Sunken)
         layout.addWidget(div)
 
-        # Right: editor form + AI generator
-        right = QWidget()
+        # ── Right column: editor form + AI generator ──
+        right   = QWidget()
         right_v = QVBoxLayout(right)
         right_v.setContentsMargins(0, 0, 0, 0)
         right_v.setSpacing(8)
@@ -895,11 +1303,11 @@ class SveldaApp(QMainWindow):
         self.edit_builtin_note.hide()
         right_v.addWidget(self.edit_builtin_note)
 
-        # Save / Delete row (shown normally, hidden during pending-generation state)
-        self.prompt_btn_row = QWidget()
-        btn_row = QHBoxLayout(self.prompt_btn_row)
+        # Save / Delete buttons (shown during normal editing)
+        self.prompt_btn_row    = QWidget()
+        btn_row                = QHBoxLayout(self.prompt_btn_row)
         btn_row.setContentsMargins(0, 0, 0, 0)
-        self.prompt_save_btn = QPushButton("Save")
+        self.prompt_save_btn   = QPushButton("Save")
         self.prompt_save_btn.clicked.connect(self._save_prompt_edit)
         self.prompt_delete_btn = QPushButton("Delete")
         self.prompt_delete_btn.setStyleSheet("QPushButton { color: red; }")
@@ -909,20 +1317,21 @@ class SveldaApp(QMainWindow):
         btn_row.addStretch()
         right_v.addWidget(self.prompt_btn_row)
 
-        # ── Separator ─────────────────────────────────────────────────────
         sep = QFrame()
         sep.setFrameShape(QFrame.Shape.HLine)
         sep.setFrameShadow(QFrame.Shadow.Sunken)
         right_v.addWidget(sep)
 
-        # ── Generate with AI ──────────────────────────────────────────────
+        # AI generator section
         gen_group = QGroupBox("Generate with AI")
-        gen_v = QVBoxLayout(gen_group)
+        gen_v     = QVBoxLayout(gen_group)
         gen_v.setSpacing(6)
 
         gen_input_row = QHBoxLayout()
         self.gen_input = QLineEdit()
-        self.gen_input.setPlaceholderText('Describe what you want, e.g. "moody black background with rim lighting"')
+        self.gen_input.setPlaceholderText(
+            'Describe what you want, e.g. "moody black background with rim lighting"'
+        )
         self.gen_input.returnPressed.connect(self._generate_prompt)
         gen_input_row.addWidget(self.gen_input, stretch=1)
         self.gen_btn = QPushButton("✦  Generate")
@@ -935,15 +1344,14 @@ class SveldaApp(QMainWindow):
         self.gen_status_lbl.setStyleSheet("color: grey; font-size: 11px;")
         self.gen_status_lbl.hide()
         gen_v.addWidget(self.gen_status_lbl)
-
         right_v.addWidget(gen_group)
 
-        # Accept / Decline row (shown only after successful generation)
+        # Accept / Decline row (shown while reviewing an AI-generated prompt)
         self.accept_row_widget = QWidget()
         self.accept_row_widget.hide()
-        accept_row = QHBoxLayout(self.accept_row_widget)
+        accept_row  = QHBoxLayout(self.accept_row_widget)
         accept_row.setContentsMargins(0, 0, 0, 0)
-        accept_btn = QPushButton("✓  Accept")
+        accept_btn  = QPushButton("✓  Accept")
         accept_btn.setStyleSheet("QPushButton { color: green; font-weight: bold; }")
         accept_btn.clicked.connect(self._accept_generated)
         decline_btn = QPushButton("✗  Decline")
@@ -963,7 +1371,8 @@ class SveldaApp(QMainWindow):
         self._populate_prompt_list()
         return tab
 
-    def _populate_prompt_list(self):
+    def _populate_prompt_list(self) -> None:
+        """Repopulate the left-side list of all prompts (built-in + custom)."""
         self.prompt_list_widget.clear()
         for key in _BUILTIN_KEYS_ORDERED:
             label = PROMPT_LABELS.get(key, key)
@@ -978,7 +1387,8 @@ class SveldaApp(QMainWindow):
             item.setData(Qt.ItemDataRole.UserRole, key)
             self.prompt_list_widget.addItem(item)
 
-    def _on_prompt_list_select(self, current):
+    def _on_prompt_list_select(self, current: QListWidgetItem | None) -> None:
+        """Populate the editor form when a prompt is selected in the list."""
         if self.accept_row_widget.isVisible():
             self._decline_generated()
         if current is None:
@@ -1007,7 +1417,8 @@ class SveldaApp(QMainWindow):
             self.edit_builtin_note.hide()
             self.prompt_delete_btn.show()
 
-    def _new_custom_prompt(self):
+    def _new_custom_prompt(self) -> None:
+        """Clear the editor and prepare it for a new custom prompt."""
         if self.accept_row_widget.isVisible():
             self._decline_generated()
         self._editing_new_prompt = True
@@ -1025,12 +1436,14 @@ class SveldaApp(QMainWindow):
         self.edit_nickname.setFocus()
         self.edit_nickname.selectAll()
 
-    def _auto_update_key(self, text: str):
+    def _auto_update_key(self, text: str) -> None:
+        """Auto-derive the KEY field from the nickname while creating a new prompt."""
         if self._editing_new_prompt and not self.edit_key.isReadOnly():
             key = re.sub(r'[^A-Za-z0-9 ]', '', text).upper().replace(' ', '_') or "CUSTOM"
             self.edit_key.setText(key)
 
-    def _save_prompt_edit(self):
+    def _save_prompt_edit(self) -> None:
+        """Persist the current editor content as a new or updated prompt."""
         nickname = self.edit_nickname.text().strip()
         key      = re.sub(r'\s+', '_', self.edit_key.text().strip().upper())
         if not key or not nickname:
@@ -1040,6 +1453,7 @@ class SveldaApp(QMainWindow):
         data       = _load_custom_data()
 
         if is_builtin:
+            # Built-in prompts: only the display label can be changed
             data.setdefault("label_overrides", {})[key] = nickname
             PROMPT_LABELS[key] = nickname
         else:
@@ -1058,6 +1472,7 @@ class SveldaApp(QMainWindow):
         self._rebuild_prompt_radio_buttons(select_key=current_run_key)
         self._populate_prompt_list()
 
+        # Re-select the saved item without re-triggering the selection handler
         for i in range(self.prompt_list_widget.count()):
             if self.prompt_list_widget.item(i).data(Qt.ItemDataRole.UserRole) == key:
                 self.prompt_list_widget.blockSignals(True)
@@ -1065,13 +1480,14 @@ class SveldaApp(QMainWindow):
                 self.prompt_list_widget.blockSignals(False)
                 break
 
-    def _delete_custom_prompt(self):
+    def _delete_custom_prompt(self) -> None:
+        """Delete the currently selected custom prompt from disk and memory."""
         item = self.prompt_list_widget.currentItem()
         if item is None:
             return
         key = item.data(Qt.ItemDataRole.UserRole)
         if key in _BUILTIN_KEYS:
-            return
+            return  # built-in prompts cannot be deleted
 
         data = _load_custom_data()
         data.get("custom_prompts", {}).pop(key, None)
@@ -1085,7 +1501,8 @@ class SveldaApp(QMainWindow):
         self._populate_prompt_list()
         self._clear_editor()
 
-    def _clear_editor(self):
+    def _clear_editor(self) -> None:
+        """Reset all editor fields to their empty/default state."""
         self._clear_pending_style()
         self.accept_row_widget.hide()
         self.prompt_btn_row.show()
@@ -1097,9 +1514,10 @@ class SveldaApp(QMainWindow):
         self.edit_builtin_note.hide()
         self.prompt_delete_btn.hide()
 
-    # ── AI prompt generator ───────────────────────────────────────────────
+    # ── AI prompt generator ───────────────────────────────────────────
 
-    def _generate_prompt(self):
+    def _generate_prompt(self) -> None:
+        """Start a PromptGeneratorWorker for the current gen_input text."""
         user_input = self.gen_input.text().strip()
         if not user_input:
             return
@@ -1112,11 +1530,12 @@ class SveldaApp(QMainWindow):
         self._generate_worker.error.connect(self._on_generate_error)
         self._generate_worker.start()
 
-    def _on_generate_result(self, data: dict):
+    def _on_generate_result(self, data: dict) -> None:
+        """Populate editor fields with the AI-generated prompt (pending style)."""
         self.gen_btn.setEnabled(True)
         self.gen_btn.setText("✦  Generate")
 
-        # Save form state so Decline can restore it
+        # Save current form state so the user can Decline and revert
         self._pre_generate_state = {
             'nickname':      self.edit_nickname.text(),
             'key':           self.edit_key.text(),
@@ -1126,7 +1545,6 @@ class SveldaApp(QMainWindow):
             'editing_new':   self._editing_new_prompt,
         }
 
-        # Populate fields with generated content
         self._editing_new_prompt = True
 
         self.edit_nickname.blockSignals(True)
@@ -1141,7 +1559,7 @@ class SveldaApp(QMainWindow):
         self.edit_text.setReadOnly(False)
         self.edit_text.setPlainText(data.get("prompt", ""))
 
-        # Grey italic style signals the pending / unconfirmed state
+        # Grey italic style signals "pending review" to the user
         _pending = "color: #888; font-style: italic; background: #f8f8f6;"
         self.edit_nickname.setStyleSheet(_pending)
         self.edit_key.setStyleSheet(_pending)
@@ -1151,21 +1569,24 @@ class SveldaApp(QMainWindow):
         self.prompt_btn_row.hide()
         self.accept_row_widget.show()
 
-    def _on_generate_error(self, message: str):
+    def _on_generate_error(self, message: str) -> None:
+        """Show the generation error in the status label."""
         self.gen_btn.setEnabled(True)
         self.gen_btn.setText("✦  Generate")
         self.gen_status_lbl.setText(f"Error: {message}")
         self.gen_status_lbl.setStyleSheet("color: red; font-size: 11px;")
         self.gen_status_lbl.show()
 
-    def _accept_generated(self):
+    def _accept_generated(self) -> None:
+        """Accept the AI-generated prompt and save it."""
         self._clear_pending_style()
         self.accept_row_widget.hide()
         self.prompt_btn_row.show()
         self._save_prompt_edit()
         self._pre_generate_state = None
 
-    def _decline_generated(self):
+    def _decline_generated(self) -> None:
+        """Discard the AI-generated prompt and restore the previous form state."""
         self._clear_pending_style()
         self.accept_row_widget.hide()
         self.prompt_btn_row.show()
@@ -1184,18 +1605,21 @@ class SveldaApp(QMainWindow):
         else:
             self._clear_editor()
 
-    def _clear_pending_style(self):
+    def _clear_pending_style(self) -> None:
+        """Remove the grey-italic style applied during AI prompt review."""
         for w in (self.edit_nickname, self.edit_key, self.edit_text):
             w.setStyleSheet("")
 
-    # ── Run tab — input ───────────────────────────────────────────────────
+    # ── Run tab — input ────────────────────────────────────────────────
 
-    def _browse_folder(self):
+    def _browse_folder(self) -> None:
+        """Open a native folder picker and update the selection."""
         folder = QFileDialog.getExistingDirectory(self, "Select image folder")
         if folder:
             self._set_folder(folder)
 
-    def _set_folder(self, folder: str):
+    def _set_folder(self, folder: str) -> None:
+        """Set the selection to a folder and reload the thumbnail strip."""
         self._selection_path      = folder
         self._selection_is_folder = True
         self.path_label.setText(folder)
@@ -1206,12 +1630,14 @@ class SveldaApp(QMainWindow):
         ]
         self.thumb_strip.set_folder(folder, files)
 
-    def _set_image_from_drop(self, image_path: str):
+    def _set_image_from_drop(self, image_path: str) -> None:
+        """Handle a dropped image by opening its parent folder and selecting it."""
         folder = os.path.dirname(image_path)
         self._set_folder(folder)
         self.thumb_strip.select_file(image_path)
 
-    def _on_thumb_selection(self, path_or_list, is_folder: bool):
+    def _on_thumb_selection(self, path_or_list, is_folder: bool) -> None:
+        """Sync internal selection state when the thumbnail strip changes."""
         self._selection_path      = path_or_list
         self._selection_is_folder = is_folder
         if is_folder:
@@ -1224,13 +1650,15 @@ class SveldaApp(QMainWindow):
             )
         self.path_label.setStyleSheet("color: black; font-size: 11px;")
 
-    def _selected_prompt_key(self):
+    def _selected_prompt_key(self) -> str | None:
+        """Return the prompt key of the currently checked radio button, or None."""
         btn = self.prompt_buttons.checkedButton()
         return btn.property("prompt_key") if btn else None
 
-    # ── Run ──────────────────────────────────────────────────────────────
+    # ── Run / Test ────────────────────────────────────────────────────
 
-    def _run(self):
+    def _run(self) -> None:
+        """Launch a full processing job for the current selection."""
         if not self._selection_path:
             return
         if self._selection_is_folder and not os.path.isdir(self._selection_path):
@@ -1247,7 +1675,37 @@ class SveldaApp(QMainWindow):
         }
         self._launch_job(config)
 
-    def _launch_job(self, config: dict):
+    def _run_test(self) -> None:
+        """Launch a test job processing only the first image in the selection."""
+        prompt_key = self._selected_prompt_key()
+        if not prompt_key or not self._selection_path:
+            return
+
+        if self._selection_is_folder and os.path.isdir(self._selection_path):
+            files = [
+                os.path.join(self._selection_path, f)
+                for f in sorted(os.listdir(self._selection_path))
+                if f.lower().endswith(IMAGE_EXTS)
+            ]
+            if not files:
+                return
+            first = files[0]
+        elif not self._selection_is_folder:
+            first = self._selection_path[0]
+        else:
+            return
+
+        config = {
+            'path':       [first],
+            'is_folder':  False,
+            'prompt_key': prompt_key,
+            'image_size': self.size_combo.currentText(),
+            'replace':    self.replace_check.isChecked(),
+        }
+        self._launch_job(config)
+
+    def _launch_job(self, config: dict) -> None:
+        """Create a JobCard, start a Worker thread, and wire up all signals."""
         card = JobCard(config)
         card.reprocess_requested.connect(self._load_into_form)
         self.jobs_layout.insertWidget(self.jobs_layout.count() - 1, card)
@@ -1264,11 +1722,14 @@ class SveldaApp(QMainWindow):
         worker.progress.connect(card.update_progress)
         worker.finished.connect(card.mark_done)
         worker.finished.connect(lambda out: self._notify(config, out))
+        worker.finished.connect(lambda out: self._append_job_history(config, out, "done"))
         worker.error.connect(card.mark_error)
+        worker.error.connect(lambda _: self._append_job_history(config, None, "error"))
         worker.start()
-        card._worker = worker
+        card._worker = worker  # keep reference alive for the card's lifetime
 
-    def _notify(self, config, output_dir):
+    def _notify(self, config: dict, output_dir: str) -> None:
+        """Send a macOS notification when a job finishes."""
         label = PROMPT_LABELS.get(config['prompt_key'], config['prompt_key'])
         subprocess.run([
             "osascript", "-e",
@@ -1276,9 +1737,66 @@ class SveldaApp(QMainWindow):
             f'subtitle "{os.path.basename(output_dir)}"'
         ])
 
-    # ── Reprocess ────────────────────────────────────────────────────────
+    # ── Job history ────────────────────────────────────────────────────
 
-    def _load_into_form(self, config: dict):
+    def _append_job_history(
+        self,
+        config: dict,
+        output_dir: str | None,
+        status: str,
+    ) -> None:
+        """Append a completed job entry to the on-disk history file."""
+        history = _load_jobs_history()
+        history.append({
+            "config":     dict(config),  # shallow copy; all values are JSON-serialisable
+            "output_dir": output_dir,
+            "status":     status,
+            "timestamp":  datetime.now().isoformat(timespec='seconds'),
+        })
+        _save_jobs_history(history)
+
+    def _restore_job_history(self) -> None:
+        """Recreate JobCards from the persisted history on startup."""
+        for item in _load_jobs_history():
+            try:
+                config     = item["config"]
+                output_dir = item.get("output_dir")
+                status     = item.get("status", "done")
+
+                # Normalise: folder jobs store path as a string, not a list
+                if config.get("is_folder") and isinstance(config.get("path"), list):
+                    config = dict(config, path=config["path"][0])
+
+                card = JobCard(config)
+                card.reprocess_requested.connect(self._load_into_form)
+                self.jobs_layout.insertWidget(self.jobs_layout.count() - 1, card)
+
+                if status == "done" and output_dir and os.path.isdir(output_dir):
+                    card.set_output_dir(output_dir)
+                    card.mark_done(output_dir)
+                elif status == "error":
+                    card.mark_error("(from previous session)")
+                else:
+                    card.mark_error("(session ended before completion)")
+            except Exception:
+                continue  # silently skip corrupt entries
+
+    def _clear_history(self) -> None:
+        """Clear the history file and remove all non-running job cards."""
+        _save_jobs_history([])
+        for i in reversed(range(self.jobs_layout.count() - 1)):  # skip trailing stretch
+            item = self.jobs_layout.itemAt(i)
+            if item and item.widget():
+                card   = item.widget()
+                worker = getattr(card, '_worker', None)
+                if worker is None or not worker.isRunning():
+                    card.deleteLater()
+                    self.jobs_layout.removeItem(item)
+
+    # ── Reprocess ─────────────────────────────────────────────────────
+
+    def _load_into_form(self, config: dict) -> None:
+        """Load a previous job's config back into the Run tab form fields."""
         if config['is_folder']:
             self._set_folder(config['path'])
         else:
@@ -1303,6 +1821,7 @@ class SveldaApp(QMainWindow):
 # ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("macos")
