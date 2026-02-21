@@ -12,6 +12,7 @@ from svelda import (
     CATS_PROMPTS_STUDIO,
     CATS_PROMPTS_HOME,
     UPSCALE_PROMPT,
+    client as _gemini_client,
 )
 
 from PyQt6.QtWidgets import (
@@ -67,7 +68,7 @@ PROMPT_LABELS = {
 # ---------------------------------------------------------------------------
 # Custom prompts persistence
 # ---------------------------------------------------------------------------
-CUSTOM_PROMPTS_FILE = Path(__file__).parent / "custom_prompts.json"
+CUSTOM_PROMPTS_FILE  = Path(__file__).parent / "custom_prompts.json"
 CUSTOM_PROMPT_TEXTS: dict = {}   # key -> raw text (for tooltip lookups)
 
 
@@ -93,8 +94,8 @@ def _apply_custom_data():
     for key, d in data.get("custom_prompts", {}).items():
         text  = d.get("text", "")
         label = d.get("label", key)
-        ALL_PROMPTS[key]        = ([text], [key])
-        PROMPT_LABELS[key]      = label
+        ALL_PROMPTS[key]         = ([text], [key])
+        PROMPT_LABELS[key]       = label
         CUSTOM_PROMPT_TEXTS[key] = text
 
 
@@ -119,6 +120,56 @@ def _prompt_tooltip(key: str) -> str:
         text  = "\n\n".join(items[1:3]) if len(items) > 1 else items[0]
         return text[:600] + ("…" if len(text) > 600 else "")
     return ""
+
+
+# ---------------------------------------------------------------------------
+# Gemini prompt generator
+# ---------------------------------------------------------------------------
+_META_PROMPT = """\
+You are an AI prompt engineer for luxury product photography.
+
+The user wants: {user_input}
+
+Write a photography AI prompt using this exact structure:
+[One sentence describing the overall aesthetic and style.]
+MANDATE: [What must be strictly preserved — the product's exact framing, scale, position, shape, texture, material, and color. Be specific and absolute.]
+ENVIRONMENT: [Background, surface, and setting. Specify materials (e.g. warm oak, polished marble), depth, and atmosphere.]
+LIGHTING: [Direction, quality, color temperature, shadow characteristics, and any specular or rim highlights.]
+OUTPUT: Clean, sharp, 4K resolution, luxury commercial aesthetic.
+
+Also provide:
+- nickname: a short human-readable display name (3–5 words, title case)
+- key: a Python constant name (SCREAMING_SNAKE_CASE, 2–4 words, no spaces)
+
+Respond ONLY with valid JSON — no markdown, no code fences, just the raw JSON object:
+{{"nickname": "...", "key": "...", "prompt": "..."}}
+"""
+
+
+class PromptGeneratorWorker(QThread):
+    result = pyqtSignal(dict)
+    error  = pyqtSignal(str)
+
+    def __init__(self, user_input: str):
+        super().__init__()
+        self.user_input = user_input
+
+    def run(self):
+        try:
+            contents = _META_PROMPT.format(user_input=self.user_input)
+            response = _gemini_client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=contents,
+            )
+            text = response.text.strip()
+            # Strip markdown code fences if Gemini wraps the JSON anyway
+            if text.startswith("```"):
+                lines = text.splitlines()
+                text  = "\n".join(lines[1:-1]) if lines[-1].strip() == "```" else "\n".join(lines[1:])
+            data = json.loads(text)
+            self.result.emit(data)
+        except Exception as e:
+            self.error.emit(str(e))
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +255,7 @@ class HoverPreviewMixin:
 
 
 # ---------------------------------------------------------------------------
-# Worker thread
+# Worker thread (image processing)
 # ---------------------------------------------------------------------------
 class Worker(QThread):
     progress     = pyqtSignal(int, int, str)
@@ -634,10 +685,12 @@ class SveldaApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Svelda")
-        self.setMinimumSize(960, 680)
+        self.setMinimumSize(960, 700)
         self._selection_path      = None
         self._selection_is_folder = True
         self._editing_new_prompt  = False
+        self._pre_generate_state  = None
+        self._generate_worker     = None
         self._build_ui()
 
     # ── Top-level layout (tabs) ───────────────────────────────────────────
@@ -807,7 +860,7 @@ class SveldaApp(QMainWindow):
         div.setFrameShadow(QFrame.Shadow.Sunken)
         layout.addWidget(div)
 
-        # Right: editor form
+        # Right: editor form + AI generator
         right = QWidget()
         right_v = QVBoxLayout(right)
         right_v.setContentsMargins(0, 0, 0, 0)
@@ -842,7 +895,10 @@ class SveldaApp(QMainWindow):
         self.edit_builtin_note.hide()
         right_v.addWidget(self.edit_builtin_note)
 
-        btn_row = QHBoxLayout()
+        # Save / Delete row (shown normally, hidden during pending-generation state)
+        self.prompt_btn_row = QWidget()
+        btn_row = QHBoxLayout(self.prompt_btn_row)
+        btn_row.setContentsMargins(0, 0, 0, 0)
         self.prompt_save_btn = QPushButton("Save")
         self.prompt_save_btn.clicked.connect(self._save_prompt_edit)
         self.prompt_delete_btn = QPushButton("Delete")
@@ -851,7 +907,56 @@ class SveldaApp(QMainWindow):
         btn_row.addWidget(self.prompt_save_btn)
         btn_row.addWidget(self.prompt_delete_btn)
         btn_row.addStretch()
-        right_v.addLayout(btn_row)
+        right_v.addWidget(self.prompt_btn_row)
+
+        # ── Separator ─────────────────────────────────────────────────────
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+        right_v.addWidget(sep)
+
+        # ── Generate with AI ──────────────────────────────────────────────
+        gen_group = QGroupBox("Generate with AI")
+        gen_v = QVBoxLayout(gen_group)
+        gen_v.setSpacing(6)
+
+        gen_input_row = QHBoxLayout()
+        self.gen_input = QLineEdit()
+        self.gen_input.setPlaceholderText('Describe what you want, e.g. "moody black background with rim lighting"')
+        self.gen_input.returnPressed.connect(self._generate_prompt)
+        gen_input_row.addWidget(self.gen_input, stretch=1)
+        self.gen_btn = QPushButton("✦  Generate")
+        self.gen_btn.setFixedWidth(108)
+        self.gen_btn.clicked.connect(self._generate_prompt)
+        gen_input_row.addWidget(self.gen_btn)
+        gen_v.addLayout(gen_input_row)
+
+        self.gen_status_lbl = QLabel("")
+        self.gen_status_lbl.setStyleSheet("color: grey; font-size: 11px;")
+        self.gen_status_lbl.hide()
+        gen_v.addWidget(self.gen_status_lbl)
+
+        right_v.addWidget(gen_group)
+
+        # Accept / Decline row (shown only after successful generation)
+        self.accept_row_widget = QWidget()
+        self.accept_row_widget.hide()
+        accept_row = QHBoxLayout(self.accept_row_widget)
+        accept_row.setContentsMargins(0, 0, 0, 0)
+        accept_btn = QPushButton("✓  Accept")
+        accept_btn.setStyleSheet("QPushButton { color: green; font-weight: bold; }")
+        accept_btn.clicked.connect(self._accept_generated)
+        decline_btn = QPushButton("✗  Decline")
+        decline_btn.setStyleSheet("QPushButton { color: #cc3300; }")
+        decline_btn.clicked.connect(self._decline_generated)
+        accept_note = QLabel("Generated by AI — review before saving")
+        accept_note.setStyleSheet("color: grey; font-size: 11px; font-style: italic;")
+        accept_row.addWidget(accept_btn)
+        accept_row.addWidget(decline_btn)
+        accept_row.addSpacing(10)
+        accept_row.addWidget(accept_note)
+        accept_row.addStretch()
+        right_v.addWidget(self.accept_row_widget)
 
         layout.addWidget(right, stretch=1)
 
@@ -860,14 +965,12 @@ class SveldaApp(QMainWindow):
 
     def _populate_prompt_list(self):
         self.prompt_list_widget.clear()
-        # Built-in (greyed, in original order)
         for key in _BUILTIN_KEYS_ORDERED:
             label = PROMPT_LABELS.get(key, key)
             item  = QListWidgetItem(f"{label}  ·  built-in")
             item.setData(Qt.ItemDataRole.UserRole, key)
             item.setForeground(QColor("#999"))
             self.prompt_list_widget.addItem(item)
-        # Custom
         data = _load_custom_data()
         for key in data.get("custom_prompts", {}):
             label = PROMPT_LABELS.get(key, key)
@@ -876,6 +979,8 @@ class SveldaApp(QMainWindow):
             self.prompt_list_widget.addItem(item)
 
     def _on_prompt_list_select(self, current):
+        if self.accept_row_widget.isVisible():
+            self._decline_generated()
         if current is None:
             return
         self._editing_new_prompt = False
@@ -903,6 +1008,8 @@ class SveldaApp(QMainWindow):
             self.prompt_delete_btn.show()
 
     def _new_custom_prompt(self):
+        if self.accept_row_widget.isVisible():
+            self._decline_generated()
         self._editing_new_prompt = True
         self.prompt_list_widget.clearSelection()
         self.edit_key.setReadOnly(False)
@@ -919,7 +1026,6 @@ class SveldaApp(QMainWindow):
         self.edit_nickname.selectAll()
 
     def _auto_update_key(self, text: str):
-        """Auto-fill key from nickname, but only while creating a new prompt."""
         if self._editing_new_prompt and not self.edit_key.isReadOnly():
             key = re.sub(r'[^A-Za-z0-9 ]', '', text).upper().replace(' ', '_') or "CUSTOM"
             self.edit_key.setText(key)
@@ -952,7 +1058,6 @@ class SveldaApp(QMainWindow):
         self._rebuild_prompt_radio_buttons(select_key=current_run_key)
         self._populate_prompt_list()
 
-        # Re-select the saved item in the list
         for i in range(self.prompt_list_widget.count()):
             if self.prompt_list_widget.item(i).data(Qt.ItemDataRole.UserRole) == key:
                 self.prompt_list_widget.blockSignals(True)
@@ -981,6 +1086,9 @@ class SveldaApp(QMainWindow):
         self._clear_editor()
 
     def _clear_editor(self):
+        self._clear_pending_style()
+        self.accept_row_widget.hide()
+        self.prompt_btn_row.show()
         self.edit_nickname.blockSignals(True)
         self.edit_nickname.clear()
         self.edit_nickname.blockSignals(False)
@@ -988,6 +1096,97 @@ class SveldaApp(QMainWindow):
         self.edit_text.clear()
         self.edit_builtin_note.hide()
         self.prompt_delete_btn.hide()
+
+    # ── AI prompt generator ───────────────────────────────────────────────
+
+    def _generate_prompt(self):
+        user_input = self.gen_input.text().strip()
+        if not user_input:
+            return
+        self.gen_btn.setEnabled(False)
+        self.gen_btn.setText("Generating…")
+        self.gen_status_lbl.hide()
+
+        self._generate_worker = PromptGeneratorWorker(user_input)
+        self._generate_worker.result.connect(self._on_generate_result)
+        self._generate_worker.error.connect(self._on_generate_error)
+        self._generate_worker.start()
+
+    def _on_generate_result(self, data: dict):
+        self.gen_btn.setEnabled(True)
+        self.gen_btn.setText("✦  Generate")
+
+        # Save form state so Decline can restore it
+        self._pre_generate_state = {
+            'nickname':      self.edit_nickname.text(),
+            'key':           self.edit_key.text(),
+            'text':          self.edit_text.toPlainText(),
+            'key_readonly':  self.edit_key.isReadOnly(),
+            'text_readonly': self.edit_text.isReadOnly(),
+            'editing_new':   self._editing_new_prompt,
+        }
+
+        # Populate fields with generated content
+        self._editing_new_prompt = True
+
+        self.edit_nickname.blockSignals(True)
+        self.edit_nickname.setText(data.get("nickname", ""))
+        self.edit_nickname.blockSignals(False)
+
+        key = re.sub(r'[^A-Z0-9_]', '', data.get("key", "GENERATED").upper())
+        self.edit_key.setReadOnly(False)
+        self.edit_key.setText(key)
+        self.edit_key.setReadOnly(True)
+
+        self.edit_text.setReadOnly(False)
+        self.edit_text.setPlainText(data.get("prompt", ""))
+
+        # Grey italic style signals the pending / unconfirmed state
+        _pending = "color: #888; font-style: italic; background: #f8f8f6;"
+        self.edit_nickname.setStyleSheet(_pending)
+        self.edit_key.setStyleSheet(_pending)
+        self.edit_text.setStyleSheet(_pending)
+
+        self.prompt_list_widget.clearSelection()
+        self.prompt_btn_row.hide()
+        self.accept_row_widget.show()
+
+    def _on_generate_error(self, message: str):
+        self.gen_btn.setEnabled(True)
+        self.gen_btn.setText("✦  Generate")
+        self.gen_status_lbl.setText(f"Error: {message}")
+        self.gen_status_lbl.setStyleSheet("color: red; font-size: 11px;")
+        self.gen_status_lbl.show()
+
+    def _accept_generated(self):
+        self._clear_pending_style()
+        self.accept_row_widget.hide()
+        self.prompt_btn_row.show()
+        self._save_prompt_edit()
+        self._pre_generate_state = None
+
+    def _decline_generated(self):
+        self._clear_pending_style()
+        self.accept_row_widget.hide()
+        self.prompt_btn_row.show()
+
+        if self._pre_generate_state:
+            s = self._pre_generate_state
+            self.edit_nickname.blockSignals(True)
+            self.edit_nickname.setText(s['nickname'])
+            self.edit_nickname.blockSignals(False)
+            self.edit_key.setText(s['key'])
+            self.edit_key.setReadOnly(s['key_readonly'])
+            self.edit_text.setPlainText(s['text'])
+            self.edit_text.setReadOnly(s['text_readonly'])
+            self._editing_new_prompt = s['editing_new']
+            self._pre_generate_state = None
+        else:
+            self._clear_editor()
+
+    def _clear_pending_style(self):
+        for w in (self.edit_nickname, self.edit_key, self.edit_text):
+            w.setStyleSheet("")
 
     # ── Run tab — input ───────────────────────────────────────────────────
 
