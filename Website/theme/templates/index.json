@@ -143,11 +143,11 @@
             "image_desktop_col_1": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM_f3e571fb-3585-49c8-a79c-51978fb10fad.jpg",
             "video_url_desktop_col_1": "",
             "video_url_mobile_col_1": "",
-            "heading": "Heading",
-            "description": "Text",
-            "button_text": "Button label",
-            "button_aria_label": "",
-            "button_link": "/",
+            "heading": "Our Story",
+            "description": "Learn about the origins of SVELDA and our mission to create a beautiful life for you and your companion.",
+            "button_text": "Read Our Story",
+            "button_aria_label": "About Svelda",
+            "button_link": "shopify://pages/about-us",
             "open_in_new_tab": false,
             "make_link_full_slide": false,
             "text_alignment_inside_block_desktop": "center",
@@ -174,11 +174,11 @@
             "image_desktop_col_1": "shopify://shop_images/Generated_Image_January_31_2026_-_3_46PM.jpg",
             "video_url_desktop_col_1": "",
             "video_url_mobile_col_1": "",
-            "heading": "Heading",
-            "description": "Text",
-            "button_text": "Button label",
-            "button_aria_label": "",
-            "button_link": "/",
+            "heading": "Craftsmanship",
+            "description": "Discover the meticulous process and premium natural materials behind every SVELDA creation.",
+            "button_text": "Explore Craftsmanship",
+            "button_aria_label": "Craftsmanship",
+            "button_link": "shopify://pages/craftsmanship",
             "open_in_new_tab": false,
             "make_link_full_slide": false,
             "text_alignment_inside_block_desktop": "center",
@@ -320,7 +320,7 @@
           "settings": {
             "image": "shopify://shop_images/Generated_Image_January_31_2026_-_4_15PM_1.jpg",
             "title": "Svelda One",
-            "text": "",
+            "text": "A minimalist approach to feeding.",
             "link_url": "shopify://products/bowl-1"
           }
         },
@@ -329,7 +329,7 @@
           "settings": {
             "image": "shopify://shop_images/Generated_Image_January_31_2026_-_4_15PM.jpg",
             "title": "Svelda Arc",
-            "text": "",
+            "text": "Elegant curves in natural stone.",
             "link_url": "shopify://products/bowl-1-copy"
           }
         },
@@ -338,7 +338,7 @@
           "settings": {
             "image": "shopify://shop_images/Generated_Image_January_31_2026_-_3_46PM.jpg",
             "title": "Svelda Janus",
-            "text": "",
+            "text": "The pinnacle of our marble collection.",
             "link_url": "shopify://products/svelda-janus-marble-bowl"
           }
         }
@@ -349,10 +349,10 @@
         "card_VE7jVT"
       ],
       "settings": {
-        "label": "",
-        "title": "",
-        "text": "",
-        "button_label": "",
+        "label": "FEATURED PRODUCTS",
+        "title": "The SVELDA Collection",
+        "text": "Explore our curated selection of premium objects, thoughtfully designed to bring harmony to your living space.",
+        "button_label": "Explore All Products",
         "button_link": "shopify://collections",
         "button_style": "secondary-border",
         "text_content_position": "top",
@@ -369,7 +369,6 @@
     },
     "image-with-text-1": {
       "type": "image-with-text",
-      "disabled": false,
       "settings": {
         "image_position": "right",
         "text_alignment": "left",
@@ -392,7 +391,6 @@
     },
     "image-with-text-2": {
       "type": "image-with-text",
-      "disabled": false,
       "settings": {
         "image_position": "left",
         "text_alignment": "left",
@@ -415,7 +413,6 @@
     },
     "image-with-text-3": {
       "type": "image-with-text",
-      "disabled": false,
       "settings": {
         "image_position": "right",
         "text_alignment": "left",
