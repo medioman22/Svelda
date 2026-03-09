@@ -1,0 +1,26 @@
+<script>
+	initAnimateObserver();
+
+	window.themeCore = window.themeCore || {};
+	window.themeCore.initAnimateObserver = initAnimateObserver;
+
+	function initAnimateObserver() {
+		const intersectionObserver = new IntersectionObserver(
+			(entries, observer) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						const element = entry.target;
+						element.classList.add("animated");
+
+						observer.unobserve(entry.target);
+					}
+				});
+			},
+			{rootMargin: "-70px", threshold: 0}
+		);
+
+		const elements = [...document.querySelectorAll(".js-animate")];
+
+		elements.forEach((element) => intersectionObserver.observe(element));
+	}
+</script>

@@ -1,0 +1,252 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Text
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign heading      		= section.settings.heading -%}
+{%- assign subheading   		= section.settings.subheading -%}
+{%- assign text_content 		= section.settings.text_content -%}
+{%- assign text_alignment 		= section.settings.text_alignment -%}
+
+{%- assign enable_read_more 	= section.settings.enable_read_more -%}
+{%- assign read_more_text 		= section.settings.read_more_text -%}
+{%- assign show_less_text 		= section.settings.show_less_text -%}
+{%- assign container 			= section.settings.container_width -%}
+
+{%- assign background_color     = section.settings.background_color -%}
+{%- assign text_color           = section.settings.text_color -%}
+{%- assign link_color           = section.settings.link_color -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- if heading != blank or text_content != blank -%}
+	{%- render 'adastra' with '/src/styles/text-section.scss' -%}
+
+	{%- style -%}
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_mobile -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+		}
+
+		@media screen and (min-width: 768px) {
+			#shopify-section-{{- section.id -}} {
+				padding-top: {{- section.settings.offset_top_desktop -}}px;
+				padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+			}
+		}
+	{%- endstyle -%}
+
+	{%- capture styles -%}
+		--text-align: {{ text_alignment }}; {{-  -}}
+		--container-width: {{ container_width }}; {{-  -}}
+		--background-color: {{ background_color }}; {{-  -}}
+		--text-color: {{ text_color }}; {{-  -}}
+		--link-color: {{ link_color }}; {{-  -}}
+	{%- endcapture -%}
+
+	<section class="text-section js-animate" style="{{ styles }}">
+		<div class="text-section__container">
+			{%- if heading != blank -%}
+				<h2 class="text-section__heading h2 need-animate tr-dur-0-8">
+					{{- heading -}}
+				</h2>
+			{%- endif -%}
+
+			{%- if subheading != blank -%}
+				<div class="text-section__subheading need-animate tr-dur-0-8 tr-del-0-4">{{- subheading -}}</div>
+			{%- endif -%}
+
+			{%- if text_content != blank -%}
+				<div id="text-section-content-{{ section.id }}"
+					 class="text-section__content need-animate tr-dur-0-8 tr-del-0-75 rte {% if enable_read_more %}text-section__content--cut-off{% endif %}"
+				>
+					{{- text_content -}}
+				</div>
+
+				{% if enable_read_more %}
+					<button class="text-section__read-more-button button-link focus-visible-outline need-animate js-rich-text-read-more"
+							data-read-more-text="{{ read_more_text }}"
+							data-show-less-text="{{ show_less_text }}"
+							aria-expanded="false"
+							aria-controls="text-section-content-{{ section.id }}"
+					>
+						<span data-text>{{- read_more_text -}}</span>
+						{%- render 'icons', icon: 'arrow-down' -%}
+					</button>
+				{% endif %}
+			{%- endif -%}
+		</div>
+	</section>
+
+	{%- render 'adastra' with '/src/scripts/section-richtext.js' -%}
+{%- endif -%}
+
+{%- schema -%}
+	{
+		"name": "Rich text",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"id": "heading",
+				"type": "text",
+				"label": "Heading",
+				"default": "Rich text"
+			},
+			{
+				"type": "textarea",
+				"id": "subheading",
+				"label": "Subheading",
+				"default": "Subheading"
+			},
+			{
+				"id": "text_content",
+				"type": "richtext",
+				"label": "Text",
+				"default": "<p>Add text to share customers about your store, products, brand.</p>"
+			},
+			{
+				"type": "select",
+				"id": "text_alignment",
+				"label": "Text alignment",
+				"options": [
+					{
+						"value": "left",
+						"label": "Left"
+					},
+					{
+						"value": "center",
+						"label": "Center"
+					},
+					{
+						"value": "right",
+						"label": "Right"
+					}
+				],
+				"default": "left"
+			},
+			{
+				"type": "checkbox",
+				"id": "enable_read_more",
+				"label": "Enable read more button",
+				"default": false,
+				"info": "Enable this feature to truncate text and show read more button."
+			},
+			{
+				"type": "text",
+				"id": "read_more_text",
+				"label": "Read more button label",
+				"default": "Show more"
+			},
+			{
+				"type": "text",
+				"id": "show_less_text",
+				"label": "Show less button label",
+				"default": "Show less"
+			},
+			{
+				"type": "header",
+				"content": "Colors"
+			},
+			{
+				"type": "color",
+				"id": "background_color",
+				"label": "Background"
+			},
+			{
+				"type": "color",
+				"id": "text_color",
+				"label": "Text"
+			},
+			{
+				"type": "color",
+				"id": "link_color",
+				"label": "Link"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "800px",
+						"label": "Small - 800px"
+					},
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 0
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 0
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 0
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 0
+			}
+		],
+		"presets": [
+			{
+				"name": "Rich text"
+			}
+		]
+	}
+{%- endschema -%}

@@ -1,0 +1,855 @@
+{% comment %}
+	------------------------------------------------------------------------------
+	Section: Article template
+	------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{% assign sidebar_show_date 			= settings.show_date %}
+{% assign sidebar_show_author 			= settings.show_author %}
+{% assign sidebar_show_comments_count 	= settings.show_comments_count %}
+{% assign show_author 					= section.settings.show_author %}
+{% assign show_date               		= section.settings.show_date %}
+{% assign show_comments_count 			= section.settings.show_comments_count %}
+{% assign author_image 					= article.metafields.custom.author_image %}
+{% assign image_desktop_height 			= section.settings.image_desktop_height %}
+{% assign image_mobile_height 			= section.settings.image_mobile_height %}
+{% assign social_heading 				= section.settings.social_heading %}
+{% assign enable_social 				= section.settings.enable_social %}
+{% assign related_articles_heading 		= section.settings.related_articles_heading %}
+{% assign enable_related_articles 		= section.settings.enable_related_articles %}
+{% assign related_products_heading 		= section.settings.related_products_heading %}
+{% assign product_list 					= section.settings.product_list %}
+
+{% assign is_show_author 				= false %}
+{% assign is_show_comments_count  		= false %}
+
+{% if show_author and article.author != blank %}
+	{% assign is_show_author = true %}
+{% endif %}
+
+{% if article.comments_enabled? and show_comments_count %}
+	{% assign is_show_comments_count = true %}
+{% endif %}
+
+{%- assign min = 1 -%}
+{%- assign max = 6 -%}
+{%- assign diff = max | minus: min -%}
+
+{% assign hidden_sidebar = false %}
+
+{% if enable_social or enable_related_articles or product_list != blank or section.blocks.size > 0 %}
+	{% assign hidden_sidebar = true %}
+{% endif %}
+
+{%- render 'adastra' with '/src/styles/article.scss' -%}
+
+{% capture style %}
+	--image-desktop-height: {{ image_desktop_height }}px;
+	--image-mobile-height: {{ image_mobile_height }}px;
+{% endcapture %}
+
+<div class="article" style="{{ style }}">
+	<section class="article-banner">
+		<div class="article-banner__heading-block js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}">
+			<h1 class="h2">
+				{{ article.title }}
+			</h1>
+
+			{% if is_show_author or show_date or is_show_comments_count %}
+				<div class="article-banner__subheading">
+					{% if is_show_author %}
+						<span class="article-banner__author">
+						{% if author_image != blank %}
+							<img class="article-banner__author-image"
+								 src="{{ author_image | image_url: width: 32, height: 32, crop: 'center' }}"
+								 srcset="{{ author_image | image_url: width: 32, height: 32, crop: 'center' }} 1x,
+										 {{ author_image | image_url: width: 64, height: 64, crop: 'center' }} 2x"
+								 alt="{{ author_image.alt | escape }}"
+								 loading="lazy"
+							>
+						{% endif %}
+
+						<span class="visually-hidden">{{- 'blogs.article.author' | t -}}</span>
+
+						{{ article.author }}
+					</span>
+					{% endif %}
+
+					{% if show_date %}
+						<span class="article-banner__date">
+						<span class="visually-hidden">{{ "blogs.article.published_at" | t }}</span>
+
+						{{ article.published_at | date: format: 'abbreviated_date' }}
+					</span>
+					{% endif %}
+
+					{% if is_show_comments_count %}
+						<span>
+						<span class="visually-hidden">
+							{{- 'blogs.article.comments_count' | t -}}
+						</span>
+
+						{{ article.comments_count }} {% if article.comments_count != 1 %}{{ 'blogs.article.many_comments' | t }}{% else %}{{ 'blogs.article.one_comment' | t }}{% endif %}
+					</span>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+
+		{% if article.image != blank %}
+			{% assign image_desktop_height_2x 	= image_desktop_height | times: 2 %}
+			{% assign image_mobile_height_2x 	= image_mobile_height | times: 2 %}
+
+			<div class="article-banner__image-container">
+				<picture>
+					<source
+						srcset="{{ article.image | image_url: width: 375, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 750, heaght: image_mobile_height_2x }} 2x"
+						media="(max-width: 375px)"
+						width="375"
+						height="{{ image_mobile_height }}"
+					/>
+
+					<source
+						srcset="{{ article.image | image_url: width: 420, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 840, heaght: image_mobile_height_2x }} 2x"
+						media="(max-width: 420px)"
+						width="420"
+						height="{{ image_mobile_height }}"
+					/>
+
+					<source
+						srcset="{{ article.image | image_url: width: 575, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 1150, heaght: image_mobile_height_2x }} 2x"
+						media="(max-width: 575px)"
+						width="575"
+						height="{{ image_mobile_height }}"
+					/>
+
+					<source
+						srcset="{{ article.image | image_url: width: 767, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 1534, heaght: image_mobile_height_2x }} 2x"
+						media="(max-width: 767px)"
+						width="767"
+						height="{{ image_mobile_height }}"
+					/>
+
+					<source
+						srcset="{{ article.image | image_url: width: 991, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 1982, height: image_mobile_height_2x }} 2x"
+						media="(max-width: 991px)"
+						width="991"
+						height="{{ image_mobile_height }}"
+					/>
+
+					<img
+						src="{{ article.image | img_url: "10px" }}"
+						srcset="{{ article.image | image_url: width: 1200, height: image_mobile_height }} 1x,
+								{{ article.image | image_url: width: 2400, height: image_desktop_height_2x }} 2x"
+						alt="{{ article.image.alt }}"
+						class="article-banner__image js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+						width="1200"
+						height="{{ image_desktop_height }}"
+					/>
+				</picture>
+			</div>
+		{% endif %}
+	</section>
+
+	<div class="article__content">
+		<div class="article__inner{% if hidden_sidebar == false %} article__inner--full-width{% endif %}">
+			<section class="article-main">
+				{% if article.content != blank %}
+					<div class="article-main__rte">
+						<div class="rte">
+							{{ article.content }}
+						</div>
+					</div>
+				{% endif %}
+
+				<div class="article-main__socials">
+					{% if is_show_author or show_date %}
+						<div class="article-main__socials-inner">
+							{% if is_show_author %}
+								<span class="article-main__socials-item">
+									{% if author_image != blank %}
+										<img class="article-main__author-image"
+											 src="{{ author_image | image_url: width: 32, height: 32, crop: 'center' }}"
+											 srcset="{{ author_image | image_url: width: 32, height: 32, crop: 'center' }} 1x,
+													 {{ author_image | image_url: width: 64, height: 64, crop: 'center' }} 2x"
+											 alt="{{ author_image.alt | escape }}"
+											 loading="lazy"
+										>
+									{% endif %}
+
+									<span class="visually-hidden">{{- 'blogs.article.author' | t -}}</span>
+
+									{{ article.author }}
+								</span>
+							{% endif %}
+
+							{% if show_date %}
+								<span class="article-main__socials-item">
+									<span class="visually-hidden">{{ "blogs.article.published_at" | t }}</span>
+
+									{{ article.published_at | date: format: 'abbreviated_date' }}
+								</span>
+							{% endif %}
+						</div>
+					{% endif %}
+
+					<input id="share-input-{{ section.id }}" class="is-hidden" type="text" value="{{ shop.url | append: article.url }}">
+
+					<button
+						class="button-social article-main__share focus-visible-outline js-social-share"
+						data-share-title="{{ article.title | escape }}"
+						data-share-url="{{ shop.url | append: article.url }}"
+						data-input-fallback="share-input-{{ section.id }}"
+						aria-label="{{ 'general.social.share_button' | t }}"
+					>
+						{% render 'icons', icon: "share-stroke" %}
+
+						<span class="tooltip js-share-tooltip">{{ 'general.social.share_success' | t }}</span>
+
+						<span class="article-main__share-text">{{ 'general.social.share_button' | t }}</span>
+					</button>
+				</div>
+			</section>
+
+			{% render 'comment-form'%}
+		</div>
+
+		{% if hidden_sidebar %}
+			<div class="article-sidebar">
+				{% if enable_social %}
+					<div class="article-sidebar__box-social">
+						{% if social_heading != blank %}
+							<h4 class="article-sidebar__title">{{ social_heading }}</h4>
+						{% endif %}
+
+						<div class="article-sidebar__socials">
+							<a href="#"
+							   class="button-social button-social--share js-social-share"
+							   data-share-title="{{ product.title | escape }}"
+							   data-share-url="{{ shop.url | append: product.url }}"
+							   data-input-fallback="share-input-{{ section_id }}"
+							   aria-label="{{ 'general.social.share_button' | t }}"
+							>
+								{% render 'icons-social', icon: "share" %}
+
+								<span class="tooltip js-share-tooltip">{{ 'general.social.share_success' | t }}</span>
+								<span class="article-main__share-text">{{ 'general.social.share_button' | t }}</span>
+							</a>
+
+							{% render 'share-button', social: "facebook", product: article %}
+							{% render 'share-button', social: "twitter", product: article %}
+							{% render 'share-button', social: "pinterest", product: article %}
+						</div>
+					</div>
+				{% endif %}
+
+				{% if enable_related_articles %}
+					<div class="article-sidebar__articles">
+						{% if related_articles_heading != blank %}
+							<h4 class="article-sidebar__title">
+								{{ related_articles_heading }}
+							</h4>
+						{% endif %}
+
+						{% assign limit_articles = 3 %}
+
+						{% for recent_articles in blog.articles limit: limit_articles %}
+							{% if recent_articles.id == article.id %}
+								{% assign limit_articles = 4 %}
+							{% endif %}
+						{% endfor %}
+
+						{% for recent_articles in blog.articles limit: limit_articles %}
+							{% if recent_articles.id != article.id %}
+								{% assign image 				= recent_articles.image %}
+								{% assign is_sidebar_show_author 			= false %}
+								{% assign is_sidebar_show_comments_count 	= false %}
+
+								{% if sidebar_show_author and recent_articles.author != blank %}
+									{% assign is_sidebar_show_author = true %}
+								{% endif %}
+
+								{% if sidebar_show_comments_count and recent_articles.comments_enabled? %}
+									{% assign is_sidebar_show_comments_count = true %}
+								{% endif %}
+
+								<div class="article-sidebar__article">
+									<div class="article-sidebar__article-box-image">
+										<a
+											class="article-sidebar__article-image-link focus-visible-outline lazy"
+											href="{{ recent_articles.url }}"
+										>
+											{% if image != blank %}
+												<img
+													class="article-sidebar__article-image"
+													src="{{ image | image_url: width: 10, height: 10 }}"
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-src="{{ image | image_url: width: 120, height: 120 }}"
+													data-srcset="{{ image | image_url: width: 120, height: 120 }} 1x,
+															 	 {{ image | image_url: width: 240, height: 240 }} 2x"
+													alt="{{ image.alt | escape }}"
+													width="120"
+													height="120"
+												>
+											{% else %}
+												{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+												{%- assign placeholder_svg_name = 'collection-' | append: random_number -%}
+
+												{{- placeholder_svg_name | placeholder_svg_tag: 'article-sidebar__article-image article-sidebar__article-image--placeholder' -}}
+											{% endif %}
+										</a>
+									</div>
+									<div class="article-sidebar__article-content">
+										{% if sidebar_show_date or is_sidebar_show_author or is_sidebar_show_comments_count %}
+											<div class="article-sidebar__article-info">
+												{% if sidebar_show_date %}
+													<span class="article-sidebar__article-info-item">
+														<span class="visually-hidden">{{ "blogs.article.published_at" | t }}</span>
+
+														{{ recent_articles.published_at | time_tag: format: 'date' }}
+													</span>
+												{% endif %}
+
+												{% if is_sidebar_show_author  %}
+													<div class="article-sidebar__article-info-item">
+														{{ recent_articles.author }}
+													</div>
+												{% endif %}
+
+												{% if is_sidebar_show_comments_count %}
+													<span class="article-sidebar__article-info-item">
+														<span class="visually-hidden">
+															{{- 'blogs.article.comments_count' | t -}}
+														</span>
+
+														{{ recent_articles.comments_count }} {% if recent_articles.comments_count != 1 %}{{ 'blogs.article.many_comments' | t }}{% else %}{{ 'blogs.article.one_comment' | t }}{% endif %}
+													</span>
+												{% endif %}
+											</div>
+										{% endif %}
+
+										<a
+											class="article-sidebar__article-title-link focus-visible-outline"
+											href="{{ recent_articles.url }}"
+										>
+											{{ recent_articles.title }}
+										</a>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				{% endif %}
+
+				{% if product_list != blank %}
+					<div class="article-sidebar__products">
+						{% if related_products_heading != blank %}
+							<h4 class="article-sidebar__title">
+								{{ related_products_heading }}
+							</h4>
+						{% endif %}
+
+						{% for product in product_list %}
+							{% assign image = product.featured_image %}
+
+							<div class="article-sidebar__product">
+								<div class="article-sidebar__product-box-image">
+									<a href="{{ product.url }}" class="article-sidebar__product-image-link focus-visible-outline lazy">
+										{% if image != blank %}
+											<img
+												class="article-sidebar__product-image"
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: 120, height: 120 }}"
+												data-srcset="{{ image | image_url: width: 120, height: 120 }} 1x,
+														 	 {{ image | image_url: width: 240, height: 240 }} 2x"
+												alt="{{ image.alt }}"
+												width="120"
+												height="120"
+											>
+										{% else %}
+											{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+											{%- assign placeholder_svg_name = 'product-' | append: random_number -%}
+
+											{{- placeholder_svg_name | placeholder_svg_tag: 'article-sidebar__product-image article-sidebar__product-image--placeholder' -}}
+										{% endif %}
+									</a>
+								</div>
+
+								<div class="article-sidebar__product-content">
+									<a href="{{ product.url }}" class="article-sidebar__product-title-link focus-visible-outline">{{ product.title }}</a>
+
+									{% render 'price', product: product %}
+
+									<button
+										class="article-sidebar__product-button button button--secondary-border js-add-to-cart"
+										data-product-handle="{{- product.handle -}}"
+										data-min-quantity="{{- product.selected_or_first_available_variant.quantity_rule.min -}}"
+										{%- if product.has_only_default_variant == false -%} aria-label="{{- 'products.best_sellers.open_quick_view' | t | escape -}}" {%- else -%} aria-label="{{- 'products.best_sellers.add_to_cart' | t | escape -}}"  {%- endif -%}
+										{%- if product.has_only_default_variant or product.variants.size == 1 -%} data-variant-id="{{- product.selected_or_first_available_variant.id -}}" {%- endif -%}
+									>
+										{{ 'products.product.add_to_cart' | t }}
+									</button>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+
+				{% if section.blocks.size > 0 %}
+					<div class="article-sidebar__banners">
+						{% for block in section.blocks %}
+							{% assign image 			= block.settings.image %}
+							{% assign title 			= block.settings.title %}
+							{% assign text 				= block.settings.text %}
+							{% assign button_label 		= block.settings.button_label %}
+							{% assign button_link 		= block.settings.button_link %}
+							{% assign button_style 		= block.settings.button_style %}
+							{% assign overlay_color 	= block.settings.overlay_color %}
+							{% assign text_color 		= block.settings.text_color %}
+
+							{% capture block_style %}
+								--overlay-color: {{ overlay_color }};
+								--text-color: {{ text_color }};
+							{% endcapture %}
+
+							<div class="article-sidebar__banner" style="{{ block_style }}">
+								<div class="article-sidebar__banner-box-image {% if image == blank %} article-sidebar__banner-box-image--no-image{% endif %}">
+									{% if image != blank %}
+										<picture class="lazy">
+											<source
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: 388, height: 385 }}"
+												data-srcset="{{ image | image_url: width: 388, height: 385 }} 1x,
+														 	 {{ image | image_url: width: 776, height: 770 }} 2x"
+												media="(max-width: 420px)"
+												width="388"
+												height="385"
+											>
+
+											<source
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: 543, height: 538 }}"
+												data-srcset="{{ image | image_url: width: 543, height: 538 }} 1x,
+														 	 {{ image | image_url: width: 1086, height: 1076 }} 2x"
+												media="(max-width: 575px)"
+												width="543"
+												height="538"
+											>
+
+											<source
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: 472, height: 467 }}"
+												data-srcset="{{ image | image_url: width: 472, height: 467 }} 1x,
+														 	 {{ image | image_url: width: 944, height: 934 }} 2x"
+												media="(max-width: 991px)"
+												width="472"
+												height="467"
+											>
+
+											<img
+												class="article-sidebar__banner-image"
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: 360, height: 380 }}"
+												data-srcset="{{ image | image_url: width: 360, height: 380 }} 1x,
+															 {{ image | image_url: width: 720, height: 760 }} 2x"
+												alt="{{ image.alt | escape }}"
+												width="360"
+												height="380"
+											>
+										</picture>
+									{% endif %}
+								</div>
+
+								{% if title != blank or text != blank or button_label != blank %}
+									<div class="article-sidebar__banner-inner">
+										{% if title != blank %}
+											<div class="article-sidebar__banner-title">
+												{{ title }}
+											</div>
+										{% endif %}
+
+										{% if text != blank %}
+											<div class="article-sidebar__banner-text">
+												{{ text }}
+											</div>
+										{% endif %}
+
+										{% if button_label != blank %}
+											<a href="{{ button_link }}" class="article-sidebar__banner-button button button--{{ button_style }}">
+												{{ button_label }}
+											</a>
+										{% endif %}
+									</div>
+								{% endif %}
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ request.origin | append: page.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}
+      "description": {{ article.excerpt | strip_html | json }},
+    {% endif %}
+    {% if article.image %}
+      "image": [
+        {{ article | image_url: width: article.image.width | prepend: "https:" | json }}
+      ],
+    {% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    }
+  }
+</script>
+
+{% schema %}
+	{
+		"name": "Article main",
+		"max_blocks": 3,
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "show_author",
+				"default": true,
+				"label": "Show author"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_date",
+				"default": true,
+				"label": "Show date"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_comments_count",
+				"default": true,
+				"label": "Show comments count"
+			},
+			{
+				"type": "select",
+				"id": "image_desktop_height",
+				"label": "Image desktop height",
+				"options": [
+					{
+						"value": "200",
+						"label": "200"
+					},
+					{
+						"value": "250",
+						"label": "250"
+					},
+					{
+						"value": "300",
+						"label": "300"
+					},
+					{
+						"value": "350",
+						"label": "350"
+					},
+					{
+						"value": "400",
+						"label": "400"
+					},
+					{
+						"value": "450",
+						"label": "450"
+					},
+					{
+						"value": "500",
+						"label": "500"
+					},
+					{
+						"value": "550",
+						"label": "550"
+					},
+					{
+						"value": "600",
+						"label": "600"
+					},
+					{
+						"value": "650",
+						"label": "650"
+					},
+					{
+						"value": "700",
+						"label": "700"
+					},
+					{
+						"value": "750",
+						"label": "750"
+					},
+					{
+						"value": "800",
+						"label": "800"
+					}
+				],
+				"default": "500"
+			},
+			{
+				"type": "select",
+				"id": "image_mobile_height",
+				"label": "Image mobile height",
+				"options": [
+					{
+						"value": "200",
+						"label": "200"
+					},
+					{
+						"value": "250",
+						"label": "250"
+					},
+					{
+						"value": "300",
+						"label": "300"
+					},
+					{
+						"value": "350",
+						"label": "350"
+					},
+					{
+						"value": "400",
+						"label": "400"
+					},
+					{
+						"value": "450",
+						"label": "450"
+					},
+					{
+						"value": "500",
+						"label": "500"
+					},
+					{
+						"value": "550",
+						"label": "550"
+					},
+					{
+						"value": "600",
+						"label": "600"
+					},
+					{
+						"value": "650",
+						"label": "650"
+					},
+					{
+						"value": "700",
+						"label": "700"
+					},
+					{
+						"value": "750",
+						"label": "750"
+					},
+					{
+						"value": "800",
+						"label": "800"
+					}
+				],
+				"default": "400"
+			},
+			{
+				"type": "header",
+				"content": "Sidebar"
+			},
+			{
+				"type": "text",
+				"id": "social_heading",
+				"label": "Social heading",
+				"default": "Share This Articles"
+			},
+			{
+				"type": "checkbox",
+				"id": "enable_social",
+				"label": "Enable social",
+				"default": true
+			},
+			{
+				"type": "text",
+				"id": "related_articles_heading",
+				"label": "Related articles heading",
+				"default": "Recent Articles"
+			},
+			{
+				"type": "checkbox",
+				"id": "enable_related_articles",
+				"label": "Enable related articles",
+				"default": true
+			},
+			{
+				"type": "text",
+				"id": "related_products_heading",
+				"label": "Related products heading",
+				"default": "Related Products"
+			},
+			{
+				"type": "product_list",
+				"id": "product_list",
+				"label": "Products",
+				"limit": 3
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"name": "Sidebar banner",
+				"type": "sidebar_banner",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "image",
+						"label": "Image"
+					},
+					{
+						"type": "text",
+						"id": "title",
+						"label": "Heading",
+						"default": "Banner Name"
+					},
+					{
+						"type": "text",
+						"id": "text",
+						"label": "Text",
+						"default": "Text"
+					},
+					{
+						"type": "text",
+						"id": "button_label",
+						"label": "Button label",
+						"default": "Shop Now"
+					},
+					{
+						"type": "url",
+						"id": "button_link",
+						"label": "Button link",
+						"default": "/"
+					},
+					{
+						"type": "select",
+						"id": "button_style",
+						"label": "Button style",
+						"options": [
+							{
+								"value": "primary",
+								"label": "Primary"
+							},
+							{
+								"value": "secondary",
+								"label": "Secondary"
+							},
+							{
+								"value": "primary-border",
+								"label": "Primary with border"
+							},
+							{
+								"value": "secondary-border",
+								"label": "Secondary with border"
+							}
+						],
+						"default": "primary"
+					},
+					{
+						"type": "color_background",
+						"id": "overlay_color",
+						"label": "Overlay color"
+					},
+					{
+						"type": "color",
+						"id": "text_color",
+						"label": "Text color",
+						"default": "#fff"
+					},
+				]
+			}
+		]
+	}
+{% endschema %}

@@ -1,0 +1,680 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Newsletter
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/newsletter.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign layout = section.settings.layout -%}
+
+{% if layout == 'one_column_img_top' %}
+	{% assign layout_class = 'newsletter__wrapper--img-top' %}
+{% elsif layout == 'one_column_bg_img' %}
+	{% assign layout_class = 'newsletter__wrapper--bg-img' %}
+{% elsif layout == 'two_columns' %}
+	{% assign layout_class = 'newsletter__wrapper--two-columns' %}
+{% elsif layout == 'three_columns' %}
+	{% assign layout_class = 'newsletter__wrapper--three-columns' %}
+{% endif %}
+
+{%- capture is_two_column -%}
+	{%- if layout == "two_columns" -%}
+		true
+	{%- else -%}
+		false
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- assign heading         			= section.settings.heading -%}
+{%- assign subheading      			= section.settings.subheading -%}
+{%- assign text            			= section.settings.text -%}
+{%- assign success_message 			= section.settings.success_message -%}
+{%- assign email_placeholder 		= section.settings.email_placeholder -%}
+{%- assign button_label 			= section.settings.button_label -%}
+{%- assign button_style 			= section.settings.button_style -%}
+
+{%- assign image_desktop  			= section.settings.image_desktop -%}
+{%- assign image_mobile   			= section.settings.image_mobile | default: image_desktop -%}
+{%- assign image_second_desktop   	= section.settings.image_second_desktop | default: image_desktop -%}
+{%- assign image_second_mobile   	= section.settings.image_second_mobile | default: image_second_desktop -%}
+{%- assign image_position 			= section.settings.image_position -%}
+
+{%- assign color_background   	= section.settings.section_background -%}
+{%- assign text_color         	= section.settings.text_color -%}
+{%- assign input_background   	= section.settings.input_background -%}
+{%- assign input_color   		= section.settings.input_color -%}
+{%- assign image_overlay      	= section.settings.image_overlay -%}
+{%- assign container 			= section.settings.container_width -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- capture section_has_images -%}
+	{%- if image_desktop != blank -%}
+		true
+	{%- else -%}
+		false
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture section_colors -%}
+	--container-width: {{- container_width -}}; {{-  -}}
+	--newsletter-background-color: {{- color_background -}}; {{-  -}}
+	--newsletter-text-color: {{- text_color -}}; {{-  -}}
+	--newsletter-input-background: {{- input_background -}}; {{-  -}}
+	--newsletter-input-color: {{- input_color -}}; {{-  -}}
+	--image-overlay: {{- image_overlay -}}; {{-  -}}
+{%- endcapture -%}
+
+{%- capture app_block -%}
+	{%- for block in section.blocks -%}
+		{%- case block.type -%}
+		{%- when '@app' -%}
+			{% render block %}
+		{%- endcase -%}
+	{%- endfor -%}
+{%- endcapture -%}
+
+{%- capture custom_liquid_block  -%}
+	{%- for block in section.blocks -%}
+		{%- case block.type -%}
+			{%- when 'custom_liquid' -%}
+				{{ block.settings.custom_liquid }}
+		{%- endcase -%}
+	{%- endfor -%}
+{%- endcapture -%}
+
+{%- capture newsletter_image -%}
+	{%- if section_has_images == 'true' or layout == 'three_columns' -%}
+		{%- assign main_image_size = '960x' -%}
+		{%- assign main_image_size_2x = '1920x' -%}
+
+		{%- unless is_two_column == 'true' -%}
+			{%- assign main_image_size = '1920x' -%}
+			{%- assign main_image_size_2x = '3840x' -%}
+		{%- endunless -%}
+
+		{%- capture img_focal -%}
+			--img-desktop-pos: {{ image_desktop.presentation.focal_point }}; --img-mob-pos: {{ image_mobile.presentation.focal_point }};
+		{%- endcapture -%}
+
+		<div class="newsletter__image-wrapper">
+			{%- if image_desktop != blank -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ image_mobile | img_url: '380x' }} 1x, {{ image_mobile | img_url: '760x' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+						media="(max-width: 380px)"
+					/>
+
+					<source
+						data-srcset="{{ image_mobile | img_url: '480x' }} 1x, {{ image_mobile | img_url: '960x' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+						media="(max-width: 480px)"
+					/>
+
+					<source
+						data-srcset="{{ image_mobile | img_url: '575x' }} 1x, {{ image_mobile | img_url: '1150x' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+						media="(max-width: 575px)"
+					/>
+
+					<source
+						data-srcset="{{ image_desktop | img_url: '767x' }} 1x, {{ image_desktop | img_url: '1534x' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 767px)"
+					/>
+
+					<source
+						data-srcset="{{ image_desktop | img_url: '991x' }} 1x, {{ image_desktop | img_url: '1982x' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 991px)"
+					/>
+
+					{%- unless is_two_column == 'true' -%}
+						<source
+							data-srcset="{{ image_desktop | img_url: '1200x' }} 1x, {{ image_desktop | img_url: '2400x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1199px)"
+						/>
+
+						<source
+							data-srcset="{{ image_desktop | img_url: '1500x' }} 1x, {{ image_desktop | img_url: '3000x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1500px)"
+						/>
+
+						<source
+							data-srcset="{{ image_desktop | img_url: '1680x' }} 1x, {{ image_desktop | img_url: '3360x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1680px)"
+						/>
+					{%- else -%}
+						<source
+							data-srcset="{{ image_desktop | img_url: '600x' }} 1x, {{ image_desktop | img_url: '1200x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1199px)"
+						/>
+
+						<source
+							data-srcset="{{ image_desktop | img_url: '750x' }} 1x, {{ image_desktop | img_url: '1500x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1500px)"
+						/>
+
+						<source
+							data-srcset="{{ image_desktop | img_url: '840x' }} 1x, {{ image_desktop | img_url: '1680x' }} 2x"
+							srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+							media="(max-width: 1680px)"
+						/>
+					{%- endunless -%}
+
+					<img
+						class="newsletter__image"
+						srcset="{{- image_desktop | img_url: "10x" -}}"
+						data-srcset="{{ image_desktop | img_url: main_image_size }} 1x, {{ image_desktop | img_url: main_image_size_2x }} 2x"
+						src="{{- image_desktop | img_url: "10x" -}}"
+						data-src="{{- image_desktop | img_url: main_image_size -}}"
+						alt="{{- image_desktop.alt -}}"
+						width="960"
+						height="640"
+						style="{{ img_focal }}"
+					/>
+				</picture>
+			{%- else -%}
+				{{- 'hero-apparel-1' | placeholder_svg_tag: "newsletter__image" -}}
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture newsletter_image_2 -%}
+	{%- capture img_focal_second -%}
+		--img-desktop-pos: {{ image_second_desktop.presentation.focal_point }}; --img-mob-pos: {{ image_second_mobile.presentation.focal_point }};
+	{%- endcapture -%}
+
+	<div class="newsletter__image-wrapper">
+		{%- if image_second_desktop != blank -%}
+			<picture class="lazy">
+				<source
+					data-srcset="{{ image_second_mobile | img_url: '380x' }} 1x, {{ image_second_mobile | img_url: '760x' }} 2x"
+					srcset="{{ image_second_mobile | img_url: '10x' }} 1x, {{ image_second_mobile | img_url: '10x' }} 2x"
+					media="(max-width: 380px)"
+				/>
+
+				<source
+					data-srcset="{{ image_second_mobile | img_url: '480x' }} 1x, {{ image_second_mobile | img_url: '960x' }} 2x"
+					srcset="{{ image_second_mobile | img_url: '10x' }} 1x, {{ image_second_mobile | img_url: '10x' }} 2x"
+					media="(max-width: 480px)"
+				/>
+
+				<source
+					data-srcset="{{ image_second_mobile | img_url: '575x' }} 1x, {{ image_second_mobile | img_url: '1150x' }} 2x"
+					srcset="{{ image_second_mobile | img_url: '10x' }} 1x, {{ image_second_mobile | img_url: '10x' }} 2x"
+					media="(max-width: 575px)"
+				/>
+
+				<source
+					data-srcset="{{ image_second_desktop | img_url: '767x' }} 1x, {{ image_second_desktop | img_url: '1534x' }} 2x"
+					srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+					media="(max-width: 767px)"
+				/>
+
+				<source
+					data-srcset="{{ image_second_desktop | img_url: '991x' }} 1x, {{ image_second_desktop | img_url: '1982x' }} 2x"
+					srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+					media="(max-width: 991px)"
+				/>
+
+				{%- unless is_two_column == 'true' -%}
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '1200x' }} 1x, {{ image_second_desktop | img_url: '2400x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1199px)"
+					/>
+
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '1500x' }} 1x, {{ image_second_desktop | img_url: '3000x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1500px)"
+					/>
+
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '1680x' }} 1x, {{ image_second_desktop | img_url: '3360x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1680px)"
+					/>
+				{%- else -%}
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '600x' }} 1x, {{ image_second_desktop | img_url: '1200x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1199px)"
+					/>
+
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '750x' }} 1x, {{ image_second_desktop | img_url: '1500x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1500px)"
+					/>
+
+					<source
+						data-srcset="{{ image_second_desktop | img_url: '840x' }} 1x, {{ image_second_desktop | img_url: '1680x' }} 2x"
+						srcset="{{ image_second_desktop | img_url: '10x' }} 1x, {{ image_second_desktop | img_url: '10x' }} 2x"
+						media="(max-width: 1680px)"
+					/>
+				{%- endunless -%}
+
+				<img
+					class="newsletter__image"
+					srcset="{{- image_second_desktop | img_url: "10x" -}}"
+					data-srcset="{{ image_second_desktop | img_url: main_image_size }} 1x, {{ image_second_desktop | img_url: main_image_size_2x }} 2x"
+					src="{{- image_second_desktop | img_url: "10x" -}}"
+					data-src="{{- image_second_desktop | img_url: main_image_size -}}"
+					alt="{{- image_second_desktop.alt -}}"
+					width="960"
+					height="640"
+					style="{{ img_focal_second }}"
+				/>
+			</picture>
+		{%- else -%}
+			{{- 'hero-apparel-2' | placeholder_svg_tag: "newsletter__image" -}}
+		{%- endif -%}
+	</div>
+{%- endcapture -%}
+
+{%- capture newsletter_form -%}
+	{% if custom_liquid_block != blank %}
+		{{ custom_liquid_block }}
+	{% endif %}
+	{%- if app_block != blank -%}
+		{{- app_block -}}
+	{%- else -%}
+		{%- assign default_label_text = 'newsletter.label' | t -%}
+		{%- assign default_btn_text = 'newsletter.button_label' | t  -%}
+		{%- assign default_success_text = 'newsletter.success' | t -%}
+		{%- assign id = 'ContactForm--' | append: section.id -%}
+
+		{% form 'customer', class: 'newsletter-form js-newsletter-form', id: id %}
+			<input type="hidden" name="contact[tags]" value="newsletter" />
+
+			<div class="newsletter-form__field">
+				<label class="visually-hidden" for="NewsletterForm--{{- section.id -}}">
+					{{- email_placeholder | default: default_label_text -}}
+				</label>
+
+				<input
+					id="NewsletterForm--{{- section.id -}}"
+					type="email"
+					name="contact[email]"
+					class="newsletter-form__input js-newsletter-input"
+					value="{{- form.email -}}"
+					aria-required="true"
+					autocapitalize="off"
+					autocomplete="email"
+					{% if form.errors %}
+						aria-invalid="true"
+						aria-describedby="Newsletter-error--{{- section.id -}}"
+					{% elsif form.posted_successfully? %}
+						aria-describedby="Newsletter-success--{{- section.id -}}"
+					{% endif %}
+					placeholder="{{- email_placeholder | default: default_label_text -}}"
+					required
+				/>
+
+				<button
+					type="submit"
+					class="button button--{{ button_style }} newsletter-form__button"
+					name="commit"
+				>
+					{{ button_label}}
+				</button>
+			</div>
+
+			{%- if form.errors -%}
+				<small class="newsletter-form__message newsletter-form__message--error" id="Newsletter-error--{{- section.id -}}">
+					{% render 'icons' with icon: 'close' %}
+
+					{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+				</small>
+			{%- endif -%}
+
+			{%- if form.posted_successfully? -%}
+				<h3
+				  class="newsletter-form__message newsletter-form__message--success"
+				  id="Newsletter-success--{{- section.id -}}"
+				  tabindex="-1"
+				>
+					{% render 'icons' with icon: 'check' %}
+
+					{{- success_message | default: default_success_text -}}
+				</h3>
+			{%- endif -%}
+		{% endform %}
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture section_wrapper_classes -%}
+	newsletter__wrapper {{ layout_class }} {% if section_has_images == 'true' and is_two_column == 'true' %} newsletter__wrapper--image-{{- image_position -}}{% endif %}
+{%- endcapture -%}
+
+<section class="newsletter js-newsletter {{ is_two_column }}" style="{{- section_colors -}}">
+	<div class="{{- section_wrapper_classes -}}">
+		{{- newsletter_image -}}
+
+		<div class="newsletter__content">
+			{%- if heading != blank -%}
+				<h2 class="newsletter__heading">
+					{{- heading -}}
+				</h2>
+			{%- endif -%}
+
+			{%- if subheading != blank -%}
+				<div class="newsletter__subheading h2">
+					{{- subheading -}}
+				</div>
+			{%- endif -%}
+
+			{%- if text != blank -%}
+				<div class="newsletter__text rte">
+					{{- text -}}
+				</div>
+			{%- endif -%}
+
+			<div class="newsletter__form-wrapper">
+				{{- newsletter_form -}}
+			</div>
+		</div>
+
+		{%- if layout == 'three_columns' -%}
+			{{- newsletter_image_2 -}}
+		{%- endif -%}
+	</div>
+
+	{%- render 'adastra' with '/src/scripts/section-newsletter.js' -%}
+</section>
+
+{%- schema -%}
+	{
+		"name": "Newsletter",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "select",
+				"id": "layout",
+				"label": "Layout",
+				"options": [
+					{
+						"value": "one_column_img_top",
+						"label": "One column image above content"
+					},
+					{
+						"value": "one_column_bg_img",
+						"label": "One column background image"
+					},
+					{
+						"value": "two_columns",
+						"label": "Two columns"
+					},
+					{
+						"value": "three_columns",
+						"label": "Three columns"
+					}
+				],
+				"default": "three_columns"
+			},
+			{
+				"type": "text",
+				"id": "heading",
+				"label": "Heading"
+			},
+			{
+				"type": "textarea",
+				"id": "subheading",
+				"label": "Subheading"
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text",
+				"default": "<p>Be the first to know about new collections and exclusive offers</p>"
+			},
+			{
+				"type": "textarea",
+				"id": "success_message",
+				"label": "Success message",
+				"default": "Thanks for subscribing",
+				"info": "The message that is displayed to the user after submitting the form. Only works with standard form"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_desktop",
+				"label": "Image first desktop"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_mobile",
+				"label": "Image first mobile"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_second_desktop",
+				"label": "Image second desktop",
+				"info": "Used with ‘Three columns’ layout"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_second_mobile",
+				"label": "Image second mobile",
+				"info": "Used with ‘Three columns’ layout"
+			},
+			{
+				"type": "select",
+				"id": "image_position",
+				"label": "Image position",
+				"options": [
+					{
+						"value": "left",
+						"label": "Left"
+					},
+					{
+						"value": "right",
+						"label": "Right"
+					}
+				],
+				"default": "left",
+				"info": "This option only works with the 'Two columns' layout"
+			},
+			{
+				"type": "header",
+				"content": "Form"
+			},
+			{
+				"type": "text",
+				"id": "email_placeholder",
+				"label": "Email placeholder",
+				"default": "Your email"
+			},
+			{
+				"type": "text",
+				"id": "button_label",
+				"label": "Button label",
+				"default": "Subscribe"
+			},
+			{
+				"id": "button_style",
+				"type": "select",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "secondary"
+			},
+			{
+				"type": "header",
+				"content": "Colors"
+			},
+			{
+				"type": "color_background",
+				"id": "section_background",
+				"label": "Section background",
+				"default": "#FFD875"
+			},
+			{
+				"type": "color",
+				"id": "text_color",
+				"label": "Text",
+				"default": "#000"
+			},
+			{
+				"type": "color",
+				"id": "input_background",
+				"label": "Input background",
+				"default": "#fff"
+			},
+			{
+				"type": "color",
+				"id": "input_color",
+				"label": "Input color",
+				"default": "#000"
+			},
+			{
+				"type": "color_background",
+				"id": "image_overlay",
+				"label": "Image overlay"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"type": "@app"
+			},
+			{
+				"name": "Custom liquid",
+				"type": "custom_liquid",
+				"settings": [
+					{
+					"type": "liquid",
+					"id": "custom_liquid",
+					"label": "Custom liquid",
+					"info": "Simple custom liquid"
+				}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Newsletter",
+				"settings": {
+					"heading": "Newsletter",
+					"subheading": "Subheading",
+					"success_message": "Thanks for subscribing",
+					"text": "<p>Be the first to know about new collections and exclusive offers</p>",
+					"email_placeholder": "Your email"
+				}
+			}
+		]
+	}
+{%- endschema -%}

@@ -1,0 +1,518 @@
+{%- render 'adastra' with '/src/styles/store-location.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign reverse_content				= section.settings.reverse_content -%}
+{%- assign title						= section.settings.title -%}
+{%- assign subtitle						= section.settings.subtitle -%}
+{%- assign newsletter_input_placeholder = section.settings.newsletter_input_placeholder -%}
+{%- assign newsletter_button_label 		= section.settings.newsletter_button_label -%}
+{%- assign newsletter_button_style		= section.settings.newsletter_button_style -%}
+{%- assign store_image 					= section.settings.store_image -%}
+{%- assign google_map_api_key 			= section.settings.google_map_api_key -%}
+{%- assign map_query 					= section.settings.map_query -%}
+{%- assign container 					= section.settings.container_width -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+<section
+	class="store-location{% if reverse_content %} store-location--reverse{% endif %} js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+	style="--container-width: {{- container_width -}};"
+>
+	<div class="store-location__media">
+		{%- capture img_focal -%}
+			--img-desktop-pos: {{- store_image.presentation.focal_point -}};
+		{%- endcapture -%}
+
+		<div class="store-location__media-wrapper need-animate tr-dur-1 tr-del-0-5">
+			{%- if google_map_api_key != blank and map_query != blank -%}
+				<iframe
+					class="store-location__map"
+					width="100%"
+					height="100%"
+					frameborder="0"
+					style="border:0"
+					referrerpolicy="no-referrer-when-downgrade"
+					src="https://www.google.com/maps/embed/v1/place?key={{- google_map_api_key -}}&q={{- map_query -}}"
+					allowfullscreen>
+				</iframe>
+			{%- elsif store_image != blank -%}
+				{%- assign enable_lazy_load = true -%}
+
+				{% if section.index == 1 %}
+					{%- assign enable_lazy_load = false -%}
+				{% endif %}
+
+				{% if enable_lazy_load %}
+					<picture class="lazy">
+						<source data-srcset="{{ store_image | image_url: width: 368, height: 368 }} 1x,
+											{{ store_image | image_url: width: 736, height: 736 }} 2x"
+								srcset="{{ store_image | image_url: width: 10, height: 10 }}"
+								media="(max-width: 400px)">
+
+						<source data-srcset="{{ store_image | image_url: width: 388, height: 388 }} 1x,
+											{{ store_image | image_url: width: 776, height: 776 }} 2x"
+								srcset="{{ store_image | image_url: width: 10, height: 10 }}"
+								media="(max-width: 420px)">
+
+						<source data-srcset="{{ store_image | image_url: width: 735, height: 735 }} 1x,
+											{{ store_image | image_url: width: 1470, height: 1470 }} 2x"
+								srcset="{{ store_image | image_url: width: 10, height: 10 }}"
+								media="(max-width: 767px)">
+
+						<source data-srcset="{{ store_image | image_url: width: 959, height: 959 }} 1x,
+											{{ store_image | image_url: width: 1918, height: 1918 }} 2x"
+								srcset="{{ store_image | image_url: width: 10, height: 10 }}"
+								media="(max-width: 991px)">
+
+						<source data-srcset="{{ store_image | image_url: width: 730, height: 730 }} 1x,
+											{{ store_image | image_url: width: 1460, height: 1460 }} 2x"
+								srcset="{{ store_image | image_url: width: 10, height: 10 }}"
+								media="(max-width: 1500px)">
+
+						<img class="store-location__image need-animate"
+							 src="{{- store_image | image_url: width: 10, height: 10 -}}"
+							 data-src="{{- store_image | image_url: width: 940, height: 940 -}}"
+							 data-srcset="{{ store_image | image_url: width: 940, height: 940 }} 1x, {{ store_image | image_url: width: 1880, height: 1880 }} 2x"
+							 alt="{{- store_image.alt | escape -}}"
+							 style="{{- img_focal -}}"
+						>
+					</picture>
+				{% else %}
+					<picture>
+						<source srcset="{{ store_image | image_url: width: 368, height: 368 }} 1x,
+											{{ store_image | image_url: width: 736, height: 736 }} 2x"
+								media="(max-width: 400px)">
+
+						<source srcset="{{ store_image | image_url: width: 388, height: 388 }} 1x,
+											{{ store_image | image_url: width: 776, height: 776 }} 2x"
+								media="(max-width: 420px)">
+
+						<source srcset="{{ store_image | image_url: width: 735, height: 735 }} 1x,
+											{{ store_image | image_url: width: 1470, height: 1470 }} 2x"
+								media="(max-width: 767px)">
+
+						<source srcset="{{ store_image | image_url: width: 959, height: 959 }} 1x,
+											{{ store_image | image_url: width: 1918, height: 1918 }} 2x"
+								media="(max-width: 991px)">
+
+						<source srcset="{{ store_image | image_url: width: 730, height: 730 }} 1x,
+											{{ store_image | image_url: width: 1460, height: 1460 }} 2x"
+								media="(max-width: 1500px)">
+
+						<img class="store-location__image need-animate"
+							 src="{{- store_image | image_url: width: 940, height: 940 -}}"
+							 srcset="{{ store_image | image_url: width: 940, height: 940 }} 1x, {{ store_image | image_url: width: 1880, height: 1880 }} 2x"
+							 alt="{{- store_image.alt | escape -}}"
+							 style="{{- img_focal -}}"
+						>
+					</picture>
+				{% endif %}
+			{%- else -%}
+				{{- 'lifestyle-1' | placeholder_svg_tag: 'store-location__image store-location__image--placeholder need-animate' -}}
+			{%- endif -%}
+		</div>
+	</div>
+
+	<div class="store-location__content">
+		{%- if title != blank -%}
+			<h2 class="store-location__title h2 need-animate tr-dur-0-8">
+				{{- title -}}
+			</h2>
+		{%- endif -%}
+
+		{%- if subtitle != blank -%}
+			<p class="store-location__subtitle need-animate tr-dur-0-8 tr-del-0-4">
+				{{- subtitle -}}
+			</p>
+		{%- endif -%}
+
+		{%- for block in section.blocks  -%}
+			{% case block.type %}
+				{% when 'store_information' %}
+					{% assign block_title = block.settings.title %}
+					{% assign block_icon = block.settings.icon %}
+					{% assign block_text = block.settings.text %}
+
+					{%- if block_title != blank or block_icon != blank or block_text != blank -%}
+						<div class="store-location__item need-animate tr-dur-0-8 tr-del-0-4">
+							{%- if block_title != blank or block_icon != blank -%}
+								<div class="store-location__content-header">
+									{%- if block_icon != blank -%}
+										<img
+											class="store-location__content-icon"
+											srcset="{{ block_icon | image_url: width: 24, height: 24 }} 1x, {{ block_icon | image_url: width: 48, height: 48 }} 2x"
+											src="{{- block_icon | image_url: width: 24, height: 24 -}}"
+											alt="{{- block_icon.alt | escape -}}"
+											height="24"
+											width="24"
+										/>
+									{%- endif -%}
+
+									{%- if block_title != blank -%}
+										<h3 class="store-location__content-title">
+											{{ block_title }}
+										</h3>
+									{%- endif -%}
+								</div>
+							{%- endif -%}
+
+							{%- if block_text != blank -%}
+								<div class="rte store-location__content-text">
+									{{- block_text -}}
+								</div>
+							{%- endif -%}
+						</div>
+					{%- endif -%}
+				{% when 'store_socials' %}
+					{% assign block_title = block.settings.title %}
+					{% assign block_icon = block.settings.icon %}
+
+					{%- if block_title != blank or block_icon != blank -%}
+					<div class="store-location__item store-location__item--center need-animate tr-dur-0-8 tr-del-0-4">
+						{%- if block_title != blank or block_icon != blank -%}
+							<div class="store-location__content-header">
+								{%- if block_icon != blank -%}
+									<img
+										class="store-location__content-icon"
+										srcset="{{ block_icon | image_url: width: 24, height: 24 }} 1x, {{ block_icon | image_url: width: 48, height: 48 }} 2x"
+										src="{{- block_icon | image_url: width: 24, height: 24 -}}"
+										alt="{{- block_icon.alt | escape -}}"
+										height="24"
+										width="24"
+									/>
+								{%- endif -%}
+
+								{%- if block_title != blank -%}
+									<h3 class="store-location__content-title">
+										{{ block_title }}
+									</h3>
+								{%- endif -%}
+							</div>
+						{%- endif -%}
+
+						{%- render "social-links" -%}
+					</div>
+				{%- endif -%}
+			{% endcase %}
+		{%- endfor -%}
+
+		{%- if newsletter_button_label != blank -%}
+			{%- assign default_btn_text = newsletter_button_label -%}
+			{%- assign default_success_text = 'newsletter.success' | t -%}
+			{%- assign id = 'ContactForm--' | append: section.id -%}
+
+			{% form 'customer', class: 'store-location__newsletter-form need-animate tr-dur-0-8 tr-del-0-4 js-newsletter-form', id: id %}
+				<input type="hidden" name="contact[tags]" value="newsletter" />
+
+				<div class="store-location__newsletter-form-field">
+					<label class="visually-hidden" for="NewsletterForm--{{- section.id -}}">
+						{{- newsletter_input_placeholder -}}
+					</label>
+
+					<input
+						id="NewsletterForm--{{- section.id -}}"
+						type="email"
+						name="contact[email]"
+						class="store-location__newsletter-form-input js-newsletter-input"
+						value="{{- form.email -}}"
+						aria-required="true"
+						autocapitalize="off"
+						autocomplete="email"
+						{% if form.errors %}
+							aria-invalid="true"
+							aria-describedby="Newsletter-error--{{- section.id -}}"
+						{% elsif form.posted_successfully? %}
+							aria-describedby="Newsletter-success--{{- section.id -}}"
+						{% endif %}
+						placeholder="{{- newsletter_input_placeholder -}}"
+						required
+					/>
+
+					<button
+						type="submit"
+						class="button button--{{ newsletter_button_style }} store-location__newsletter-form-button"
+						name="commit"
+					>
+						{{ newsletter_button_label}}
+					</button>
+				</div>
+
+				{%- if form.errors -%}
+					<small class="store-location__newsletter-form-message store-location__newsletter-form-message--error" id="Newsletter-error--{{- section.id -}}">
+						{% render 'icons' with icon: 'close' %}
+
+						{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+					</small>
+				{%- endif -%}
+
+				{%- if form.posted_successfully? -%}
+					<h3
+						class="store-location__newsletter-form-message store-location__newsletter-form-message--success"
+						id="Newsletter-success--{{- section.id -}}"
+						tabindex="-1"
+					>
+						{% render 'icons' with icon: 'check' %}
+
+						{{- success_message | default: default_success_text -}}
+					</h3>
+				{%- endif -%}
+			{% endform %}
+		{% endif %}
+	</div>
+</section>
+
+{% schema %}
+{
+	"name": "Store location",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Heading",
+			"default": "Store name"
+		},
+		{
+			"type": "textarea",
+			"id": "subtitle",
+			"label": "Subheading",
+			"default": "Subheading text about store"
+		},
+		{
+			"type": "text",
+			"id": "newsletter_input_placeholder",
+			"label": "Input placeholder",
+			"default": "Enter email address..."
+		},
+		{
+			"type": "text",
+			"id": "newsletter_button_label",
+			"label": "Form button label",
+			"default": "Subscribe"
+		},
+		{
+			"id": "newsletter_button_style",
+			"type": "select",
+			"label": "Form button style",
+			"options": [
+				{
+					"value": "primary",
+					"label": "Primary"
+				},
+				{
+					"value": "secondary",
+					"label": "Secondary"
+				},
+				{
+					"value": "primary-border",
+					"label": "Primary with border"
+				},
+				{
+					"value": "secondary-border",
+					"label": "Secondary with border"
+				}
+			],
+			"default": "secondary-border"
+		},
+		{
+			"type": "image_picker",
+			"id": "store_image",
+			"label": "Image"
+		},
+		{
+			"type": "checkbox",
+			"id": "reverse_content",
+			"label": "Reverse content",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "google_map_api_key",
+			"label": "Google maps API key (text)",
+			"info": "You’ll need to [register a Google Maps API Key](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template) to display the map."
+		},
+		{
+			"type": "text",
+			"id": "map_query",
+			"label": "Map query",
+			"info": "Specify the query parameter [learn more](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template)",
+			"default": "Eiffel+Tower,Paris+France"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"type": "store_information",
+			"name": "Store information",
+			"limit": 6,
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "icon",
+					"label": "Icon",
+					"info": "24 x 24px recommended"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Heading:"
+				},
+				{
+					"type": "richtext",
+					"id": "text",
+					"label": "Text",
+					"default": "<p>Text</p>"
+				}
+			]
+		},
+		{
+			"type": "store_socials",
+			"name": "Store socials",
+			"limit": 1,
+			"settings": [
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Follow Us:"
+				},
+				{
+					"type": "image_picker",
+					"id": "icon",
+					"label": "Icon",
+					"info": "24 x 24px recommended"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Store location",
+			"blocks": [
+				{
+					"type": "store_information",
+					"settings": {
+						"title": "Address:",
+						"text": "<p>123 Main Street</p>"
+					}
+				},
+				{
+					"type": "store_information",
+					"settings": {
+						"title": "Phone:",
+						"text": "<p>+12345678900</p>"
+					}
+				},
+				{
+					"type": "store_information",
+					"settings": {
+						"title": "Email:",
+						"text": "<p>example@example.com</p>"
+					}
+				},
+				{
+					"type": "store_information",
+					"settings": {
+						"title": "Schedule:",
+						"text": "<p>Mn - Fr. 8:00-17:00</p>"
+					}
+				},
+				{
+					"type": "store_socials",
+					"settings": {
+						"title": "Follow Us:"
+					}
+				}
+			]
+		}
+	]
+}
+{% endschema %}

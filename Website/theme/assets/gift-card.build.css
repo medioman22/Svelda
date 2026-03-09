@@ -1,0 +1,145 @@
+.gift-card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.gift-card__header {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.gift-card__shop-name {
+  margin-bottom: 1rem;
+}
+
+.gift-card__logo {
+  object-fit: contain;
+  object-position: var(--img-desktop-pos);
+}
+
+.gift-card__title {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.214;
+}
+
+.gift-card__value {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.gift-card__body {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.gift-card__body .button {
+  text-decoration: none;
+}
+
+.gift-card__image {
+  max-width: 332px;
+  width: 100%;
+}
+
+.gift-card__qr-code {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.gift-card__number {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.gift-card__copy-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  opacity: 1;
+  line-height: 1.375;
+  transition: opacity var(--timing-micro);
+}
+
+.gift-card__copy-link .text {
+  border-bottom: 1px solid var(--color-text-primary);
+}
+
+.gift-card__copy-link:hover {
+  opacity: 0.8;
+}
+
+.gift-card__copy-link:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+}
+
+.gift-card__copy-code {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.gift-card__copy-code .icon-success {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+.gift-card__redeem {
+  line-height: 1.5rem;
+}
+
+.gift-card__buttons-wrapper {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.gift-card__apple-wallet {
+  margin-top: 30px;
+}
+
+.gift-card__apple-wallet:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 1px;
+}
+
+.gift-card__apple-wallet-image {
+  vertical-align: middle;
+}
+
+.gift-card__copy-success {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.gift-card__copy-success.show {
+  display: flex;
+}
+
+@media (max-width: 991.98px) {
+  .gift-card__body {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .gift-card__title {
+    font-size: 1.375rem;
+    line-height: 1.75rem;
+  }
+  .gift-card__buttons-wrapper {
+    flex-direction: column;
+    width: 100%;
+  }
+}

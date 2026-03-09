@@ -1,0 +1,306 @@
+{% comment %}
+	Images collage layout for grid-images section
+{% endcomment %}
+
+{%- assign title 		= section.settings.title -%}
+{%- assign container 	= section.settings.container_width -%}
+{%- assign blocks  		= section.blocks -%}
+
+{%- assign min = 1 -%}
+{%- assign max = 4 -%}
+{%- assign diff = max | minus: min -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- if blocks.size > 0 -%}
+	{% assign delay_step = 0.2 %}
+
+	{%- capture images -%}
+		{%- for block in blocks -%}
+			{%- assign desktop_image 	= block.settings.image_desktop -%}
+			{%- assign mobile_image 	= block.settings.image_mobile | default: desktop_image -%}
+			{%- assign delay_step 		= delay_step | plus: 0.25 -%}
+
+			{%- assign heading         		= block.settings.heading -%}
+			{%- assign text         		= block.settings.text -%}
+			{%- assign url           		= block.settings.url -%}
+			{%- assign horizontal       	= block.settings.horizontal -%}
+			{%- assign vertical         	= block.settings.vertical -%}
+			{%- assign overlay_color 		= block.settings.overlay_color -%}
+			{%- assign text_color    		= block.settings.text_color -%}
+			{%- assign overlay_opacity  	= block.settings.overlay -%}
+			{%- assign image_border_width  	= block.settings.image_border_width -%}
+			{%- assign image_border_indent 	= block.settings.image_border_indent -%}
+			{%- assign image_border_color  	= block.settings.image_border_color -%}
+
+			{%- capture styles -%}
+				--horizontal: {{- horizontal -}};
+				--overlay-color: {{- overlay_color -}};
+				--overlay-opacity: {{- overlay_opacity -}}%;
+				--text-color: {{- text_color -}};
+				--image-border-color: {{- image_border_color -}};
+				--image-border-width: {{- image_border_width -}}px;
+				--image-border-indent: {{- image_border_indent -}}px;
+			{%- endcapture -%}
+
+			<div class="images-collage__col {% if url != blank %}images-collage__col--hover{% endif %} need-animate tr-dur-0-5" style="{{ styles }} transition-delay: {{ delay_step }}s;">
+				{% if url != blank %}
+					{% assign link_name = heading | default: desktop_image.alt %}
+					<a href="{{ url }}"
+					   class="images-collage__image-link"
+						{% if link_name != blank %}
+							aria-label="{{ link_name | escape }}"
+						{% endif %}
+					></a>
+				{% endif %}
+				<div class="images-collage__col-wrapper">
+					{%- if desktop_image != blank -%}
+						{%- capture img_focal -%}
+							--img-mob-pos: {{ mobile_image.presentation.focal_point }};
+							--img-desktop-pos: {{ desktop_image.presentation.focal_point }};
+						{%- endcapture -%}
+
+						{% assign x1_width 	= 619 %}
+						{% assign x2_width 	= x1_width | times: 2 %}
+
+						{% assign x1_width_1600 	= 512 %}
+						{% assign x2_width_1600 	= x1_width_1600 | times: 2 %}
+
+						{% assign x1_width_991 		= 472 %}
+						{% assign x2_width_991 		= x1_width_991 | times: 2 %}
+
+						{% assign x1_width_767 		= 360 %}
+						{% assign x2_width_767 		= x1_width_767 | times: 2 %}
+
+						{% assign x1_width_420 		= 186 %}
+						{% assign x2_width_420 		= x1_width_420 | times: 2 %}
+
+						{% assign x1_width_380 		= 166 %}
+						{% assign x2_width_380 		= x1_width_380 | times: 2 %}
+
+						{% if blocks.size == 1 or index.forloop == 3 %}
+							{% assign x1_width_991 		= 959 %}
+							{% assign x2_width_991 		= x1_width_991 | times: 2 %}
+
+							{% assign x1_width_767 		= 735 %}
+							{% assign x2_width_767 		= x1_width_767 | times: 2 %}
+
+							{% assign x1_width_420 		= 388 %}
+							{% assign x2_width_420 		= x1_width_420 | times: 2 %}
+
+							{% assign x1_width_380 		= 348 %}
+							{% assign x2_width_380 		= x1_width_380 | times: 2 %}
+						{% endif %}
+
+						{%- if blocks.size == 3 -%}
+							{% assign x1_width 	= 936 %}
+							{% assign x2_width 	= x1_width | times: 2 %}
+
+							{% assign x1_width_1600 	= 776 %}
+							{% assign x2_width_1600 	= x1_width_1600 | times: 2 %}
+						{%- elsif blocks.size == 2 -%}
+							{% assign x1_width 	= 936 %}
+							{% assign x2_width 	= x1_width | times: 2 %}
+
+							{% assign x1_width_1600 	= 776 %}
+							{% assign x2_width_1600 	= x1_width_1600 | times: 2 %}
+
+							{% assign x1_width_991 		= 472 %}
+							{% assign x2_width_991 		= x1_width_991 | times: 2 %}
+
+							{% assign x1_width_767 		= 360 %}
+							{% assign x2_width_767 		= x1_width_767 | times: 2 %}
+
+							{% assign x1_width_420 		= 186 %}
+							{% assign x2_width_420 		= x1_width_420 | times: 2 %}
+
+							{% assign x1_width_380 		= 166 %}
+							{% assign x2_width_380 		= x1_width_380 | times: 2 %}
+						{%- elsif blocks.size == 1 -%}
+							{% assign x1_width 	= 1888 %}
+							{% assign x2_width 	= x1_width | times: 2 %}
+
+							{% assign x1_width_1600 	= 1568 %}
+							{% assign x2_width_1600 	= x1_width_1600 | times: 2 %}
+						{%- endif -%}
+
+						{%- capture default_image -%}
+							<picture>
+								<source
+									srcset="{{- mobile_image | image_url: width: x1_width_380 }} 1x,
+									{{ mobile_image | image_url: width: x2_width_380 }} 2x"
+									media="(max-width: 380px)"
+									width="{{- x1_width_380 -}}"
+									height="253"
+								/>
+
+								<source
+									srcset="{{- mobile_image | image_url: width: x1_width_420 }} 1x,
+									{{ mobile_image | image_url: width: x2_width_420 }} 2x"
+									media="(max-width: 420px)"
+									width="{{- x1_width_420 -}}"
+									height="284"
+								/>
+
+								<source
+									srcset="{{- mobile_image | image_url: width: x1_width_767 }} 1x,
+									{{ mobile_image | image_url: width: x2_width_767 }} 2x"
+									media="(max-width: 767px)"
+									width="{{- x1_width_767 -}}"
+									height="548"
+								/>
+
+								<source
+									srcset="{{- mobile_image | image_url: width: x1_width_991 }} 1x,
+									{{ mobile_image | image_url: width: x2_width_991 }} 2x"
+									media="(max-width: 991px)"
+									width="{{- x1_width_991 -}}"
+									height="719"
+								/>
+
+								<source
+									srcset="{{- desktop_image | image_url: width: x1_width_1600 }} 1x,
+									{{ desktop_image | image_url: width: x2_width_1600 }} 2x"
+									media="(max-width: 1600px)"
+									width="{{- x1_width_1600 -}}"
+									height="949"
+								/>
+
+								<img
+									srcset="{{- desktop_image | image_url: width: x1_width }} 1x,
+									{{ desktop_image | image_url: width: x2_width }} 2x"
+									src="{{- desktop_image | image_url: width: x1_width -}}"
+									alt="{{- desktop_image.alt | escape -}}"
+									class="images-collage__image"
+									width="{{- x1_width -}}"
+									height="253"
+									style="{{ img_focal }}"
+								/>
+							</picture>
+						{%- endcapture -%}
+
+						<picture class="lazy">
+							<source
+								data-srcset="{{- mobile_image | image_url: width: x1_width_380 }} 1x,
+											 {{ mobile_image | image_url: width: x2_width_380 }} 2x"
+								srcset="{{- mobile_image | image_url: width: 10 }} 1x,
+										{{ mobile_image | image_url: width: 20 }} 2x"
+								media="(max-width: 380px)"
+								width="{{- x1_width_380 -}}"
+								height="253"
+							/>
+
+							<source
+								data-srcset="{{- mobile_image | image_url: width: x1_width_420 }} 1x,
+											 {{ mobile_image | image_url: width: x2_width_420 }} 2x"
+								srcset="{{- mobile_image | image_url: width: 10 }} 1x,
+										{{ mobile_image | image_url: width: 20 }} 2x"
+								media="(max-width: 420px)"
+								width="{{- x1_width_420 -}}"
+								height="284"
+							/>
+
+							<source
+								data-srcset="{{- mobile_image | image_url: width: x1_width_767 }} 1x,
+											 {{ mobile_image | image_url: width: x2_width_767 }} 2x"
+								srcset="{{- mobile_image | image_url: width: 10 }} 1x,
+										{{ mobile_image | image_url: width: 20 }} 2x"
+								media="(max-width: 767px)"
+								width="{{- x1_width_767 -}}"
+								height="548"
+							/>
+
+							<source
+								data-srcset="{{- mobile_image | image_url: width: x1_width_991 }} 1x,
+											 {{ mobile_image | image_url: width: x2_width_991 }} 2x"
+								srcset="{{- mobile_image | image_url: width: 10 }} 1x,
+										{{ mobile_image | image_url: width: 20 }} 2x"
+								media="(max-width: 991px)"
+								width="{{- x1_width_991 -}}"
+								height="719"
+							/>
+
+							<source
+								data-srcset="{{- desktop_image | image_url: width: x1_width_1600 }} 1x,
+											 {{ desktop_image | image_url: width: x2_width_1600 }} 2x"
+								srcset="{{- desktop_image | image_url: width: 10 }} 1x,
+										{{ desktop_image | image_url: width: 20 }} 2x"
+								media="(max-width: 1600px)"
+								width="{{- x1_width_1600 -}}"
+								height="949"
+							/>
+
+							<img
+								data-srcset="{{- desktop_image | image_url: width: x1_width }} 1x,
+											 {{ desktop_image | image_url: width: x2_width }} 2x"
+								srcset="{{- desktop_image | image_url: width: 10 }} 1x,
+										{{ desktop_image | image_url: width: 20 }} 2x"
+								data-src="{{- desktop_image | image_url: width: x1_width -}}"
+								src="{{- desktop_image | image_url: width: 10 -}}"
+								alt="{{- desktop_image.alt | escape -}}"
+								class="images-collage__col-image"
+								width="{{- x1_width -}}"
+								height="253"
+								style="{{ img_focal }}"
+							/>
+						</picture>
+
+						<noscript>
+							{{- default_image -}}
+						</noscript>
+					{% else %}
+						{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+						{%- assign placeholder_svg_name = 'hero-apparel-' | append: random_number -%}
+
+						{{- placeholder_svg_name | placeholder_svg_tag: 'images-collage__col-image images-collage__col-image--placeholder' -}}
+					{% endif %}
+				</div>
+
+				<div class="images-collage__info images-collage__info--{{ vertical }}">
+					{%- if heading != blank -%}
+						<h3 class="h2 images-collage__heading">
+							{{- heading -}}
+						</h3>
+					{%- endif -%}
+
+					{%- if text != blank -%}
+						<div class="images-collage__text">
+							{{- text -}}
+						</div>
+					{%- endif -%}
+				</div>
+			</div>
+		{%- endfor -%}
+	{%- endcapture -%}
+
+	{%- render 'adastra' with '/src/styles/images-collage.scss' -%}
+
+	{%- style -%}
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_mobile -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+		}
+
+		@media screen and (min-width: 768px) {
+			#shopify-section-{{- section.id -}} {
+				padding-top: {{- section.settings.offset_top_desktop -}}px;
+				padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+			}
+		}
+	{%- endstyle -%}
+
+	<section class="images-collage js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="--container-width: {{ container_width }};">
+		{% if title != blank %}
+			<h2 class="images-collage__title h2 need-animate tr-dur-0-8">
+				{{ title }}
+			</h2>
+		{% endif %}
+		<div class="images-collage__container{% if blocks.size > 2 %} images-collage__container--grid{% endif %} images-collage__container--{{ blocks.size }}">
+			{{- images -}}
+		</div>
+	</section>
+{%- endif -%}

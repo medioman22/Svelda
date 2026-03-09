@@ -1,0 +1,205 @@
+{% comment %}
+  ------------------------------------------------------------------------------
+  Snippet: List collections card
+  - collection: Collection object (required)
+  - image: image object
+  - text_alignment: text aligment position
+  - show_products_count: boolean, show/hide products count,
+  - is_lazy: boolean, enable lazy-load
+  - item_size: image size class, small or large
+  ------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- render 'adastra' with '/src/styles/list-collections-card.scss' -%}
+
+{%- assign min = 1 -%}
+{%- assign max = 6 -%}
+{%- assign diff = max | minus: min -%}
+
+<a
+  class="focus-visible-outline list-collections-card {% if text_alignment != 'left' %}list-collections-card--{{ text_alignment }}{% endif %}"
+  {% if collection != blank %}
+    href="{{- collection.url -}}"
+    aria-label="{{- 'collections.general.collection_card_link_aria_label' | t: title: collection.title | escape -}}"
+  {% endif %}
+  {% if collection == blank %}role="link" aria-disabled="true"{% endif %}
+>
+	<span class="list-collections-card__image-wrapper list-collections-card__image-wrapper--{{- item_size }}">
+		{% if collection != blank %}
+      {% if image != blank %}
+        {%- capture img_focal -%}
+          --img-desktop-pos: {{ image.presentation.focal_point }};
+        {%- endcapture -%}
+      {% endif %}
+
+      {%- if item_size == 'small' -%}
+        <picture class="{% if is_lazy %}lazy{% endif %} no-js-hidden">
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '166x254', crop: 'center' }} 1x, {{ image | img_url: '332x508', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '166x254', crop: 'center' }} 1x, {{ image | img_url: '332x508', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 380px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '186x284', crop: 'center' }} 1x, {{ image | img_url: '372x568', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '186x284', crop: 'center' }} 1x, {{ image | img_url: '372x568', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 420px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '359x550', crop: 'center' }} 1x, {{ image | img_url: '718x1100', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '359x550', crop: 'center' }} 1x, {{ image | img_url: '718x1100', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 767px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '228x318', crop: 'center' }} 1x, {{ image | img_url: '456x636', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '228x318', crop: 'center' }} 1x, {{ image | img_url: '456x636', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 991px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '355x496', crop: 'center' }} 1x, {{ image | img_url: '710x992', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '355x496', crop: 'center' }} 1x, {{ image | img_url: '710x992', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 1500px)"
+          >
+
+          <img class="list-collections-card__image"
+            {% if is_lazy %}
+              src="{{ image | img_url: '10x' }}"
+              srcset="{{ image | img_url: '10x' }}"
+              data-src="{{ image | img_url: '460x642', crop: 'center' }}"
+              data-srcset="{{ image | img_url: '460x642', crop: 'center' }} 1x, {{ image | img_url: '920x1284', crop: 'center' }} 2x"
+            {% else %}
+              src="{{ image | img_url: '460x642', crop: 'center' }}"
+              srcset="{{ image | img_url: '460x642', crop: 'center' }} 1x, {{ image | img_url: '920x1284', crop: 'center' }} 2x"
+            {% endif %}
+            alt="{{ image.alt | escape }}"
+            {% if img_focal != blank %}
+              style="{{ img_focal }}"
+            {% endif %}
+          >
+        </picture>
+      {%- else -%}
+        <picture class="{% if is_lazy %}lazy{% endif %} no-js-hidden">
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '348x254', crop: 'center' }} 1x, {{ image | img_url: '696x508', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '348x254', crop: 'center' }} 1x, {{ image | img_url: '696x508', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 380px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '388x283', crop: 'center' }} 1x, {{ image | img_url: '776x566', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '388x283', crop: 'center' }} 1x, {{ image | img_url: '776x566', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 420px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '735x536', crop: 'center' }} 1x, {{ image | img_url: '1470x1072', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '735x536', crop: 'center' }} 1x, {{ image | img_url: '1472x1072', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 767px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '472x344', crop: 'center' }} 1x, {{ image | img_url: '944x688', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '472x344', crop: 'center' }} 1x, {{ image | img_url: '944x688', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 991px)"
+          >
+
+          <source
+            {% if is_lazy %}
+              data-srcset="{{ image | img_url: '726x529', crop: 'center' }} 1x, {{ image | img_url: '1452x1058', crop: 'center' }} 2x"
+              srcset="{{ image | img_url: '10x' }} 1x, {{ image | img_url: '10x' }} 2x"
+            {% else %}
+              srcset="{{ image | img_url: '726x529', crop: 'center' }} 1x, {{ image | img_url: '1452x1058', crop: 'center' }} 2x"
+            {% endif %}
+            media="(max-width: 1500px)"
+          >
+
+          <img class="list-collections-card__image"
+            {% if is_lazy %}
+              src="{{ image | img_url: '10x' }}"
+              srcset="{{ image | img_url: '10x' }}"
+              data-src="{{ image | img_url: '936x682', crop: 'center' }}"
+              data-srcset="{{ image | img_url: '936x682', crop: 'center' }} 1x, {{ image | img_url: '1872x1364', crop: 'center' }} 2x"
+            {% else %}
+              src="{{ image | img_url: '936x682', crop: 'center' }}"
+              srcset="{{ image | img_url: '936x682', crop: 'center' }} 1x, {{ image | img_url: '1872x1364', crop: 'center' }} 2x"
+            {% endif %}
+            alt="{{ image.alt | escape }}"
+            {% if img_focal != blank %}
+              style="{{ img_focal }}"
+            {% endif %}
+          >
+        </picture>
+      {%- endif -%}
+		{% else %}
+      {%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+      {%- assign placeholder_svg_name = 'collection-' | append: random_number -%}
+
+      <span aria-hidden="true">
+				{{- placeholder_svg_name | placeholder_svg_tag: 'list-collections-card__image list-collections-card__image--placeholder' -}}
+			</span>
+    {% endif %}
+	</span>
+
+  <div class="list-collections-card__header">
+    <div class="list-collections-card__title h4" aria-hidden="true">
+      {%- if collection == blank -%}
+        {{ 'sections.collection_list.card_title' | t }}
+      {%- else -%}
+        {{- collection.title -}}
+      {%- endif -%}
+    </div>
+
+    {% if show_products_count %}
+      {% assign one_product_label = 'sections.collection_list.one_product' | t %}
+      {% assign many_product_label = 'sections.collection_list.many_products' | t %}
+
+      <div class="list-collections-card__count">
+        {%- if collection == blank -%}
+          0 {{ many_product_label }}
+        {%- else -%}
+          {{ collection.all_products_count }} {{ collection.all_products_count | pluralize: one_product_label, many_product_label }}
+        {%- endif -%}
+      </div>
+    {% endif %}
+  </div>
+</a>
+

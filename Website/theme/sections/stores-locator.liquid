@@ -1,0 +1,611 @@
+{%- render 'adastra' with '/src/styles/stores-locator.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media (min-width: 786px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign title 			= section.settings.title -%}
+{%- assign container 		= section.settings.container_width -%}
+{%- assign background_color = section.settings.background_color -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--container-width: {{- container_width -}};
+	--background-color: {{- background_color -}};
+{%- endcapture -%}
+
+{%- assign is_lazy = true %}
+
+{%- if section.index == 1 -%}
+	{%- assign is_lazy = false -%}
+{%- endif -%}
+
+{%- capture desktop_content -%}
+	<div class="stores-locator__wrapper stores-locator__wrapper--desktop">
+		<ul class="stores-locator__list">
+			{% assign delay_step = 0.25 %}
+
+			{%- for block in section.blocks -%}
+				{%- assign block_image 		= block.settings.block_image -%}
+				{%- assign block_title 		= block.settings.block_title -%}
+				{%- assign block_text 		= block.settings.block_text -%}
+				{%- assign delay_step 		= delay_step | plus: 0.25 -%}
+
+				<li class="stores-locator__item js-stores-locator-item need-animate js-stores-locator-item-desktop{% if forloop.first %} is-active{% endif %}" style="--delay-step: {{ delay_step }}s;"
+					data-index="{{- forloop.index -}}"
+					aria-controls="content-{{- block.id -}}"
+					{% if forloop.index != 1 %}
+						aria-expanded="false"
+					{% else %}
+						aria-expanded="true"
+					{% endif %}
+				>
+					<button class="stores-locator__item-wrapper">
+							<span class="stores-locator__item-box-image">
+								{%- if block_image != blank -%}
+									<picture>
+										<img class="stores-locator__item-image"
+											 src="{{ block_image | image_url: width: 100, height: 100 }}"
+											 srcset="{{ block_image | image_url: width: 100, height: 100 }} 1x,
+										 	 	 	 {{ block_image | image_url: width: 200, height: 200 }} 2x"
+											 alt="{{- block_image.alt | escape -}}"
+											 width="100"
+											 height="100"
+										>
+									</picture>
+								{%- else -%}
+									{{- 'image' | placeholder_svg_tag: 'stores-locator__item-image stores-locator__item-image--placeholder' -}}
+								{%- endif -%}
+							</span>
+
+						{%- if block_title != blank or block_text != blank -%}
+							<span class="stores-locator__item-box-text">
+									{%- if block_title != blank -%}
+										<span class="stores-locator__item-title h4">
+											{{- block_title -}}
+										</span>
+									{%- endif -%}
+
+								{%- if block_text != blank -%}
+									<span class="stores-locator__item-text js-stores-locator-item-text">
+										{{- block_text -}}
+									</span>
+								{%- endif -%}
+								</span>
+						{%- endif -%}
+					</button>
+
+					{%- if block.settings.icon-1 != blank or block.settings.text-1 != blank or block.settings.icon-2 != blank or block.settings.text-2 != blank -%}
+						<div class="stores-locator__item-body js-stores-locator-accordion-body"
+							 aria-labelledby="control-{{- block.id -}}"
+							{% if forloop.index != 1 %}
+								style="height: 0"
+							{% endif %}
+						>
+							<div class="stores-locator__item-box-info">
+								{%- for item in (1..2) -%}
+									{%- capture icon -%}
+										icon-{{- item -}}
+									{%- endcapture -%}
+
+									{%- capture text -%}
+										text-{{- item -}}
+									{%- endcapture -%}
+
+									{%- assign icon = block.settings[icon] -%}
+									{%- assign text = block.settings[text] -%}
+
+									{%- if icon != blank or text != blank -%}
+										<div class="stores-locator__item-info">
+											{%- if icon != blank -%}
+												<div class="stores-locator__info-box-icon">
+													<img class="stores-locator__info-icon"
+														 src="{{ icon | image_url: width: 24, height: 24 }}"
+														 srcset="{{ icon | image_url: width: 24, height: 24 }} 1x,
+														 {{ icon | image_url: width: 48, height: 48 }} 2x"
+														 alt="{{- icon.alt | escape -}}"
+														 width="24"
+														 height="24"
+													>
+												</div>
+											{%- endif -%}
+
+											{%- if text != blank -%}
+												<div class="stores-locator__info-text">
+													{{- text -}}
+												</div>
+											{%- endif -%}
+										</div>
+									{%- endif -%}
+								{%- endfor -%}
+							</div>
+						</div>
+					{%- endif -%}
+				</li>
+			{%- endfor -%}
+		</ul>
+
+		<div class="stores-locator__box-map">
+			{%- for block in section.blocks -%}
+				{%- assign google_map_api_key 	= block.settings.google_map_api_key -%}
+				{%- assign map_query 			= block.settings.map_query -%}
+				{%- assign map_image 			= block.settings.map_image -%}
+				{%- assign map_link 			= block.settings.map_link -%}
+
+				{%- if map_image != blank and map_link != blank -%}
+					<a href="{{ map_link }}" target="_blank" class="stores-locator__map-wrapper need-animate tr-dur-1 tr-del-0-5 js-stores-locator-map-wrapper{% if forloop.index != 1 %} is-hidden{% endif %}" data-index="{{- forloop.index -}}">
+				{%- else -%}
+					<div class="stores-locator__map-wrapper need-animate tr-dur-1 tr-del-0-5 js-stores-locator-map-wrapper{% if forloop.index != 1 %} is-hidden{% endif %}" data-index="{{- forloop.index -}}">
+				{%- endif -%}
+						{%- if google_map_api_key != blank and map_query != blank -%}
+							<iframe
+								class="stores-locator__map"
+								width="100%"
+								height="100%"
+								frameborder="0"
+								style="border:0"
+								referrerpolicy="no-referrer-when-downgrade"
+								src="https://www.google.com/maps/embed/v1/place?key={{- google_map_api_key -}}&q={{- map_query -}}"
+								allowfullscreen
+							>
+							</iframe>
+						{%- elsif map_image != blank -%}
+							<picture class="{% if is_lazy %}lazy{% endif %}">
+								<source
+									{% if is_lazy %}
+										srcset="{{ map_image | image_url: width: 10, height: 10 }}"
+										data-srcset="{{ map_image | image_url: width: 917, height: 600 }} 1x,
+													 {{ map_image | image_url: width: 1834, height: 1200 }} 2x"
+									{% else %}
+										srcset="{{ map_image | image_url: width: 917, height: 600 }} 1x,
+												{{ map_image | image_url: width: 1834, height: 1200 }} 2x"
+									{% endif %}
+										media="(max-width: 1500px)"
+										width="917"
+										height="600"
+								>
+
+								<img class="stores-locator__map-image need-animate"
+									 {% if is_lazy %}
+										 src="{{- map_image | image_url: width: 10, height: 10 -}}"
+										 srcset="{{- map_image | image_url: width: 10, height: 10 -}}"
+										 data-src="{{- map_image | image_url: width: 1184, height: 697 -}}"
+										 data-srcset="{{ map_image | image_url: width: 1184, height: 697 }} 1x,
+													  {{ map_image | image_url: width: 2368, height: 1394 }} 2x"
+									 {% else %}
+										 src="{{- map_image | image_url: width: 1184, height: 697 -}}"
+										 srcset="{{- map_image | image_url: width: 1184, height: 697 -}} 1x,
+												 {{- map_image | image_url: width: 2368, height: 1394 -}} 2x"
+									 {% endif %}
+									 alt="{{- store_image.alt | escape -}}"
+									 style="{{- img_focal -}}"
+									 width="1184"
+									 height="697"
+								>
+							</picture>
+						{%- else -%}
+							{{- 'lifestyle-1' | placeholder_svg_tag: 'stores-locator__map-image need-animate stores-locator__map-image--placeholder' -}}
+						{%- endif -%}
+				{%- if map_image != blank and map_link != blank -%}
+					</a>
+				{%- else -%}
+					</div>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+	</div>
+{%- endcapture -%}
+
+{%- capture mobile_content -%}
+	{%- assign delay_step = 0.25 -%}
+	<div class="stores-locator__wrapper stores-locator__wrapper--mobile">
+		<ul class="stores-locator__list">
+			{%- for block in section.blocks -%}
+				{%- assign block_image 		= block.settings.block_image -%}
+				{%- assign block_title 		= block.settings.block_title -%}
+				{%- assign block_text 		= block.settings.block_text -%}
+				{%- assign google_map_api_key 	= block.settings.google_map_api_key -%}
+				{%- assign map_query 			= block.settings.map_query -%}
+				{%- assign map_image 			= block.settings.map_image -%}
+				{%- assign map_link 			= block.settings.map_link -%}
+				{%- assign delay_step = delay_step | plus: 0.25 -%}
+
+				<li class="stores-locator__item need-animate js-stores-locator-item js-stores-locator-item-mobile{% if forloop.first %} is-active{% endif %}" style="--delay-step: {{ delay_step }}s; {% unless forloop.first %} height: 86px;{% endunless %}"
+					data-index="{{- forloop.index -}}"
+					aria-controls="content-{{- block.id -}}"
+					aria-expanded="false"
+					{% if forloop.index != 1 %}
+						aria-expanded="false"
+						style="height: 86px"
+					{% else %}
+						aria-expanded="true"
+					{% endif %}
+				>
+					<button class="stores-locator__item-wrapper">
+							<span class="stores-locator__item-box-image">
+								{%- if block_image != blank -%}
+									<picture>
+										<img class="stores-locator__item-image"
+											 src="{{ block_image | image_url: width: 64, height: 64 }}"
+											 srcset="{{ block_image | image_url: width: 64, height: 64 }} 1x,
+										 	 	 	 {{ block_image | image_url: width: 128, height: 128 }} 2x"
+											 alt="{{- block_image.alt -}}"
+											 width="64"
+											 height="64"
+										>
+									</picture>
+								{%- else -%}
+									{{- 'image' | placeholder_svg_tag: 'stores-locator__item-image stores-locator__item-image--placeholder' -}}
+								{%- endif -%}
+							</span>
+
+						{%- if block_title != blank or block_text != blank -%}
+							<span class="stores-locator__item-box-text">
+									{%- if block_title != blank -%}
+										<span class="stores-locator__item-title h4">
+											{{- block_title -}}
+										</span>
+									{%- endif -%}
+
+								{%- if block_text != blank -%}
+									<span class="stores-locator__item-text js-stores-locator-item-text">
+										{{- block_text -}}
+									</span>
+								{%- endif -%}
+								</span>
+						{%- endif -%}
+					</button>
+
+					<div class="stores-locator__item-body"
+						 aria-labelledby="control-{{- block.id -}}"
+					>
+						<div class="stores-locator__item-box-info">
+							{%- for item in (1..2) -%}
+								{%- capture icon -%}
+									icon-{{- item -}}
+								{%- endcapture -%}
+
+								{%- capture text -%}
+									text-{{- item -}}
+								{%- endcapture -%}
+
+								{%- assign icon = block.settings[icon] -%}
+								{%- assign text = block.settings[text] -%}
+
+								{%- if icon != blank or text != blank -%}
+									<div class="stores-locator__item-info">
+										{%- if icon != blank -%}
+											<div class="stores-locator__info-box-icon">
+												<img class="stores-locator__info-icon"
+													 src="{{ icon | image_url: width: 24, height: 24 }}"
+													 srcset="{{ icon | image_url: width: 24, height: 24 }} 1x,
+														 {{ icon | image_url: width: 48, height: 48 }} 2x"
+													 alt="{{- icon.alt | escape -}}"
+													 width="24"
+													 height="24"
+												>
+											</div>
+										{%- endif -%}
+
+										{%- if text != blank -%}
+											<div class="stores-locator__info-text">
+												{{- text -}}
+											</div>
+										{%- endif -%}
+									</div>
+								{%- endif -%}
+							{%- endfor -%}
+						</div>
+
+						<div class="stores-locator__box-map">
+							{%- if map_image != blank and map_link != blank -%}
+								<a href="{{ map_link }}" class="stores-locator__map-wrapper" target="_blank" data-index="{{- forloop.index -}}">
+							{%- else -%}
+								<div class="stores-locator__map-wrapper" data-index="{{- forloop.index -}}">
+							{%- endif -%}
+									{%- if google_map_api_key != blank and map_query != blank -%}
+										<iframe
+											class="stores-locator__map"
+											width="100%"
+											height="100%"
+											frameborder="0"
+											style="border:0"
+											referrerpolicy="no-referrer-when-downgrade"
+											src="https://www.google.com/maps/embed/v1/place?key={{- google_map_api_key -}}&q={{- map_query -}}"
+											allowfullscreen
+										>
+										</iframe>
+									{%- elsif map_image != blank -%}
+										<picture class="{% if is_lazy %}lazy{% endif %}">
+											<source
+												{% if is_lazy %}
+													srcset="{{ map_image | image_url: width: 10, height: 10 }}"
+													data-srcset="{{ map_image | image_url: width: 311, height: 183 }} 1x,
+																 {{ map_image | image_url: width: 622, height: 366 }} 2x"
+												{% else %}
+													srcset="{{ map_image | image_url: width: 311, height: 183 }} 1x,
+															{{ map_image | image_url: width: 622, height: 366 }} 2x"
+												{% endif %}
+												media="(max-width: 375px)"
+												width="311"
+												height="183"
+											>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ map_image | image_url: width: 10, height: 10 }}"
+													data-srcset="{{ map_image | image_url: width: 356, height: 210 }} 1x,
+																 {{ map_image | image_url: width: 712, height: 420 }} 2x"
+												{% else %}
+													srcset="{{ map_image | image_url: width: 356, height: 210 }} 1x,
+												{{ map_image | image_url: width: 712, height: 420 }} 2x"
+												{% endif %}
+												media="(max-width: 420px)"
+												width="356"
+												height="210"
+											>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ map_image | image_url: width: 10, height: 10 }}"
+													data-srcset="{{ map_image | image_url: width: 703, height: 414 }} 1x,
+																 {{ map_image | image_url: width: 1406, height: 828 }} 2x"
+												{% else %}
+													srcset="{{ map_image | image_url: width: 703, height: 414 }} 1x,
+															{{ map_image | image_url: width: 1406, height: 828 }} 2x"
+												{% endif %}
+												media="(max-width: 767px)"
+												width="703"
+												height="414"
+											>
+
+											<img class="stores-locator__map-image"
+												{% if is_lazy %}
+													src="{{- map_image | image_url: width: 10, height: 10 -}}"
+													srcset="{{- map_image | image_url: width: 10, height: 10 -}}"
+													data-src="{{- map_image | image_url: width: 927, height: 546 -}}"
+													data-srcset="{{ map_image | image_url: width: 927, height: 546 }} 1x,
+																 {{ map_image | image_url: width: 1454, height: 1092 }} 2x"
+												{% else %}
+													src="{{- map_image | image_url: width: 927, height: 546 -}}"
+													srcset="{{- map_image | image_url: width: 927, height: 546 -}} 1x,
+															{{- map_image | image_url: width: 1454, height: 1092 -}} 2x"
+												{% endif %}
+												 alt="{{- store_image.alt | escape -}}"
+												 style="{{- img_focal -}}"
+												 width="927"
+												 height="546"
+											>
+										</picture>
+									{%- else -%}
+										{{- 'lifestyle-1' | placeholder_svg_tag: 'stores-locator__map-image stores-locator__map-image--placeholder' -}}
+									{%- endif -%}
+							{%- if map_image != blank and map_link != blank -%}
+								</a>
+							{%- else -%}
+								</div>
+							{%- endif -%}
+						</div>
+					</div>
+				</li>
+			{%- endfor -%}
+		</ul>
+	</div>
+{%- endcapture -%}
+
+<section class="stores-locator js-stores-locator js-animate{% if request.visual_preview_mode or section.index == 1 %} animated{% endif %}" style="{{- styles -}}">
+	{%- if title != blank -%}
+		<h2 class="stores-locator__heading h2 need-animate tr-dur-0-8">
+			{{- title -}}
+		</h2>
+	{%- endif -%}
+
+
+	{%- if section.blocks.size > 0 -%}
+		{{- desktop_content -}}
+
+		{{- mobile_content -}}
+	{%- endif -%}
+</section>
+
+{%- render 'adastra' with '/src/scripts/stores-locator.js' -%}
+
+{% schema %}
+{
+	"name": "Stores locator",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Heading",
+			"default": "Stores locator"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "background_color",
+			"label": "Active background color",
+			"default": "#000000"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"name": "Store",
+			"type": "store",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "block_image",
+					"label": "Image"
+				},
+				{
+					"type": "text",
+					"id": "block_title",
+					"label": "Heading",
+					"default": "Store"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "block_text",
+					"default": "Store text",
+					"label": "Text"
+				},
+				{
+					"type": "image_picker",
+					"id": "icon-1",
+					"label": "Location icon"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "text-1",
+					"default": "2205 Rosewood Lane",
+					"label": "Location text"
+				},
+				{
+					"type": "image_picker",
+					"id": "icon-2",
+					"label": "Phone icon"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "text-2",
+					"default": "213 443 6364",
+					"label": "Phone text"
+				},
+				{
+					"type": "text",
+					"id": "google_map_api_key",
+					"label": "Google maps API key (text)",
+					"info": "You’ll need to [register a Google Maps API Key](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template) to display the map."
+				},
+				{
+					"type": "text",
+					"id": "map_query",
+					"label": "Map query",
+					"info": "Specify the query parameter [learn more](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template)",
+					"default": "Eiffel+Tower,Paris+France"
+				},
+				{
+					"type": "image_picker",
+					"id": "map_image",
+					"label": "Map image"
+				},
+				{
+					"type": "url",
+					"id": "map_link",
+					"label": "Map link",
+					"info": "Used only for ‘Map image’"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Stores locator",
+			"blocks": [
+				{
+					"type": "store"
+				},
+				{
+					"type": "store"
+				},
+				{
+					"type": "store"
+				},
+				{
+					"type": "store"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

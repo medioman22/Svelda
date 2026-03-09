@@ -1,0 +1,529 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Image with text
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign image_position        	  = section.settings.image_position -%}
+{%- assign text_alignment        	  = section.settings.text_alignment -%}
+{%- assign content_vertical_alignment = section.settings.content_vertical_alignment -%}
+{%- assign two_images_layout          = section.settings.two_images_layout -%}
+{%- assign first_desktop_image        = section.settings.first_desktop_image -%}
+{%- assign first_mobile_image         = section.settings.first_mobile_image | default: first_desktop_image -%}
+{%- assign second_desktop_image       = section.settings.second_desktop_image -%}
+{%- assign second_mobile_image        = section.settings.second_mobile_image | default: second_desktop_image -%}
+{%- assign third_desktop_image        = section.settings.third_desktop_image -%}
+{%- assign third_mobile_image         = section.settings.third_mobile_image | default: third_desktop_image -%}
+{%- assign heading                 	  = section.settings.heading -%}
+{%- assign subheading                 = section.settings.subheading -%}
+{%- assign text_content               = section.settings.text_content -%}
+{%- assign button_label            	  = section.settings.button_label -%}
+{%- assign button_aria_label       	  = section.settings.button_aria_label -%}
+{%- assign button_url              	  = section.settings.button_url -%}
+{%- assign button_style            	  = section.settings.button_style -%}
+{%- assign border_color 		   	  = section.settings.border_color -%}
+{%- assign container 				  = section.settings.container_width -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{% if first_desktop_image != blank and second_desktop_image != blank and third_desktop_image != blank %}
+	{% assign three_img_layout_class = 'image-with-text__image-container--triple' %}
+{% endif %}
+
+{% if first_desktop_image != blank and second_desktop_image != blank and third_desktop_image == blank %}
+	{% assign is_double_layout = true %}
+{% endif %}
+
+{% if first_desktop_image == blank and second_desktop_image == blank and third_desktop_image == blank %}
+	{% assign is_double_layout = true %}
+{% endif %}
+
+{% if two_images_layout == 'double_horizontal' and is_double_layout %}
+	{% assign two_img_layout_class = 'image-with-text__image-container--double-horizontal' %}
+{% elsif two_images_layout == 'double_vertical_offset' and is_double_layout %}
+	{% assign two_img_layout_class = 'image-with-text__image-container--double-vertical-offset' %}
+{% elsif two_images_layout == 'double_with_small' and is_double_layout %}
+	{% assign two_img_layout_class = 'image-with-text__image-container--double-with-small' %}
+
+	{% if image_position == 'left' %}
+		{% assign position_class = 'image-with-text__image-container--double-with-small-left' %}
+	{% else %}
+		{% assign position_class = 'image-with-text__image-container--double-with-small-right' %}
+	{% endif %}
+
+	{% assign two_img_layout_class = two_img_layout_class | append: ' ' | append: position_class %}
+{% endif %}
+
+{%- capture section_styles -%}
+	--text-alignment: {{ text_alignment }};
+	--content-vertical-alignment: {{ content_vertical_alignment }};
+	--container-width: {{ container_width }};
+{%- endcapture -%}
+
+{%- capture content -%}
+	<div class="image-with-text__content-wrapper">
+		<div class="image-with-text__content need-animate tr-dur-1">
+			{%- if heading != blank -%}
+				<h2 class="image-with-text__heading h2">
+					{{- heading -}}
+				</h2>
+			{%- endif -%}
+
+			{% if subheading != blank %}
+				<p class="image-with-text__subheading">{{ subheading }}</p>
+			{% endif %}
+
+			{%- if text_content != blank -%}
+				<div class="image-with-text__text-content rte">
+					{{- text_content -}}
+				</div>
+			{%- endif -%}
+
+			{%- if button_label != blank and button_url != blank -%}
+				<a
+					href="{{- button_url -}}"
+					{%- if button_aria_label != blank -%}aria-label="{{- button_aria_label | escape -}}"{%- endif -%}
+					class="image-with-text__button button button--{{- button_style -}}"
+				>
+					{{- button_label -}}
+				</a>
+			{%- endif -%}
+		</div>
+	</div>
+{%- endcapture -%}
+
+{%- render 'adastra' with '/src/styles/image-with-text.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 992px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign are_three_images = false -%}
+
+{% if first_desktop_image != blank and second_desktop_image != blank and third_desktop_image != blank %}
+	{%- assign are_three_images = true -%}
+{% endif %}
+
+{%- assign image_width    = "388x" -%}
+{%- assign image_width_2x = "776x" -%}
+
+{% if second_desktop_image != blank or third_desktop_image != blank %}
+	{% if are_three_images or two_images_layout == 'double_vertical' %}
+		{%- assign image_width    = "190x287" -%}
+		{%- assign image_width_2x = "380x574" -%}
+	{% elsif two_images_layout == 'double_horizontal' %}
+		{%- assign image_width    = "388x139" -%}
+		{%- assign image_width_2x = "380x278" -%}
+	{% elsif two_images_layout == 'double_vertical_offset' %}
+		{%- assign image_width    = "192x285" -%}
+		{%- assign image_width_2x = "384x570" -%}
+	{% elsif two_images_layout == 'double_with_small' %}
+		{%- assign image_width    = "133x195" -%}
+		{%- assign image_width_2x = "266x390" -%}
+	{% endif %}
+{% endif %}
+
+{%- assign first_image_width    = image_width -%}
+{%- assign first_image_width_2x = image_width_2x -%}
+
+{% unless are_three_images %}
+	{% if two_images_layout == 'double_vertical_offset' %}
+		{%- assign first_image_width    = "221x285" -%}
+		{%- assign first_image_width_2x = "442x570" -%}
+	{% elsif two_images_layout == 'double_with_small' %}
+		{%- assign first_image_width    = "323x235" -%}
+		{%- assign first_image_width_2x = "646x470" -%}
+	{% endif %}
+{% endunless %}
+
+<section class="image-with-text js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{ section_styles }}">
+	<div class="image-with-text__container">
+		{%- if image_position == 'left' -%}
+			<div class="image-with-text__image-container {{ two_img_layout_class }} {{ three_img_layout_class }}">
+				{% render 'image-with-text-image',
+					desktop_image: first_desktop_image,
+					mobile_image: first_mobile_image,
+					image_width: first_image_width,
+					image_width_2x: first_image_width_2x,
+					delay_step: 0.25
+				%}
+
+				{% if second_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: second_desktop_image,
+						mobile_image: second_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: 0.5
+					%}
+				{% elsif first_desktop_image == blank and second_desktop_image == blank and third_desktop_image == blank %}
+					{% render 'image-with-text-image',
+						desktop_image: second_desktop_image,
+						mobile_image: second_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x
+					%}
+				{% endif %}
+
+				{% if third_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: third_desktop_image,
+						mobile_image: third_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: 0.75
+					%}
+				{% endif %}
+			</div>
+
+			{{- content -}}
+		{%- else -%}
+			<div class="image-with-text__image-container image-with-text__image-container--mobile {{ two_img_layout_class }} {{ three_img_layout_class }}">
+				{% render 'image-with-text-image',
+					desktop_image: first_desktop_image,
+					mobile_image: first_mobile_image,
+					image_width: first_image_width,
+					image_width_2x: first_image_width_2x,
+					delay_step: 0.25
+				%}
+
+				{% if second_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: second_desktop_image,
+						mobile_image: second_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: 0.5
+					%}
+				{% endif %}
+
+				{% if third_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: third_desktop_image,
+						mobile_image: third_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: 0.75
+					%}
+				{% endif %}
+			</div>
+
+			{{- content -}}
+
+			<div class="image-with-text__image-container image-with-text__image-container--desktop {{ two_img_layout_class }} {{ three_img_layout_class }}">
+				{% if are_three_images %}
+					{% assign three_1_delay = 0.75 %}
+					{% assign three_2_delay = 0.5 %}
+					{% assign three_3_delay = 0.25 %}
+				{% elsif is_double_layout and two_images_layout != "double_with_small" %}
+					{% assign three_1_delay = 0.5 %}
+					{% assign three_2_delay = 0.25 %}
+				{% elsif is_double_layout and two_images_layout == "double_with_small" %}
+					{% assign three_1_delay = 0.25 %}
+					{% assign three_2_delay = 0.5 %}
+				{% endif %}
+
+				{% render 'image-with-text-image',
+					desktop_image: first_desktop_image,
+					mobile_image: first_mobile_image,
+					image_width: first_image_width,
+					image_width_2x: first_image_width_2x,
+					delay_step: three_1_delay
+				%}
+
+				{% if second_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: second_desktop_image,
+						mobile_image: second_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: three_2_delay
+					%}
+				{% endif %}
+
+				{% if third_desktop_image != blank %}
+					{% render 'image-with-text-image',
+						desktop_image: third_desktop_image,
+						mobile_image: third_mobile_image,
+						image_width: image_width,
+						image_width_2x: image_width_2x,
+						delay_step: three_3_delay
+					%}
+				{% endif %}
+			</div>
+		{%- endif -%}
+	</div>
+</section>
+
+
+{%- schema -%}
+	{
+		"name": "Image with text",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"id": "image_position",
+				"type": "select",
+				"label": "Image position",
+				"options": [
+					{
+						"value": "left",
+						"label": "Left"
+					},
+					{
+						"value": "right",
+						"label": "Right"
+					}
+				],
+				"default": "left"
+			},
+			{
+				"id": "text_alignment",
+				"type": "select",
+				"label": "Text alignment",
+				"options": [
+					{
+						"value": "left",
+						"label": "Left"
+					},
+					{
+						"value": "center",
+						"label": "Center"
+					},
+					{
+						"value": "right",
+						"label": "Right"
+					}
+				],
+				"default": "left"
+			},
+			{
+				"id": "content_vertical_alignment",
+				"type": "select",
+				"label": "Content vertical alignment",
+				"options": [
+					{
+						"value": "start",
+						"label": "Top"
+					},
+					{
+						"value": "center",
+						"label": "Center"
+					},
+					{
+						"value": "end",
+						"label": "Bottom"
+					}
+				],
+				"default": "center"
+			},
+			{
+				"id": "two_images_layout",
+				"type": "select",
+				"label": "Two images layout",
+				"options": [
+					{
+						"value": "double_vertical",
+						"label": "Double vertical"
+					},
+					{
+						"value": "double_horizontal",
+						"label": "Double horizontal"
+					},
+					{
+						"value": "double_vertical_offset",
+						"label": "Double vertical with offset"
+					},
+					{
+						"value": "double_with_small",
+						"label": "Double with small"
+					}
+				],
+				"default": "double_with_small",
+				"info": "This setting works only when you have two images."
+			},
+			{
+				"id": "first_desktop_image",
+				"type": "image_picker",
+				"label": "First image desktop"
+			},
+			{
+				"id": "first_mobile_image",
+				"type": "image_picker",
+				"label": "First image mobile"
+			},
+			{
+				"id": "second_desktop_image",
+				"type": "image_picker",
+				"label": "Second image desktop"
+			},
+			{
+				"id": "second_mobile_image",
+				"type": "image_picker",
+				"label": "Second image mobile"
+			},
+			{
+				"id": "third_desktop_image",
+				"type": "image_picker",
+				"label": "Third image desktop"
+			},
+			{
+				"id": "third_mobile_image",
+				"type": "image_picker",
+				"label": "Third image mobile"
+			},
+			{
+				"id": "heading",
+				"type": "text",
+				"label": "Heading"
+			},
+			{
+				"id": "subheading",
+				"type": "textarea",
+				"label": "Subheading"
+			},
+			{
+				"id": "text_content",
+				"type": "richtext",
+				"label": "Text"
+			},
+			{
+				"id": "button_label",
+				"type": "text",
+				"label": "Button label"
+			},
+			{
+				"id": "button_aria_label",
+				"type": "text",
+				"label": "Button aria-label",
+				"info": "Need for good accessibility, e.g. 'All news about'."
+			},
+			{
+				"id": "button_url",
+				"type": "url",
+				"label": "Button link"
+			},
+			{
+				"id": "button_style",
+				"type": "select",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "secondary-border"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 50
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 50
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"presets": [
+			{
+				"name": "Image with text",
+				"settings": {
+					"heading": "Text heading",
+					"subheading": "Subheading",
+					"text_content": "<p>Combine an image with text to highlight a specific product, collection, or blog post of your choice. Enhance the content by including information on its availability, style, or possibly a review.</p>",
+					"button_label": "Button label",
+					"button_url": "/"
+				}
+			}
+		]
+	}
+{%- endschema -%}

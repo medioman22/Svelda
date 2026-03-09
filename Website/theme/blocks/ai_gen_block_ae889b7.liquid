@@ -1,0 +1,64 @@
+{% doc %}
+  @prompt
+    just a horizontal line
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-horizontal-line-{{ ai_gen_id }} {
+    display: block;
+    width: {{ block.settings.desktop_width_percent }}%;
+    margin: 0 auto;
+  }
+
+  .ai-horizontal-line-{{ ai_gen_id }}__line {
+    width: 100%;
+    height: {{ block.settings.line_thickness }}px;
+    background-color: {{ block.settings.line_color }};
+    border: none;
+    margin: 0;
+  }
+{% endstyle %}
+
+<div class="ai-horizontal-line-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <hr class="ai-horizontal-line-{{ ai_gen_id }}__line">
+</div>
+
+{% schema %}
+{
+  "name": "Horizontal line",
+  "settings": [
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "line_thickness",
+      "label": "Line thickness",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Desktop width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    }
+  ],
+  "presets": [
+    {
+      "name": "Horizontal line"
+    }
+  ]
+}
+{% endschema %}

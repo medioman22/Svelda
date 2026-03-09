@@ -1,0 +1,557 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Our team
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign heading 			= section.settings.heading -%}
+{%- assign text 			= section.settings.text -%}
+{%- assign cards_alignment 	= section.settings.cards_alignment -%}
+{%- assign read_more_text 	= section.settings.read_more_text -%}
+{%- assign container 		= section.settings.container_width -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- render 'adastra' with '/src/styles/our-team.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- capture section_styles -%}
+	--cards-alignment: {{ cards_alignment }}; {{-  -}}
+	--container-width: {{ container_width }}; {{-  -}}
+{%- endcapture -%}
+
+<section class="our-team js-our-team js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{ section_styles }}">
+	<div class="our-team__container">
+		{%- if heading != blank or text != blank -%}
+			<div class="our-team__header need-animate tr-dur-0-8">
+				{% if heading != blank %}
+					<h2 class="h2 our-team__title">
+						{{- heading -}}
+					</h2>
+				{% endif %}
+
+				{% if text != blank %}
+					<div class="our-team__text rte">{{ text }}</div>
+				{% endif %}
+			</div>
+		{%- endif -%}
+
+		<div class="our-team__slider swiper js-featured-content-slider">
+			<div class="our-team__cards {% if section.blocks.size <= 2 %}our-team__cards--center-tablet{% endif %} swiper-wrapper">
+				{% assign delay_step = 0 %}
+				{% assign delay_step_text = 0.5 %}
+
+				{% for block in section.blocks %}
+					{% assign card_image 		= block.settings.card_image %}
+					{% assign popup_image 		= block.settings.popup_image | default: card_image %}
+					{% assign name 				= block.settings.name %}
+					{% assign role 				= block.settings.role %}
+					{% assign description 		= block.settings.description %}
+					{% assign facebook 			= block.settings.facebook %}
+					{% assign instagram 		= block.settings.instagram %}
+					{% assign twitter 			= block.settings.twitter %}
+					{% assign youtube 			= block.settings.youtube %}
+					{% assign delay_step 		= delay_step | plus: 0.25 %}
+					{% assign delay_step_text 	= delay_step_text | plus: 0.25 %}
+
+					{% if facebook != blank or instagram != blank or twitter != blank or youtube != blank %}
+						{% assign show_socials = true %}
+					{% endif %}
+
+					<div class="our-team__cards-col swiper-slide">
+						<div class="team-card">
+							<div class="team-card__wrapper need-animate tr-dur-0-5" style="transition-delay: {{ delay_step }}s;">
+								{% if card_image != blank %}
+									{%- capture img_focal -%}
+										--img-desktop-pos: {{ card_image.presentation.focal_point }};
+									{%- endcapture -%}
+
+									{% assign is_lazy = false %}
+
+									{% if section.index > 1 %}
+										{% assign is_lazy = true %}
+									{% elsif section.index == 1 and forloop.index > 2 %}
+										{% assign is_lazy = true %}
+									{% endif %}
+
+									<picture {% if is_lazy %}class="lazy"{% endif %}>
+										<source
+											{% if is_lazy %}
+												data-srcset="{{ card_image | image_url: width: 343, height: 425 }} 1x,
+															{{ card_image | image_url: width: 686, height: 850 }} 2x"
+											{% else %}
+												srcset="{{ card_image | image_url: width: 343, height: 425 }} 1x,
+															{{ card_image | image_url: width: 686, height: 850 }} 2x"
+											{% endif %}
+											media="(max-width: 420px)"
+										>
+
+										<source
+											{% if is_lazy %}
+												data-srcset="{{ card_image | image_url: width: 480, height: 595 }} 1x,
+															{{ card_image | image_url: width: 960, height: 1190 }} 2x"
+											{% else %}
+												srcset="{{ card_image | image_url: width: 480, height: 595 }} 1x,
+															{{ card_image | image_url: width: 960, height: 1190 }} 2x"
+											{% endif %}
+											media="(max-width: 574px)"
+										>
+
+										<source
+											{% if is_lazy %}
+												data-srcset="{{ card_image | image_url: width: 360, height: 446 }} 1x,
+															{{ card_image | image_url: width: 720, height: 892 }} 2x"
+											{% else %}
+												srcset="{{ card_image | image_url: width: 360, height: 446 }} 1x,
+															{{ card_image | image_url: width: 720, height: 892 }} 2x"
+											{% endif %}
+											media="(max-width: 767px)"
+										>
+
+										<source
+											{% if is_lazy %}
+												data-srcset="{{ card_image | image_url: width: 309, height: 384 }} 1x,
+															{{ card_image | image_url: width: 618, height: 768 }} 2x"
+											{% else %}
+												srcset="{{ card_image | image_url: width: 309, height: 384 }} 1x,
+															{{ card_image | image_url: width: 618, height: 768 }} 2x"
+											{% endif %}
+											media="(max-width: 991px)"
+										>
+
+										<source
+											{% if is_lazy %}
+												data-srcset="{{ card_image | image_url: width: 376, height: 467 }} 1x,
+															{{ card_image | image_url: width: 752, height: 934 }} 2x"
+											{% else %}
+												srcset="{{ card_image | image_url: width: 376, height: 467 }} 1x,
+															{{ card_image | image_url: width: 752, height: 934 }} 2x"
+											{% endif %}
+											media="(max-width: 1600px)"
+										>
+
+										<img class="team-card__image"
+											{% if is_lazy %}
+												src="{{ card_image | image_url: width: 10 }}"
+												data-src="{{ card_image | image_url: width: 456, height: 567 }}"
+												data-srcset="{{ card_image | image_url: width: 456, height: 567 }} 1x,
+													{{ card_image | image_url: width: 800, height: 996 }} 2x"
+											{% else %}
+												src="{{ card_image | image_url: width: 456, height: 567 }}"
+												srcset="{{ card_image | image_url: width: 456, height: 567 }} 1x,
+													{{ card_image | image_url: width: 800, height: 996 }} 2x"
+											{% endif %}
+											 style="{{ img_focal }}"
+											 alt="{{ card_image.alt | escape }}">
+									</picture>
+								{% else %}
+									{{ 'image' | placeholder_svg_tag: 'team-card__image team-card__image--placeholder' }}
+								{% endif %}
+
+								{% if show_socials %}
+									<ul class="team-card__socials">
+										{% if facebook != blank %}
+											<li class="team-card__socials-item">
+												<a href="{{ facebook }}" class="team-card__socials-link focus-visible-outline">
+													{% render 'icons-social', icon: 'facebook' %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if instagram != blank %}
+											<li class="team-card__socials-item">
+												<a href="{{ instagram }}" class="team-card__socials-link focus-visible-outline">
+													{% render 'icons-social', icon: 'instagram' %}
+												</a>
+											</li>
+										{% endif %}
+
+										{% if twitter != blank %}
+											<li class="team-card__socials-item">
+												<a href="{{ twitter }}" class="team-card__socials-link focus-visible-outline">
+													{% render 'icons-social', icon: 'x-twitter' %}
+												</a>
+											</li>
+										{% endif %}
+
+
+										{% if youtube != blank %}
+											<li class="team-card__socials-item">
+												<a href="{{ youtube }}" class="team-card__socials-link focus-visible-outline">
+													{% render 'icons-social', icon: 'youtube' %}
+												</a>
+											</li>
+										{% endif %}
+									</ul>
+								{% endif %}
+
+								<div class="team-card__content need-animate tr-dur-0-5" style="transition-delay: {{ delay_step_text }}s;">
+									{% if name != blank %}
+										<div class="team-card__name h4">{{ name }}</div>
+									{% endif %}
+
+									{% if role != blank %}
+										<div class="team-card__role">{{ role }}</div>
+									{% endif %}
+
+									{% if read_more_text != blank %}
+										<button
+											class="team-card__read-more button-link js-team-card-open-popup"
+											data-js-toggle="team-toggle-{{ section.id }}-{{ forloop.index }}"
+											data-target="our-team-{{ section.id }}-{{ forloop.index }}"
+										>
+											{{- read_more_text -}}
+										</button>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<div class="our-team__pagination js-featured-content-slider-pagination {% if section.blocks.size < 2 %}is-hidden{% endif %}"></div>
+		</div>
+
+		{% for block in section.blocks %}
+			{% assign card_image 	= block.settings.card_image %}
+			{% assign popup_image 	= block.settings.popup_image | default: card_image %}
+			{% assign name 			= block.settings.name %}
+			{% assign role 			= block.settings.role %}
+			{% assign description 	= block.settings.description %}
+			{% assign facebook 		= block.settings.facebook %}
+			{% assign instagram 	= block.settings.instagram %}
+			{% assign twitter 		= block.settings.twitter %}
+			{% assign youtube 		= block.settings.youtube %}
+
+			<div id="our-team-{{ section.id }}-{{ forloop.index }}"
+				 class="our-team-popup popup"
+				 role="dialog"
+			>
+				<div class="our-team-popup__container popup__container">
+					<div class="our-team-popup__image-col">
+						{% if popup_image != blank %}
+							{%- capture img_focal -%}
+								--img-desktop-pos: {{ popup_image.presentation.focal_point }};
+							{%- endcapture -%}
+
+							<picture class="our-team-popup__image-wrapper lazy">
+								<source data-srcset="{{ popup_image | image_url: width: 356, height: 356 }} 1x,
+														{{ popup_image | image_url: width: 712, height: 712 }} 2x"
+										media="(max-width: 420px)"
+								>
+
+								<source data-srcset="{{ popup_image | image_url: width: 518, height: 518 }} 1x,
+														{{ popup_image | image_url: width: 1036, height: 1036 }} 2x"
+										media="(max-width: 767px)"
+								>
+
+								<img class="our-team-popup__image"
+									 src="{{ popup_image | image_url: width: 10 }}"
+									 data-src="{{ popup_image | image_url: width: 504, height: 504 }}"
+									 data-srcset="{{ popup_image | image_url: width: 504, height: 504 }} 1x,
+															{{ popup_image | image_url: width: 1008, height: 1008 }} 2x"
+									 style="{{ img_focal }}"
+									 alt="{{ popup_image.alt | escape }}">
+							</picture>
+						{% else %}
+							<div class="our-team-popup__image-wrapper">
+								{{ 'image' | placeholder_svg_tag: 'our-team-popup__image our-team-popup__image--placeholder' }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="our-team-popup__content-col">
+						{% if name != blank %}
+							<h3 class="our-team-popup__title">{{ name }}</h3>
+						{% endif %}
+
+						{% if role != blank %}
+							<div class="our-team-popup__role">{{ role }}</div>
+						{% endif %}
+
+						{% if description != blank %}
+							<div class="our-team-popup__rte rte">{{ description }}</div>
+						{% endif %}
+
+						{% if show_socials %}
+							<ul class="our-team-popup__socials">
+								{% if facebook != blank %}
+									<li>
+										<a href="{{ facebook }}" class="our-team-popup__socials-link button-social focus-visible-outline">
+											{% render 'icons-social', icon: 'facebook' %}
+										</a>
+									</li>
+								{% endif %}
+
+								{% if instagram != blank %}
+									<li>
+										<a href="{{ instagram }}" class="our-team-popup__socials-link button-social focus-visible-outline">
+											{% render 'icons-social', icon: 'instagram' %}
+										</a>
+									</li>
+								{% endif %}
+
+								{% if twitter != blank %}
+									<li>
+										<a href="{{ twitter }}" class="our-team-popup__socials-link button-social focus-visible-outline">
+											{% render 'icons-social', icon: 'x-twitter' %}
+										</a>
+									</li>
+								{% endif %}
+
+								{% if youtube != blank %}
+									<li>
+										<a href="{{ youtube }}" class="our-team-popup__socials-link button-social focus-visible-outline">
+											{% render 'icons-social', icon: 'youtube' %}
+										</a>
+									</li>
+								{% endif %}
+							</ul>
+						{% endif %}
+					</div>
+
+					<button type="button"
+							class="popup-close-icon-button focus-visible-outline"
+							aria-label="{{- 'general.accessibility.close_modal' | t | escape -}}"
+							data-target="our-team-{{ section.id }}-{{ forloop.index }}"
+							data-js-toggle="team-toggle-{{ section.id }}-{{ forloop.index }}"
+					>
+						{% render 'icons', icon: 'menu-close' %}
+					</button>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+</section>
+
+{%- render 'adastra' with '/src/scripts/component-featured-content-slider.js' -%}
+{%- render 'adastra' with '/src/scripts/our-team-slider.js' -%}
+
+{%- schema -%}
+	{
+		"name": "Our team",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "text",
+				"id": "heading",
+				"label": "Heading",
+				"default": "Our team"
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text"
+			},
+			{
+				"type": "select",
+				"id": "cards_alignment",
+				"label": "Cards alignment",
+				"info": "Only desktop",
+				"options": [
+					{
+						"value": "flex-start",
+						"label": "Left"
+					},
+					{
+						"value": "center",
+						"label": "Center"
+					}
+				],
+				"default": "center"
+			},
+			{
+				"type": "text",
+				"id": "read_more_text",
+				"label": "Read more label",
+				"default": "Read More",
+				"info": "By click on this button you can open a card team popup with description."
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 50
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 50
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"type": "card",
+				"name": "Team card",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "card_image",
+						"label": "Card image"
+					},
+					{
+						"type": "image_picker",
+						"id": "popup_image",
+						"label": "Popup image",
+						"info": "The card image will be used by default"
+					},
+					{
+						"type": "text",
+						"id": "name",
+						"label": "Name",
+						"default": "Name team member"
+					},
+					{
+						"type": "text",
+						"id": "role",
+						"label": "Role",
+						"default": "Role team member"
+					},
+					{
+						"type": "richtext",
+						"id": "description",
+						"label": "Description"
+					},
+					{
+						"type": "header",
+						"content": "Socials"
+					},
+					{
+						"type": "text",
+						"id": "facebook",
+						"label": "Facebook"
+					},
+					{
+						"type": "text",
+						"id": "instagram",
+						"label": "Instagram"
+					},
+					{
+						"type": "text",
+						"id": "twitter",
+						"label": "X (Twitter)"
+					},
+					{
+						"type": "text",
+						"id": "youtube",
+						"label": "Youtube"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Our team",
+				"settings": {},
+				"blocks": [
+					{
+						"type": "card",
+						"settings": {
+							"name": "Name of 1st team member",
+							"role": "Role of 1st team member"
+						}
+					},
+					{
+						"type": "card",
+						"settings": {
+							"name": "Name of 2nd team member",
+							"role": "Role of 2nd team member"
+						}
+					},
+					{
+						"type": "card",
+						"settings": {
+							"name": "Name of 3rd team member",
+							"role": "Role of 3rd team member"
+						}
+					},
+					{
+						"type": "card",
+						"settings": {
+							"name": "Name of 4th team member",
+							"role": "Role of 4th team member"
+						}
+					}
+				]
+			}
+		]
+	}
+{%- endschema -%}

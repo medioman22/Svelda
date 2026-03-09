@@ -1,0 +1,308 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+  Section: Product media
+------------------------------------------------------------------------------
+{%- endcomment -%}
+{% assign is_preset = false %}
+{% if product == blank %}
+	{% assign is_preset = true %}
+{% endif %}
+
+{%- if product.media.size > 0 -%}
+	{%- assign is_lazy = true -%}
+	{%- assign is_zoom_enabled = section.settings.is_zoom_enabled -%}
+	{%- assign is_enable_media_scroller = section.settings.is_enable_media_scroller -%}
+	{%- assign contain_video = false -%}
+	{%- for media in product.media  -%}
+		{%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+			{%- assign contain_video = true -%}
+			{%- break -%}
+		{%- endif -%}
+	{%- endfor -%}
+
+	{% assign media_layout = section.settings.media_layout %}
+	{% assign thumbnails_position = section.settings.thumbnails_position %}
+	{% assign pagination_dynamic = false %}
+	{% assign auto_height = false %}
+
+	{% if media_height == 'full_size' or media_height == 'fit_to_screen' %}
+		{% assign auto_height = true %}
+	{% endif %}
+
+	{% if product.media.size > 10 %}
+		{% assign pagination_dynamic = true %}
+	{% endif %}
+
+	{%- capture media_container_classes -%}
+		product-media product-media--layout-{{- media_layout }} {% if media_layout == 'carousel' %}product-media--thumbnails-position-{{- thumbnails_position }}{% endif %} js-product-media-container
+	{%- endcapture -%}
+
+	<div class="{{- media_container_classes }}" data-media-layout="{{- media_layout -}}" {% if is_zoom_enabled %}data-zoom-container{% endif %} {% if is_enable_media_scroller %}data-enable-media-scroller{% endif %}>
+		<div class="product-media__container js-product-sticky-container">
+			<div class="swiper product-media__slider js-product-media-slider-{{ section.id }}"
+				 data-dynamic-pagination="{{ pagination_dynamic }}"
+				 data-js-product-media-slider
+				 data-auto-height="{{ auto_height }}"
+			>
+				{% if is_zoom_enabled %}
+					<div class="product-media__zoom-wrapper">
+						<button
+							class="product-media__zoom-button"
+							data-js-zoom-button
+							aria-label="{{- 'general.accessibility.zoom_button' | t | escape -}}"
+						>
+							{% render 'icons', icon: 'plus' %}
+						</button>
+					</div>
+				{% endif %}
+
+				<div class="product-media__navigation {% unless section.settings.show_arrows_mobile %}product-media__navigation--hide-mob{% endunless %} {% if product.media.size < 2 %}is-hidden{% endif %}">
+					<button
+						class="swiper-button swiper-button-prev product-media__navigation-button js-product-media-slider-prev-{{ section.id }}"
+					>
+						{% render 'icons', icon: 'arrow-left' %}
+					</button>
+
+					<button
+						class="swiper-button swiper-button-next product-media__navigation-button js-product-media-slider-next-{{ section.id }}"
+					>
+						{% render 'icons', icon: 'arrow-right' %}
+					</button>
+				</div>
+
+				<div class="swiper-wrapper product-media__slider-wrapper {% if media_height == 'full_size' or media_height == 'fit_to_screen' -%}product-media__slider-wrapper--start{% endif %} {% if media_height == 'fit_to_screen' %}product-media__slider-wrapper--auto{% endif %}">
+					{%- for media in product.media  -%}
+						{% assign is_current_lazy = is_lazy %}
+						{% assign square_image = false %}
+
+						{% if media_height == 'square' %}
+							{% assign square_image = true %}
+						{% endif %}
+
+						{% if forloop.first and template == "product" %}
+							{% assign is_current_lazy = false %}
+						{% endif %}
+
+						{% if product.selected_or_first_available_variant.featured_media.id == media.id and template == "product" %}
+							{% assign is_current_lazy = false %}
+						{% endif %}
+
+						{% capture variant_ids %}
+							{% for variant in product.variants  %}
+								{% if media == variant.featured_media %}
+									,{{- variant.id -}}
+								{% endif %}
+							{% endfor %}
+						{% endcapture %}
+
+						{% assign variant_ids = variant_ids | remove_first: "," | strip | split: "," %}
+
+						{% if media_height == "fit_to_screen" %}
+							{% assign slide_height_class = "product-media__slider-slide--fit-to-screen" %}
+						{% elsif media_height == "square" %}
+							{% assign slide_height_class = "product-media__slider-slide--square" %}
+						{% endif %}
+
+						<div
+							class="swiper-slide product-media__slider-slide js-product-gallery-slide js-product-media-item {% if is_zoom_enabled and media.media_type != 'video' %}product-media__slider-slide--zoom{% endif %} {{ slide_height_class }}"
+							{% if media_layout == 'stacked' or media_layout == 'stacked_2_col' or media_layout == 'stacked_2_col_with_big_image' %}
+								id="thumbnail-{{- media.id -}}"
+								data-media-id="{{- media.id -}}"
+							{% endif %}
+							{% if media.media_type == 'model' %}
+								data-model-slide="{{- media.id -}}"
+							{% endif %}
+							{% if is_zoom_enabled and media.media_type != 'video' and media.media_type != 'external_video' %}
+								data-zoom-media="{{- media.id -}}"
+							{% endif %}
+							{% if is_zoom_enabled %}
+								{% if media.media_type == 'video' or media.media_type == 'external_video' %}
+									data-zoom-media-html-video="{{- media.id -}}"
+								{% endif %}
+							{% endif %}
+						>
+							{%- case media.media_type -%}
+							{%- when 'image' -%}
+								<div
+									class="js-product-gallery-slide-variant-{{ section.id }} js-product-media-item-variant"
+									data-variant-id="{% for variant_id in variant_ids %}{{- variant_id | strip -}}{% unless forloop.index == forloop.last %},{% endunless %}{% endfor %}"
+								>
+									{%- render "product-gallery-image",
+										image: media,
+										is_lazy: is_current_lazy,
+										container: section.settings.container_width,
+										square_image: square_image
+									-%}
+								</div>
+							{%- when 'video' -%}
+								{%- if is_zoom_enabled -%}
+									<div class="product-media__slider-slide-wrapper">
+										{%- render "product-gallery-video",
+											video: media,
+											type: media.media_type
+										-%}
+									</div>
+								{%- else -%}
+									{%- render "product-gallery-video",
+										video: media,
+										type: media.media_type
+									-%}
+								{%- endif -%}
+							{%- when 'external_video' -%}
+								{%- if is_zoom_enabled -%}
+									<div class="product-media__slider-slide-wrapper">
+										{%- render "product-gallery-video",
+											video: media,
+											type: media.media_type
+										-%}
+									</div>
+								{%- else -%}
+									{%- render "product-gallery-video",
+										video: media,
+										type: media.media_type
+									-%}
+								{%- endif -%}
+							{%- when 'model' -%}
+								{%- render "product-gallery-image",
+									image: media,
+									is_lazy: is_current_lazy,
+									container: section.settings.container_width,
+									square_image: square_image,
+									additional_class: 'js-product-media-model-poster'
+								-%}
+
+								{%- if is_zoom_enabled -%}
+									<span class="product-media__slider-slide-icon">
+										{%- render 'icons', icon: 'model' -%}
+									</span>
+								{%- else -%}
+									<button class="product-media__slider-slide-icon product-media__slider-model-button js-product-media-model-button" aria-label="{{- 'products.product.ar_button' | t | escape -}}">
+										{%- render 'icons', icon: 'model' -%}
+									</button>
+
+									<span class="js-product-media-model-content is-hidden">
+										{{ media | model_viewer_tag }}
+									</span>
+								{%- endif -%}
+
+								<button
+									class="product-media__model-view-button"
+									type="button"
+									data-shopify-xr
+									aria-label="{{ 'products.product.xr_button_label' | t }}"
+									data-shopify-model3d-id="{{- media.id -}}"
+									data-shopify-title="{{- product.title | escape -}}"
+									data-shopify-xr-hidden
+								>
+									{%- render 'icons', icon: 'model' -%}
+
+									{{- 'products.product.xr_button' | t -}}
+								</button>
+							{%- endcase -%}
+						</div>
+					{%- endfor -%}
+				</div>
+			</div>
+
+			{% if product.media.size < 5 %}
+				{% assign hidden_class = "is-hidden" %}
+			{% endif %}
+
+			<div class="product-media__slider-thumbnails-container js-thumb-container">
+				<div class="swiper js-product-media-slider-thumbnails-{{- section.id }} product-media__slider-thumbnails {% if product.media.size == 1 %}is-hidden{% endif %}"
+					 data-thumbnails-position="{{- thumbnails_position -}}"
+				>
+					<div class="swiper-wrapper product-media__slider-thumbnails-wrapper">
+						{% for media in product.media  %}
+							{% if forloop.index < 5 and template == "product" %}
+								{% assign is_current_lazy = false %}
+							{% endif %}
+
+							<button class="swiper-slide product-media__slider-thumbnails-slide"
+									data-slide-index="{{ forloop.index0 }}"
+							>
+								{%- case media.media_type -%}
+									{%- when 'image' -%}
+										{%- render "product-gallery-thumbnail",
+											image: media,
+											is_lazy: is_current_lazy,
+											thumbnails_position: thumbnails_position
+										-%}
+									{%- when 'video' -%}
+										{%- render "product-gallery-poster",
+											image: media.preview_image,
+											is_lazy: is_current_lazy,
+											media_type: media.media_type,
+											thumbnails_position: thumbnails_position
+										-%}
+									{%- when 'external_video' -%}
+										{%- render "product-gallery-poster",
+											image: media.preview_image,
+											is_lazy: is_current_lazy,
+											media_type: media.media_type,
+											thumbnails_position: thumbnails_position
+										-%}
+									{%- when 'model' -%}
+										{%- render "product-gallery-poster",
+											image: media.preview_image,
+											is_lazy: is_current_lazy,
+											media_type: media.media_type,
+											thumbnails_position: thumbnails_position
+										-%}
+								{%- endcase -%}
+							</button>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{%- if is_zoom_enabled -%}
+			{% assign id = 'ZoomMediaModal-' | append: section.id %}
+
+			{%- render 'zoom-modal', id: id, medias: product.media -%}
+		{%- endif -%}
+
+		{%- capture models_json -%}
+			{{ product.media | where: 'media_type', 'model' | json }}
+		{%- endcapture -%}
+
+		{%- if models_json != "" -%}
+			<script type="application/json" id="ProductModelsJSON">
+				{{- models_json -}}
+			</script>
+		{%- endif -%}
+	</div>
+{% elsif settings.product_default_image != blank or is_preset %}
+	{%- assign is_lazy = section.settings.is_lazy -%}
+	{% assign media_layout = section.settings.media_layout %}
+
+	{%- capture media_container_classes -%}
+		product-media product-media__layout-{{ media_layout }}
+	{%- endcapture -%}
+
+	<div class="{{- media_container_classes -}}">
+		<div class="swiper product-media__slider">
+			<div class="swiper-wrapper product-media__slider-wrapper">
+				<div class="swiper-slide product-media__slider-slide default-image">
+					{% if is_preset %}
+						{%- assign min = 1 -%}
+						{%- assign max = 6 -%}
+						{%- assign diff = max | minus: min -%}
+						{%- assign random_number       = "now" | date: "%N" | modulo: diff | plus: min -%}
+						{%- assign placeholer_svg_name = 'product-' | append: random_number -%}
+
+						{{- placeholer_svg_name | placeholder_svg_tag: 'product-card__image' -}}
+					{% else %}
+						{%- render "product-gallery-image",
+							image: settings.product_default_image,
+							is_lazy: is_lazy,
+							container: section.settings.container_width,
+							square_image: square_image
+						-%}
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{%- endif -%}

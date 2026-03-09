@@ -1,4 +1,35 @@
-.env
-svelda/
-__pycache__/
-*.pyc
+# Shopify integration
+Website/theme/.shopify-login
+Website/theme/.shopify-cli
+
+# Photos and Products
+PHOTOS/
+Products/
+SHARED/
+Suppliers/
+Admin/
+Logo/
+Code/
+
+# Media and binary files
+*.jpg
+*.png
+*.jpeg
+*.mp4
+*.pdf
+*.webp
+*.DS_Store
+
+# Python
+_python/__pycache__/
+_python/*.pyc
+_python/.env
+_python/svelda_backup/
+_python/jobs_history.json
+_python/proto_history.json
+_python/custom_prompts.json
+
+# System
+node_modules/
+.vscode/
+.claude/

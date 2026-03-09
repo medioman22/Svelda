@@ -1,0 +1,461 @@
+{% comment %}
+	------------------------------------------------------------------------------
+	Snippet: Collection card
+	- collection: Collection object (required)
+	- image: image object
+	- cards_per_row: number, default is 4 cards per row
+	- aspect_ratio: image aspect ratio class
+	- text_alignment: text aligment position
+	- text_position: layout of the card
+	- show_products_count: boolean, show/hide products count,
+	- is_lazy: boolean, enable lazy-load
+	------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- render 'adastra' with '/src/styles/collection-card.scss' -%}
+
+{% if cards_per_row == nil %}
+	{% assign cards_per_row = 4 %}
+{% endif %}
+
+{%- assign min = 1 -%}
+{%- assign max = 6 -%}
+{%- assign diff = max | minus: min -%}
+
+<a
+	class="focus-visible-outline collection-card {% if text_alignment != 'left' %}collection-card--{{ text_alignment }}{% endif %}"
+	{% if collection != blank %}
+		href="{{- collection.url -}}"
+		aria-label="{{- 'collections.general.collection_card_link_aria_label' | t: title: collection.title | escape -}}"
+	{% endif %}
+	{% if collection == blank %}role="link" aria-disabled="true"{% endif %}
+>
+	<span class="collection-card__image-wrapper {{ aspect_ratio }}">
+		{% if collection != blank %}
+			{% if image != blank %}
+				{%- capture img_focal -%}
+					--img-desktop-pos: {{ image.presentation.focal_point }};
+				{%- endcapture -%}
+			{% endif %}
+
+			<picture class="{% if is_lazy %}lazy{% endif %} no-js-hidden">
+				{% if section.settings.aspect_ratio == "square" %}
+					{% comment %} 4 per row {% endcomment %}
+					{% assign x1_1920 = '460x460' %}
+					{% assign x2_1920 = '920x920' %}
+
+					{% assign x1_1500 = '355x355' %}
+					{% assign x2_1500 = '710x710' %}
+
+					{% assign x1_991 = '228x228' %}
+					{% assign x2_991 = '456x456' %}
+
+					{% comment %} 3 per row {% endcomment %}
+					{% assign x1_3_per_row_1920 = '620x620' %}
+					{% assign x2_3_per_row_1920 = '1240x1240' %}
+
+					{% assign x1_3_per_row_1500 = '480x480' %}
+					{% assign x2_3_per_row_1500 = '960x960' %}
+
+					{% assign x1_3_per_row_991 = '310x310' %}
+					{% assign x2_3_per_row_991 = '620x620' %}
+
+					{% comment %} 2 per row {% endcomment %}
+					{% assign x1_2_per_row_1920 = '936x936' %}
+					{% assign x2_2_per_row_1920 = '1872x1872' %}
+
+					{% assign x1_2_per_row_1500 = '726x726' %}
+					{% assign x2_2_per_row_1500 = '1452x1452' %}
+
+					{% assign x1_2_per_row_991 = '472x472' %}
+					{% assign x2_2_per_row_991 = '944x944' %}
+
+					{% if cards_per_row == "3" %}
+						{% assign x1_1920 = x1_3_per_row_1920 %}
+						{% assign x2_1920 = x2_3_per_row_1920 %}
+
+						{% assign x1_1500 = x1_3_per_row_1500 %}
+						{% assign x2_1500 = x2_3_per_row_1500 %}
+
+						{% assign x1_991 = x1_3_per_row_991 %}
+						{% assign x2_991 = x2_3_per_row_991 %}
+					{% elsif cards_per_row == "2" %}
+						{% assign x1_1920 = x1_2_per_row_1920 %}
+						{% assign x2_1920 = x2_2_per_row_1920 %}
+
+						{% assign x1_1500 = x1_2_per_row_1500 %}
+						{% assign x2_1500 = x2_2_per_row_1500 %}
+
+						{% assign x1_991 = x1_2_per_row_991 %}
+						{% assign x2_991 = x2_2_per_row_991 %}
+					{% endif %}
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '350x350', crop: 'center' }} 1x,
+										{{ image | img_url: '700x700', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '350x350', crop: 'center' }} 1x,
+										{{ image | img_url: '700x700', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 380px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '356x356', crop: 'center' }} 1x,
+										{{ image | img_url: '712x712', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '356x356', crop: 'center' }} 1x,
+										{{ image | img_url: '712x712', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 420px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '736x736', crop: 'center' }} 1x,
+										{{ image | img_url: '1534x1534', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '736x736', crop: 'center' }} 1x,
+										{{ image | img_url: '1534x1534', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 767px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 991px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 1500px)">
+
+					<img class="collection-card__image"
+						 {% if is_lazy %}
+						 src="{{ image | img_url: '10x' }}"
+						 srcset="{{ image | img_url: '10x' }}"
+						 data-src="{{ image | img_url: x1_1920, crop: 'center' }}"
+						 data-srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% else %}
+							 src="{{ image | img_url: x1_1920, crop: 'center' }}"
+							 srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% endif %}
+						 alt="{{ image.alt | escape }}"
+						{% if img_focal != blank %}
+							style="{{ img_focal }}"
+						{% endif %}
+					>
+				{% elsif section.settings.aspect_ratio == "landscape" %}
+					{% comment %} 4 per row {% endcomment %}
+					{% assign x1_1920 = '455x229' %}
+					{% assign x2_1920 = '910x458' %}
+
+					{% assign x1_1500 = '460x260' %}
+					{% assign x2_1500 = '920x520' %}
+
+					{% assign x1_991 = '228x129' %}
+					{% assign x2_991 = '456x258' %}
+
+					{% comment %} 3 per row {% endcomment %}
+					{% assign x1_3_per_row_1920 = '620x350' %}
+					{% assign x2_3_per_row_1920 = '1240x700' %}
+
+					{% assign x1_3_per_row_1500 = '480x270' %}
+					{% assign x2_3_per_row_1500 = '960x540' %}
+
+					{% assign x1_3_per_row_991 = '310x175' %}
+					{% assign x2_3_per_row_991 = '620x350' %}
+
+					{% comment %} 2 per row {% endcomment %}
+					{% assign x1_2_per_row_1920 = '936x528' %}
+					{% assign x2_2_per_row_1920 = '1872x1056' %}
+
+					{% assign x1_2_per_row_1500 = '726x410' %}
+					{% assign x2_2_per_row_1500 = '1452x820' %}
+
+					{% assign x1_2_per_row_991 = '472x266' %}
+					{% assign x2_2_per_row_991 = '944x532' %}
+
+					{% if cards_per_row == "3" %}
+						{% assign x1_1920 = x1_3_per_row_1920 %}
+						{% assign x2_1920 = x2_3_per_row_1920 %}
+
+						{% assign x1_1500 = x1_3_per_row_1500 %}
+						{% assign x2_1500 = x2_3_per_row_1500 %}
+
+						{% assign x1_991 = x1_3_per_row_991 %}
+						{% assign x2_991 = x2_3_per_row_991 %}
+					{% elsif cards_per_row == "2" %}
+						{% assign x1_1920 = x1_2_per_row_1920 %}
+						{% assign x2_1920 = x2_2_per_row_1920 %}
+
+						{% assign x1_1500 = x1_2_per_row_1500 %}
+						{% assign x2_1500 = x2_2_per_row_1500 %}
+
+						{% assign x1_991 = x1_2_per_row_991 %}
+						{% assign x2_991 = x2_2_per_row_991 %}
+					{% endif %}
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '348x197', crop: 'center' }} 1x,
+										{{ image | img_url: '696x394', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+										{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '348x197', crop: 'center' }} 1x,
+										{{ image | img_url: '696x394', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 380px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '356x201', crop: 'center' }} 1x,
+										{{ image | img_url: '712x402', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '356x201', crop: 'center' }} 1x,
+										{{ image | img_url: '712x402', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 420px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '736x415', crop: 'center' }} 1x,
+										{{ image | img_url: '1472x830', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '736x415', crop: 'center' }} 1x,
+										{{ image | img_url: '1472x830', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 767px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 991px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 1500px)">
+
+					<img class="collection-card__image"
+						 {% if is_lazy %}
+						 src="{{ image | img_url: '10x' }}"
+						 srcset="{{ image | img_url: '10x' }}"
+						 data-src="{{ image | img_url: x1_1920, crop: 'center' }}"
+						 data-srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% else %}
+							 src="{{ image | img_url: x1_1920, crop: 'center' }}"
+							 srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% endif %}
+						 alt="{{ image.alt | escape }}"
+						{% if img_focal != blank %}
+							style="{{ img_focal }}"
+						{% endif %}
+					>
+				{% else %}
+					{% comment %} 4 per row {% endcomment %}
+					{% assign x1_1920 = '460x560' %}
+					{% assign x2_1920 = '920x1120' %}
+
+					{% assign x1_1500 = '355x430' %}
+					{% assign x2_1500 = '710x860' %}
+
+					{% assign x1_991 = '228x276' %}
+					{% assign x2_991 = '456x552' %}
+
+					{% comment %} 3 per row {% endcomment %}
+					{% assign x1_3_per_row_1920 = '620x750' %}
+					{% assign x2_3_per_row_1920 = '1240x1500' %}
+
+					{% assign x1_3_per_row_1500 = '480x580' %}
+					{% assign x2_3_per_row_1500 = '960x1060' %}
+
+					{% assign x1_3_per_row_991 = '310x375' %}
+					{% assign x2_3_per_row_991 = '620x750' %}
+
+					{% comment %} 2 per row {% endcomment %}
+					{% assign x1_2_per_row_1920 = '936x1135' %}
+					{% assign x2_2_per_row_1920 = '1872x2264' %}
+
+					{% assign x1_2_per_row_1500 = '726x880' %}
+					{% assign x2_2_per_row_1500 = '1452x1760' %}
+
+					{% assign x1_2_per_row_991 = '472x571' %}
+					{% assign x2_2_per_row_991 = '944x1142' %}
+
+					{% if cards_per_row == "3" %}
+						{% assign x1_1920 = x1_3_per_row_1920 %}
+						{% assign x2_1920 = x2_3_per_row_1920 %}
+
+						{% assign x1_1500 = x1_3_per_row_1500 %}
+						{% assign x2_1500 = x2_3_per_row_1500 %}
+
+						{% assign x1_991 = x1_3_per_row_991 %}
+						{% assign x2_991 = x2_3_per_row_991 %}
+					{% elsif cards_per_row == "2" %}
+						{% assign x1_1920 = x1_2_per_row_1920 %}
+						{% assign x2_1920 = x2_2_per_row_1920 %}
+
+						{% assign x1_1500 = x1_2_per_row_1500 %}
+						{% assign x2_1500 = x2_2_per_row_1500 %}
+
+						{% assign x1_991 = x1_2_per_row_991 %}
+						{% assign x2_991 = x2_2_per_row_991 %}
+					{% endif %}
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '348x422', crop: 'center' }} 1x,
+										{{ image | img_url: '696x844', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '348x422', crop: 'center' }} 1x,
+										{{ image | img_url: '696x844', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 380px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '356x431', crop: 'center' }} 1x,
+										{{ image | img_url: '712x862', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '356x431', crop: 'center' }} 1x,
+										{{ image | img_url: '712x862', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 420px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: '736x890', crop: 'center' }} 1x,
+										{{ image | img_url: '1472x1780', crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: '736x890', crop: 'center' }} 1x,
+										{{ image | img_url: '1472x1780', crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 767px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_991, crop: 'center' }} 1x,
+										{{ image | img_url: x2_991, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 991px)">
+
+					<source
+							{% if is_lazy %}
+							data-srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							srcset="{{ image | img_url: '10x' }} 1x,
+									{{ image | img_url: '10x' }} 2x"
+							{% else %}
+								srcset="{{ image | img_url: x1_1500, crop: 'center' }} 1x,
+										{{ image | img_url: x2_1500, crop: 'center' }} 2x"
+							{% endif %}
+							media="(max-width: 1500px)">
+
+					<img class="collection-card__image"
+						 {% if is_lazy %}
+						 src="{{ image | img_url: '10x' }}"
+						 srcset="{{ image | img_url: '10x' }}"
+						 data-src="{{ image | img_url: x1_1920, crop: 'center' }}"
+						 data-srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% else %}
+							 src="{{ image | img_url: x1_1920, crop: 'center' }}"
+							 srcset="{{ image | img_url: x1_1920, crop: 'center' }} 1x,
+									{{ image | img_url: x2_1920, crop: 'center' }} 2x"
+						 {% endif %}
+						 alt="{{ image.alt | escape }}"
+						{% if img_focal != blank %}
+							style="{{ img_focal }}"
+						{% endif %}
+					>
+				{% endif %}
+			</picture>
+		{% else %}
+			{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+			{%- assign placeholder_svg_name = 'collection-' | append: random_number -%}
+
+			<span aria-hidden="true">
+				{{- placeholder_svg_name | placeholder_svg_tag: 'collection-card__image collection-card__image--placeholder' -}}
+			</span>
+		{% endif %}
+	</span>
+
+	<div class="collection-card__header {% if text_position == 'inside_image' %}collection-card__header--inside{% endif %}">
+		<div class="collection-card__title h4" aria-hidden="true">
+			{%- if collection == blank -%}
+				{{ 'sections.collection_list.card_title' | t }}
+			{%- else -%}
+				{{- collection.title -}}
+			{%- endif -%}
+		</div>
+
+		{% if show_products_count %}
+			{% assign one_product_label = 'sections.collection_list.one_product' | t %}
+			{% assign many_product_label = 'sections.collection_list.many_products' | t %}
+
+			<div class="collection-card__count">
+				{%- if collection == blank -%}
+					0 {{ many_product_label }}
+				{%- else -%}
+					{{ collection.all_products_count }} {{ collection.all_products_count | pluralize: one_product_label, many_product_label }}
+				{%- endif -%}
+			</div>
+		{% endif %}
+	</div>
+</a>
+

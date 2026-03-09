@@ -1,0 +1,126 @@
+.featured-products-with-banner .featured-products-with-banner__container {
+  width: 100%;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.featured-products-with-banner .featured-products-with-banner__row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.featured-products-with-banner .featured-products-with-banner__column {
+  padding: 8px;
+}
+.featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--small {
+  width: 50%;
+}
+.featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--big {
+  width: 100%;
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: auto;
+  aspect-ratio: 1.143;
+  border-radius: var(--global-border-radius);
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--global-border-radius);
+  background-image: var(--content-overlay);
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper .featured-products-with-banner__content {
+  position: relative;
+  z-index: 1;
+  color: var(--content-color);
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper .featured-products-with-banner__content .featured-products-with-banner__heading {
+  color: var(--content-color);
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper .featured-products-with-banner__content .featured-products-with-banner__button {
+  margin-top: 8px;
+}
+.featured-products-with-banner .featured-products-with-banner__image-wrapper svg {
+  background-color: var(--color-img-placeholder-bg);
+}
+.featured-products-with-banner .featured-products-with-banner__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--global-border-radius);
+}
+.featured-products-with-banner .featured-products-with-banner__content {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+.featured-products-with-banner .featured-products-with-banner__label {
+  font-size: var(--body-font-size);
+  line-height: 1.5;
+  word-break: break-word;
+}
+.featured-products-with-banner .featured-products-with-banner__text {
+  font-size: var(--body-font-size);
+  line-height: 1.375;
+  word-break: break-word;
+}
+.featured-products-with-banner.need-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition-duration: var(--animate-time);
+  transition-property: opacity, transform;
+}
+.featured-products-with-banner.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 767.98px) {
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--mobile-first {
+    order: -1;
+  }
+}
+@media (min-width: 768px) {
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--small {
+    width: 25%;
+  }
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--big {
+    width: 50%;
+  }
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--content {
+    display: flex;
+    flex-direction: column;
+  }
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--content .featured-products-with-banner__content {
+    padding: 32px 48px;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--content .featured-products-with-banner__text {
+    margin-top: 8px;
+  }
+  .featured-products-with-banner .featured-products-with-banner__column.featured-products-with-banner__column--content .featured-products-with-banner__button {
+    margin-top: 8px;
+  }
+  .featured-products-with-banner .featured-products-with-banner__image-wrapper {
+    aspect-ratio: 1.5;
+  }
+  .featured-products-with-banner .featured-products-with-banner__button {
+    margin-top: 16px;
+  }
+}

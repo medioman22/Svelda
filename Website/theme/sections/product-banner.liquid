@@ -1,0 +1,419 @@
+{%- render 'adastra' with '/src/styles/carousel.scss' -%}
+{%- render 'adastra' with '/src/styles/product-banner.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 992px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign blocks		 = section.blocks -%}
+{%- assign label		 = section.settings.label -%}
+{%- assign heading		 = section.settings.heading -%}
+{%- assign text			 = section.settings.text -%}
+{%- assign button_label	 = section.settings.button_label -%}
+{%- assign button_link	 = section.settings.button_link -%}
+{%- assign button_style	 = section.settings.button_style -%}
+{%- assign container 	 = section.settings.container_width -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%-assign container_width = container -%}
+{%- endif -%}
+
+{%- capture section_styles -%}
+	--container-width: {{- container_width -}}; {{-  -}}
+{%- endcapture -%}
+
+<section class="product-banner{% if blocks.size > 1 %} js-product-banner{% endif %} js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{- section_styles -}}">
+	<div class="product-banner__container">
+		<div class="product-banner__content">
+			{%- if label != blank or heading != blank or text != blank -%}
+				<div class="product-banner__text-wrapper need-animate tr-dur-0-8 tr-del-0-5">
+					<div class="product-banner__text-header">
+						{%- if label != blank -%}
+							<span class="product-banner__label">
+								{{- label -}}
+							</span>
+						{%- endif -%}
+
+						{%- if heading != blank -%}
+							<h2 class="h2 product-banner__heading">
+								{{- heading -}}
+							</h2>
+						{%- endif -%}
+					</div>
+
+					{%- if text != blank -%}
+						<div class="product-banner__text rte">
+							{{- text -}}
+						</div>
+					{%- endif %}
+
+					{%- if button_label != blank and button_link != blank -%}
+						<a class="button button--{{ button_style }} product-banner__button"
+						   href="{{- button_link -}}">
+							{{- button_label -}}
+						</a>
+					{%- endif %}
+				</div>
+			{%- endif -%}
+
+			<div class="product-banner__products-slider-container">
+				<div class="product-banner__products-slider-wrapper{% if blocks.size > 1 %} swiper js-product-banner-slider{% endif %}">
+					<div class="{% if blocks.size > 1 %}swiper-wrapper{% endif %}">
+						{%- for block in blocks -%}
+							{%- assign product = block.settings.product -%}
+							{%- assign image = block.settings.image -%}
+							{%- assign is_lazy = true -%}
+
+							{%- if section.index == 1 and forloop.index < 2 -%}
+								{%- assign is_lazy = false -%}
+							{%- endif -%}
+
+							<div class="product-banner__products-slide{% if blocks.size > 1 %} swiper-slide{% endif %}">
+								<div class="product-banner__image-aspect-ratio need-animate tr-dur-0-8">
+									{%- if image != blank -%}
+										{%- capture img_focal -%}
+											--img-desktop-pos: {{ image.presentation.focal_point }};
+										{%- endcapture -%}
+
+										<picture class="{% if is_lazy %} lazy{% endif %}">
+											<source
+												{% if is_lazy %}
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-srcset="{{ image | image_url: width: 343, height: 281 }} 1x,
+																 {{ image | image_url: width: 686, height: 562 }} 2x"
+												{% else %}
+													srcset="{{ image | image_url: width: 343, height: 281 }} 1x,
+															{{ image | image_url: width: 686, height: 562 }} 2x"
+												{% endif %}
+												media="(max-width: 375px)"
+												width="343"
+												height="281"
+											/>
+
+											<source
+											{% if is_lazy %}
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-srcset="{{ image | image_url: width: 388, height: 318 }} 1x,
+															 {{ image | image_url: width: 776, height: 636 }} 2x"
+											{% else %}
+												srcset="{{ image | image_url: width: 388, height: 318 }} 1x,
+														{{ image | image_url: width: 776, height: 636 }} 2x"
+											{% endif %}
+												media="(max-width: 420px)"
+												width="388"
+												height="318"
+											/>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-srcset="{{ image | image_url: width: 545, height: 445 }} 1x,
+																 {{ image | image_url: width: 1090, height: 890 }} 2x"
+												{% else %}
+													srcset="{{ image | image_url: width: 545, height: 445 }} 1x,
+															{{ image | image_url: width: 1090, height: 890 }} 2x"
+												{% endif %}
+												media="(max-width: 575px)"
+												width="545"
+												height="445"
+											/>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-srcset="{{ image | image_url: width: 735, height: 603 }} 1x,
+																 {{ image | image_url: width: 1470, height: 1206 }} 2x"
+												{% else %}
+													srcset="{{ image | image_url: width: 735, height: 603 }} 1x,
+															{{ image | image_url: width: 1470, height: 1206 }} 2x"
+												{% endif %}
+												media="(max-width: 767px)"
+												width="735"
+												height="603"
+											/>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-srcset="{{ image | image_url: width: 959, height: 786 }} 1x,
+																 {{ image | image_url: width: 1918, height: 1572 }} 2x"
+												{% else %}
+													srcset="{{ image | image_url: width: 959, height: 786 }} 1x,
+															{{ image | image_url: width: 1918, height: 1572 }} 2x"
+												{% endif %}
+												media="(max-width: 991px)"
+												width="959"
+												height="786"
+											/>
+
+											<source
+												{% if is_lazy %}
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-srcset="{{ image | image_url: width: 540, height: 490 }} 1x,
+															{{ image | image_url: width: 1080, height: 980 }} 2x"
+												{% else %}
+													srcset="{{ image | image_url: width: 540, height: 490 }} 1x,
+															{{ image | image_url: width: 1080, height: 980 }} 2x"
+												{% endif %}
+												media="(max-width: 1440px)"
+												width="540"
+												height="490"
+											/>
+
+											<img
+												class="product-banner__slide-media product-banner__slide-media--image need-animate"
+												{% if is_lazy %}
+													src="{{ image | image_url: width: 10, height: 10 }}"
+													srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+															{{ image | image_url: width: 20, height: 20 }} 2x"
+													data-src="{{ image | image_url: width: 770, height: 698 }}"
+													data-srcset="{{ image | image_url: width: 770, height: 698 }} 1x,
+																 {{ image | image_url: width: 1540, height: 1396 }} 2x"
+												{% else %}
+													src="{{ image | image_url: width: 770, height: 698 }}"
+													srcset="{{ image | image_url: width: 770, height: 698 }} 1x,
+															{{ image | image_url: width: 1540, height: 1396 }} 2x"
+												{% endif %}
+												alt="{{ image.alt | escape }}"
+												width="770"
+												height="698"
+												style="{{ img_focal }}"
+											/>
+										</picture>
+									{%- else -%}
+										{{- 'product-apparel-3' | placeholder_svg_tag: 'product-banner__slide-media need-animate' -}}
+									{%- endif -%}
+								</div>
+
+								<div class="product-banner__card need-animate tr-dur-0-8 tr-del-0-75">
+									{%- render 'product-card', product: product, size: 384, mobile_size: 340, is_lazy: true -%}
+								</div>
+							</div>
+						{% else %}
+							<div class="swiper-slide product-banner__products-slide">
+								<div class="product-banner__image-aspect-ratio need-animate tr-dur-0-8">
+									{{- 'product-apparel-3' | placeholder_svg_tag: 'product-banner__slide-media' -}}
+								</div>
+
+								<div class="product-banner__card need-animate tr-dur-0-8 tr-del-0-75">
+									{%- render 'product-card', product: product, size: 384, mobile_size: 340, is_lazy: true -%}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+
+					{%- if blocks.size > 1 -%}
+						<button
+							class="swiper-button swiper-button--prev product-banner__slider-button product-banner__slider-button--prev js-product-banner-slider-button-prev"
+							type="button"
+							aria-label="{{ "general.accessibility.slider.prev_slide_message" | t | escape -}}"
+						>
+							{% render 'icons', icon: 'arrow-left' %}
+						</button>
+
+						<button
+							class="swiper-button swiper-button--next product-banner__slider-button product-banner__slider-button--next js-product-banner-slider-button-next"
+							type="button"
+							aria-label="{{ "general.accessibility.slider.next_slide_message" | t | escape -}}"
+						>
+							{% render 'icons', icon: 'arrow-right' %}
+						</button>
+
+						<div
+							class="swiper-pagination product-banner__pagination js-product-banner-pagination"></div>
+					{%- endif -%}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{%- render 'adastra' with '/src/scripts/component-swiper-modules.js' -%}
+	{%- render 'adastra' with '/src/scripts/section-product-banner.js' -%}
+</section>
+
+{% schema %}
+{
+	"name": "Product banner",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "textarea",
+			"id": "heading",
+			"label": "Heading",
+			"default": "Product banner"
+		},
+		{
+			"type": "text",
+			"id": "label",
+			"label": "Label",
+			"default": "Label"
+		},
+		{
+			"type": "richtext",
+			"id": "text",
+			"label": "Text",
+			"default": "<p>Text</p>"
+		},
+		{
+			"type": "text",
+			"id": "button_label",
+			"label": "Button label",
+			"default": "Shop All"
+		},
+		{
+			"type": "url",
+			"id": "button_link",
+			"label": "Button link",
+			"default": "/"
+		},
+		{
+			"type": "select",
+			"id": "button_style",
+			"label": "Button style",
+			"options": [
+				{
+					"value": "primary",
+					"label": "Primary"
+				},
+				{
+					"value": "secondary",
+					"label": "Secondary"
+				},
+				{
+					"value": "primary-border",
+					"label": "Primary with border"
+				},
+				{
+					"value": "secondary-border",
+					"label": "Secondary with border"
+				}
+			],
+			"default": "secondary"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"type": "product",
+			"name": "Product",
+			"settings": [
+				{
+					"type": "product",
+					"id": "product",
+					"label": "Product"
+				},
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Product banner",
+			"settings": {},
+			"blocks": [
+				{
+					"type": "product"
+				},
+				{
+					"type": "product"
+				},
+				{
+					"type": "product"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

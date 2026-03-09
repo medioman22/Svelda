@@ -1,0 +1,98 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "menu_heading": "Products",
+            "menu": "customer-account-main-menu"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "menu_heading": "What about SVELDA?",
+            "menu": "footer"
+          }
+        },
+        "menu-3": {
+          "type": "menu",
+          "settings": {
+            "menu_heading": "Help & Info",
+            "menu": "footer"
+          }
+        },
+        "text-block": {
+          "type": "text",
+          "settings": {
+            "heading": "Socials",
+            "text_content": "<h6>Follow us:</h6><p><a href=\"https://www.instagram.com/svelda.design/\" title=\"https://www.instagram.com/svelda.design/\">Instagram</a></p>",
+            "show_social_links": true
+          }
+        }
+      },
+      "block_order": [
+        "menu-1",
+        "menu-2",
+        "menu-3",
+        "text-block"
+      ],
+      "settings": {
+        "logo_image": "shopify://shop_images/text_90e24d8a-3484-454a-91e3-4b0a997e8a15.png",
+        "logo_image_width": 180,
+        "footer_text": "",
+        "copyright_text": "Copyright © %date% /",
+        "quick_links": "customer-account-main-menu",
+        "is_show_payment_methods": true,
+        "show_back_to_top_button": true,
+        "enable_newsletter": true,
+        "placeholder_text": "Enter email address...",
+        "button_text": "Subscribe",
+        "success_message": "Thanks for subscribing",
+        "enable_gdpr": true,
+        "gdpr_text": "I agree to receiving marketing emails and special deals",
+        "is_show_country_selector": true,
+        "is_show_language_selector": true,
+        "enable_follow_on_shop": true,
+        "section_background": "#c2c2c2",
+        "menu_headings_color": "#000000",
+        "text_color": "#333333",
+        "copyright_text_color": "#717070",
+        "link_color": "#525252",
+        "link_hover_color": "#7b7b7b",
+        "input_background": "#ffffff",
+        "input_border": "#000000",
+        "input_color": "#000000",
+        "button_icon_color_social": "#000000",
+        "button_background_color_social": "rgba(0,0,0,0)",
+        "button_border_color_social": "#333333",
+        "button_icon_color_social_hover": "#c2c2c2",
+        "button_background_color_social_hover": "#333333",
+        "button_border_color_social_hover": "rgba(0,0,0,0)",
+        "border_color": "#454b42",
+        "button_top_color": "#ffffff",
+        "button_top_background": "#333333",
+        "button_top_border": "rgba(0,0,0,0)",
+        "button_top_color_hover": "#ffffff",
+        "button_top_background_hover": "#434343",
+        "button_top_border_hover": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

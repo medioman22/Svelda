@@ -1,0 +1,42 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Product hover image
+	- hover_image: image object (required, object),
+	- image_on_hover_enabled: boolean,
+	- simplified_view: boolean,
+	- product: Product object (required, object)
+	- size: desktop image size (optional, default: 300, number)
+	- tablet_size: tablet image size (optional, default: size, number)
+	- mobile_size: mobile image size (optional, default: tablet_size, number)
+
+	{%- render 'product-hover-image', product: product, size: 705, tablet_size: 387, mobile_size: 165 -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- if hover_image != blank and image_on_hover_enabled == true and simplified_view != true -%}
+	{%- if hover_image.value.media_type == 'video' -%}
+		<div class="product-card__image-picture product-card__image-picture--hover">
+			<video
+				class="product-card__image js-product-card-video"
+				loop
+				muted
+				playsinline
+				tabindex="-1"
+				aria-hidden="true"
+			>
+				{%- for source in hover_image.value.sources -%}
+					<source src="{{- source.url -}}" type="{{- source.mime_type -}}">
+				{%- endfor -%}
+			</video>
+		</div>
+	{%- else -%}
+		{%- render 'product-card-image',
+			product: product,
+			is_lazy: true,
+			image: hover_image,
+			is_hover_image: true,
+			size: size,
+			tablet_size: tablet_size,
+			mobile_size: mobile_size -%}
+	{%- endif -%}
+{%- endif -%}

@@ -1,0 +1,361 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Section: Best sellers
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/best-sellers.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign heading               = section.settings.heading -%}
+{%- assign show_numeric          = section.settings.show_numeric -%}
+{%- assign background_color      = section.settings.background_color -%}
+{%- assign text_color            = section.settings.text_color -%}
+{%- assign border_color          = section.settings.border_color -%}
+{%- assign link_active_color     = section.settings.link_active_color -%}
+{%- assign currency_code_enabled = settings.is_currency_code_enabled -%}
+{%- assign blocks                = section.blocks -%}
+{%- assign container 			 = section.settings.container_width -%}
+{%- assign product_title_from_translations = 'products.best_sellers.product_title' | t -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--container-width: {{- container_width -}}; {{-  -}}
+	--background-color: {{- background_color -}}; {{-  -}}
+	--text-color: {{- text_color -}}; {{-  -}}
+	--border-color: {{- border_color -}}; {{-  -}}
+	--link-active-color: {{- link_active_color -}}; {{-  -}}
+{%- endcapture -%}
+
+<section
+	class="best-sellers{% if request.visual_preview_mode or section.index == 1 %} animated{% endif %} js-animate"
+	style="{{- styles -}}"
+>
+	<div class="best-sellers__container need-animate tr-dur-0-8">
+		{%- if heading != blank -%}
+			<h2 class="best-sellers__heading need-animate tr-dur-0-8 tr-del-0-5">
+				{{- heading -}}
+			</h2>
+		{%- endif -%}
+
+		<div class="best-sellers__row">
+			{% assign delay_step = 0.4 %}
+
+			{%- for block in blocks -%}
+				{%- assign product 		 	= block.settings.product -%}
+				{%- assign product_title 	= block.settings.product_title | default: product.title | default: product_title_from_translations -%}
+				{%- assign image   		 	= block.settings.image | default: product.featured_image -%}
+				{%- assign index 		 	= forloop.index -%}
+				{%- assign delay_step 		= delay_step | plus: 0.25 -%}
+
+				<div class="best-sellers__column need-animate" style="--delay-step: {{ delay_step }}s;">
+					<div class="best-sellers__product-image-wrapper">
+						<div class="best-sellers__product-image-container">
+							{%- if image != blank -%}
+								<picture class="lazy">
+									<source
+										data-srcset="{{ image | image_url: width: 80, height: 80 }} 1x, {{ image | image_url: width: 160, height: 160 }} 2x"
+										srcset="{{ image | image_url: width: 10, height: 10 }} 1x, {{ image | image_url: width: 20, height: 20 }} 2x"
+										width="80"
+										height="80"
+										media="(max-width: 375px)"
+									/>
+
+									<source
+										data-srcset="{{ image | image_url: width: 150, height: 150 }} 1x, {{ image | image_url: width: 300, height: 300 }} 2x"
+										srcset="{{ image | image_url: width: 10, height: 10 }} 1x, {{ image | image_url: width: 20, height: 20 }} 2x"
+										width="150"
+										height="150"
+										media="(max-width: 1199px)"
+									/>
+
+									<img
+										class="best-sellers__product-image"
+										src="{{- image | image_url: width: 10, height: 10 -}}"
+										srcset="{{- image | image_url: width: 10, height: 10 -}} 1x, {{ image | image_url: width: 20, height: 20 }} 2x"
+										data-src="{{- image | image_url: width: 240, height: 240 -}}"
+										data-srcset="{{ image |image_url: width: 240, height: 240 }} 1x, {{ image | image_url: width: 480, height: 480 }} 2x"
+										alt="{{- image.alt | default: product.title | escape -}}"
+										width="240"
+										height="240"
+									>
+								</picture>
+
+								<noscript>
+									<picture>
+										<source
+											srcset="{{ image | image_url: width: 80, height: 80 }} 1x, {{ image | image_url: width: 160, height: 160 }} 2x"
+											width="80"
+											height="80"
+											media="(max-width: 375px)"
+										/>
+
+										<source
+											srcset="{{ image | image_url: width: 150, height: 150 }} 1x, {{ image | image_url: width: 300, height: 300 }} 2x"
+											width="150"
+											height="150"
+											media="(max-width: 1199px)"
+										/>
+
+										<img
+											class="best-sellers__product-image"
+											src="{{- image | image_url: width: 240, height: 240 -}}"
+											srcset="{{ image |image_url: width: 240, height: 240 }} 1x, {{ image | image_url: width: 480, height: 480 }} 2x"
+											alt="{{- image.alt | default: product.title | escape -}}"
+											width="240"
+											height="240"
+										>
+									</picture>
+								</noscript>
+							{%- else -%}
+								{%- assign current_index = index | modulo: 6 -%}
+
+								{%- if current_index == 0 -%}
+									{%- assign current_index = 6 -%}
+								{%- endif -%}
+
+								{%- assign placeholer_svg_name = 'product-' | append: current_index -%}
+
+								{{- placeholer_svg_name | placeholder_svg_tag: 'best-sellers__product-image best-sellers__product-image--placeholder' -}}
+							{%- endif -%}
+
+							<a
+								href="{{- product.url | default: '#' -}}"
+								class="best-sellers__product-url"
+								aria-label="{{- product_title | escape -}}"
+							></a>
+						</div>
+					</div>
+
+					<div class="best-sellers__product-info">
+						<div class="best-sellers__product-header">
+							{%- if show_numeric != blank -%}
+								<span class="best-sellers__product-number">
+									{%- if index < 10 -%}
+										{{- index | prepend: 0 -}}
+									{%- else -%}
+										{{- index -}}
+									{%- endif -%}
+								</span>
+							{%- endif -%}
+
+							<h3 class="best-sellers__product-title">
+								{{- product_title -}}
+							</h3>
+						</div>
+
+						<div class="best-sellers__product-footer">
+							<div class="best-sellers__product-price">
+								{%- assign price = product.selected_or_first_available_variant.price | default: 1999 -%}
+
+								{%- if settings.currency_code_enabled -%}
+									{{- price | money_with_currency -}}
+								{%- else -%}
+									{{- price | money -}}
+								{%- endif -%}
+							</div>
+
+							<span class="best-sellers__product-icon">
+								{%- render 'icons', icon: 'arrow-right-2' -%}
+							</span>
+						</div>
+					</div>
+
+					<a
+						href="{{- product.url | default: '#' -}}"
+						class="best-sellers__product-url"
+						aria-label="{{- product_title | escape -}}"
+					></a>
+				</div>
+			{%- endfor -%}
+		</div>
+	</div>
+</section>
+
+{%- schema -%}
+	{
+		"name": "Best sellers",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "textarea",
+				"id": "heading",
+				"label": "Heading",
+				"default": "Heading"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_numeric",
+				"label": "Show numeric",
+				"info": "Only desktop",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Colors"
+			},
+			{
+				"type": "color",
+				"id": "background_color",
+				"label": "Background",
+				"default": "#161E13"
+			},
+			{
+				"type": "color",
+				"id": "text_color",
+				"label": "Text",
+				"default": "#9D9D9D"
+			},
+			{
+				"type": "color",
+				"id": "border_color",
+				"label": "Border",
+				"default": "#323930"
+			},
+			{
+				"type": "color",
+				"id": "link_active_color",
+				"label": "Link active",
+				"default": "#fff"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"type": "product_item",
+				"name": "Product",
+				"settings": [
+					{
+						"type": "product",
+						"id": "product",
+						"label": "Product"
+					},
+					{
+						"type": "text",
+						"id": "product_title",
+						"label": "Heading"
+					},
+					{
+						"type": "image_picker",
+						"id": "image",
+						"label": "Image"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Best sellers",
+				"settings": {},
+				"blocks": [
+					{
+						"type": "product_item"
+					},
+					{
+						"type": "product_item"
+					},
+					{
+						"type": "product_item"
+					},
+					{
+						"type": "product_item"
+					},
+					{
+						"type": "product_item"
+					},
+					{
+						"type": "product_item"
+					}
+				]
+			}
+		]
+	}
+{%- endschema -%}

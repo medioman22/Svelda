@@ -1,0 +1,209 @@
+.store-location {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--container-width);
+  margin: 0 auto;
+  padding: 0 16px;
+  word-break: break-word;
+  row-gap: 16px;
+}
+.store-location .store-location__media,
+.store-location .store-location__content {
+  width: 100%;
+}
+.store-location .store-location__media-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding-top: 81.63%;
+  border-radius: var(--global-border-radius);
+}
+.store-location .store-location__image,
+.store-location .store-location__map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--global-border-radius);
+}
+.store-location .store-location__image {
+  object-fit: cover;
+  object-position: var(--img-desktop-pos);
+}
+.store-location .store-location__image.store-location__image--placeholder {
+  background-color: var(--color-img-placeholder-bg);
+}
+.store-location .store-location__subtitle {
+  color: var(--color-text-secondary);
+}
+.store-location .store-location__subtitle,
+.store-location .store-location__content-title {
+  font-size: var(--body-font-size);
+  line-height: 1.5;
+}
+.store-location .store-location__content-title {
+  font-weight: 400;
+}
+.store-location .store-location__title + .store-location__subtitle {
+  margin-top: 16px;
+}
+.store-location .store-location__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.store-location .store-location__item.store-location__item--center {
+  align-items: center;
+}
+.store-location .store-location__newsletter-form-field {
+  position: relative;
+}
+.store-location .store-location__newsletter-form-input {
+  padding-right: 118px;
+  min-height: 50px;
+}
+.store-location .store-location__newsletter-form-button {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  height: calc(100% - 16px);
+  padding: 8px 16px;
+  font-size: calc(var(--body-font-size) * 0.875);
+  line-height: 1.285;
+  transform: translateY(-50%);
+}
+.store-location .store-location__title + .store-location__item,
+.store-location .store-location__title + .store-location__newsletter-form,
+.store-location .store-location__subtitle + .store-location__item,
+.store-location .store-location__subtitle + .store-location__newsletter-form,
+.store-location .store-location__item + .store-location__newsletter-form {
+  margin-top: 24px;
+}
+.store-location .store-location__item + .store-location__item {
+  margin-top: 16px;
+}
+.store-location .store-location__content-text {
+  line-height: 1.5;
+  font-weight: 500;
+}
+.store-location .store-location__content-text a {
+  color: currentColor;
+  text-decoration-color: transparent;
+  transition-property: text-decoration-color;
+  transition-duration: var(--timing-short);
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .store-location .store-location__content-text a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+.store-location .store-location__content-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 140px;
+}
+.store-location .store-location__content-icon {
+  max-width: 24px;
+  width: 100%;
+}
+.store-location .social-links .social-links__list {
+  gap: 10px;
+}
+.store-location .social-links .button-social {
+  width: 40px;
+  height: 40px;
+}
+.store-location .store-location__newsletter-form-message {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  font-size: inherit;
+  font-weight: normal;
+}
+.store-location .store-location__newsletter-form-message.store-location__newsletter-form-message--error {
+  color: var(--color-text-attention);
+}
+.store-location .store-location__newsletter-form-message.store-location__newsletter-form-message--success {
+  color: currentColor;
+}
+.store-location .store-location__newsletter-form-message .icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-right: 5px;
+}
+.store-location .store-location__title.need-animate,
+.store-location .store-location__subtitle.need-animate,
+.store-location .store-location__item.need-animate,
+.store-location .store-location__newsletter-form.need-animate,
+.store-location .store-location__media-wrapper.need-animate {
+  opacity: 0;
+  transition-property: opacity;
+}
+.store-location .store-location__image.need-animate {
+  transform: scale(1.25);
+  transition-duration: 1s;
+  transition-property: opacity, transform;
+}
+.store-location.animated .store-location__title.need-animate,
+.store-location.animated .store-location__subtitle.need-animate,
+.store-location.animated .store-location__item.need-animate,
+.store-location.animated .store-location__newsletter-form.need-animate,
+.store-location.animated .store-location__media-wrapper.need-animate {
+  opacity: 1;
+}
+.store-location.animated .store-location__image.need-animate {
+  transform: scale(1);
+}
+@media (min-width: 992px) {
+  .store-location {
+    flex-direction: row;
+    column-gap: 16px;
+  }
+  .store-location.store-location--reverse {
+    flex-direction: row-reverse;
+  }
+  .store-location .store-location__media-wrapper {
+    padding-top: 73.57%;
+  }
+  .store-location .store-location__newsletter-form-input {
+    padding-right: 166px;
+    min-height: 72px;
+  }
+  .store-location .store-location__newsletter-form-button {
+    font-size: var(--body-font-size);
+    padding: 16px 32px;
+  }
+  .store-location .store-location__media,
+  .store-location .store-location__content {
+    width: 50%;
+  }
+  .store-location .store-location__content {
+    align-self: center;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .store-location .social-links .button-social {
+    width: 48px;
+    height: 48px;
+  }
+}
+@media (min-width: 1200px) {
+  .store-location .store-location__content {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+  .store-location .store-location__content-text {
+    font-size: calc(var(--body-font-size) * 1.125);
+    line-height: 1.3333;
+  }
+  .store-location .store-location__title + .store-location__item,
+  .store-location .store-location__title + .store-location__newsletter-form,
+  .store-location .store-location__subtitle + .store-location__item,
+  .store-location .store-location__subtitle + .store-location__newsletter-form,
+  .store-location .store-location__item + .store-location__item,
+  .store-location .store-location__item + .store-location__newsletter-form {
+    margin-top: 32px;
+  }
+}

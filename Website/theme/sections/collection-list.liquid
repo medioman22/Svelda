@@ -1,0 +1,391 @@
+{%- render 'adastra' with '/src/styles/collection-list.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_mobile -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_desktop -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+	}
+	}
+{%- endstyle -%}
+
+{%- assign min = 1 -%}
+{%- assign max = 6 -%}
+{%- assign diff = max | minus: min -%}
+
+{% if section.settings.aspect_ratio == "square" %}
+	{% assign image_class = "collection-card__image-wrapper--square" %}
+{% elsif section.settings.aspect_ratio == "landscape" %}
+	{% assign image_class = "collection-card__image-wrapper--landscape" %}
+{% else %}
+	{% assign image_class = "collection-card__image-wrapper--portrait" %}
+{% endif %}
+
+{%- assign title 				= section.settings.heading -%}
+{%- assign link_url 			= section.settings.link_url -%}
+{%- assign link_text 			= section.settings.link_text -%}
+{%- assign link_aria_label_text = section.settings.link_aria_label_text -%}
+{%- assign text_alignment 		= section.settings.text_alignment -%}
+{%- assign text_position 		= section.settings.text_position -%}
+{%- assign button_style 		= section.settings.button_style -%}
+{%- assign show_products_count 	= section.settings.show_products_count -%}
+{%- assign center_on_desktop 	= section.settings.center_on_desktop -%}
+{%- assign cards_per_row 		= section.settings.cards_per_row -%}
+{%- assign overlay_color 		= section.settings.overlay_color -%}
+{%- assign color_text 			= section.settings.color_text | default: '#fff' -%}
+{%- assign container 			= section.settings.container_width -%}
+{%- assign delay_step 			= 0 -%}
+
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{% if center_on_desktop %}
+	{% assign row_center_class = 'collection-list__row--center' %}
+{% endif %}
+
+{%- capture styles -%}
+	--container-width: {{- container_width -}}; {{-  -}}
+	--overlay-color: {{ overlay_color }}; {{-  -}}
+	--overlay-text-color: {{ color_text }}; {{-  -}}
+{%- endcapture -%}
+
+<section class="collection-list js-collection-list js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{- styles -}}">
+	{% if title != blank %}
+		<h2 class="collection-list__title h2 need-animate tr-dur-0-8">{{ title }}</h2>
+	{% endif %}
+
+	<div
+		class="collection-list__slider swiper {% if section.blocks.size > 1 %}js-featured-content-slider{% endif %}">
+		<div class="collection-list__row {{ row_center_class }} swiper-wrapper">
+			{% if section.blocks.size > 0 %}
+				{% for block in section.blocks %}
+					{% assign collection 	= block.settings.collection %}
+					{% assign image 		= block.settings.image | default: collection.featured_image %}
+					{%- assign delay_step 	= delay_step | plus: 0.25 -%}
+
+					{% if section.index > 1 %}
+						{% assign is_lazy = true %}
+					{% elsif section.index == 1 and forloop.index > 2 %}
+						{% assign is_lazy = true %}
+					{% endif %}
+
+					<div class="collection-list__col collection-list__col--{{ cards_per_row }} swiper-slide need-animate tr-dur-0-5"
+						 style="transition-delay: {{ delay_step }}s;"
+					>
+						{% render 'collection-card',
+							collection: collection,
+							image: image,
+							cards_per_row: cards_per_row,
+							aspect_ratio: image_class,
+							text_alignment: text_alignment,
+							text_position: text_position,
+							show_products_count: show_products_count,
+							is_lazy: is_lazy
+						%}
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		{%- if section.blocks.size > 1 -%}
+			<div class="collection-list__pagination js-featured-content-slider-pagination"></div>
+		{%- endif -%}
+	</div>
+
+	{%- if link_text != blank and link_url != blank -%}
+		<div class="collection-list__button-wrapper js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}">
+			<a
+				class="focus-visible-outline button button--{{- button_style }} collection-list__button"
+				href="{{- link_url -}}"
+				{% if link_aria_label_text != blank %}
+					aria-label="{{- link_aria_label_text | escape -}}"
+				{% endif %}
+			>
+				{{- link_text -}}
+			</a>
+		</div>
+	{%- endif -%}
+</section>
+
+{%- if section.blocks.size > 1 -%}
+	{%- render 'adastra' with '/src/scripts/component-featured-content-slider.js' -%}
+	{%- render 'adastra' with '/src/scripts/section-collection-list.js' -%}
+{%- endif -%}
+
+{% schema %}
+	{
+		"name": "Collections grid",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "text",
+				"id": "heading",
+				"label": "Heading",
+				"default": "Collection list"
+			},
+			{
+				"type": "url",
+				"id": "link_url",
+				"label": "Button link"
+			},
+			{
+				"type": "text",
+				"id": "link_text",
+				"label": "Button label"
+			},
+			{
+				"type": "text",
+				"id": "link_aria_label_text",
+				"label": "Button aria-label",
+				"info": "Need for good accessibility, e.g. 'All news about'."
+			},
+			{
+				"type": "select",
+				"id": "button_style",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "secondary-border"
+			},
+			{
+				"type": "select",
+				"id": "text_alignment",
+				"label": "Text alignment",
+				"options": [
+					{
+						"value": "left",
+						"label": "Left"
+					},
+					{
+						"value": "center",
+						"label": "Center"
+					},
+					{
+						"value": "right",
+						"label": "Right"
+					}
+				],
+				"default": "center"
+			},
+			{
+				"type": "select",
+				"id": "text_position",
+				"label": "Text position",
+				"options": [
+					{
+						"value": "under_image",
+						"label": "Under the image"
+					},
+					{
+						"value": "inside_image",
+						"label": "Inside the image"
+					}
+				],
+				"default": "under_image"
+			},
+			{
+				"type": "select",
+				"id": "aspect_ratio",
+				"label": "Image aspect ratio",
+				"options": [
+					{
+						"value": "square",
+						"label": "Square"
+					},
+					{
+						"value": "portrait",
+						"label": "Portrait"
+					},
+					{
+						"value": "landscape",
+						"label": "Landscape"
+					}
+				],
+				"default": "portrait"
+			},
+			{
+				"type": "select",
+				"id": "cards_per_row",
+				"label": "Card per row",
+				"options": [
+					{
+						"value": "2",
+						"label": "2"
+					},
+					{
+						"value": "3",
+						"label": "3"
+					},
+					{
+						"value": "4",
+						"label": "4"
+					}
+				],
+				"default": "4",
+				"info": "Desktop only"
+			},
+			{
+				"type": "checkbox",
+				"id": "center_on_desktop",
+				"label": "Center blocks on desktop",
+				"default": false
+			},
+			{
+				"type": "checkbox",
+				"id": "show_products_count",
+				"label": "Show products count",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Colors"
+			},
+			{
+				"type": "color_background",
+				"id": "overlay_color",
+				"label": "Overlay color"
+			},
+			{
+				"type": "color",
+				"id": "color_text",
+				"label": "Inside the image text",
+				"default": "#fff",
+				"info": "The color of the text to be used with the 'Inside the image' text position"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 60
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 60
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 30
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 30
+			}
+			],
+			"blocks": [
+				{
+					"type": "collection",
+					"name": "Collection",
+					"settings": [
+						{
+							"type": "collection",
+							"id": "collection",
+							"label": "Collection"
+						},
+						{
+							"type": "image_picker",
+							"id": "image",
+							"label": "Image",
+							"info": "Use instead of collection image"
+						}
+					]
+				}
+			],
+			"presets": [
+				{
+					"name": "Collections grid",
+					"blocks": [
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					}
+				]
+			}
+		]
+	}
+{% endschema %}

@@ -1,0 +1,322 @@
+{%- if section.blocks.size > 0 -%}
+	{%- render 'adastra' with '/src/styles/reviews.scss' -%}
+
+	{%- assign layout			= section.settings.layout -%}
+	{%- assign heading			= section.settings.heading -%}
+	{%- assign enable_autoplay	= section.settings.enable_autoplay -%}
+	{%- assign autoplay_speed	= section.settings.autoplay_speed -%}
+	{%- assign container 		= section.settings.container_width -%}
+
+	{% if container == 'inherit' %}
+		{% assign container_width = settings.container_width %}
+	{% else %}
+		{% assign container_width = container %}
+	{% endif %}
+
+	{% if layout == 'big-image' %}
+		{% assign slidesPerView = 1 %}
+	{% else %}
+		{% assign slidesPerView = 3 %}
+	{% endif %}
+
+	{%- style -%}
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_mobile -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+		}
+
+		@media screen and (min-width: 768px) {
+			#shopify-section-{{- section.id -}} {
+				padding-top: {{- section.settings.offset_top_desktop -}}px;
+				padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+			}
+		}
+	{%- endstyle -%}
+
+	<section class="reviews {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %} js-animate" style="--container-width: {{ container_width }};">
+		{%- if heading != blank -%}
+			<h2 class="reviews__heading h2 need-animate tr-dur-0-8">
+				{{- heading -}}
+			</h2>
+		{%- endif -%}
+
+		<div
+			class="reviews__items-container swiper js-reviews-container"
+			data-layout="{{ layout }}"
+			data-slides-per-view="{{ slidesPerView }}"
+			{%- if enable_autoplay == true -%}
+				data-autoplay-speed="{{ autoplay_speed | times: 1000 }}"
+			{%- endif -%}
+		>
+			<div class="reviews__items-wrapper swiper-wrapper">
+				{% assign delay_step = 0.3 %}
+
+				{%- for block in section.blocks -%}
+					{%- assign review_text				= block.settings.review_text -%}
+					{%- assign review_author_name		= block.settings.review_author_name -%}
+					{%- assign review_author_role		= block.settings.review_author_role -%}
+					{%- assign review_author_image		= block.settings.review_image -%}
+					{%- assign product					= block.settings.product -%}
+					{%- assign custom_image				= block.settings.custom_image -%}
+					{%- assign delay_step 				= delay_step | plus: 0.4 -%}
+
+					{% render 'reviews-slide',
+						review_text: review_text,
+						review_author_name: review_author_name,
+						review_author_role: review_author_role,
+						review_image: review_author_image,
+						product: product,
+						custom_image: custom_image,
+						layout: layout,
+						delay_step: delay_step
+					%}
+				{%- endfor -%}
+
+				{% if section.blocks.size == 1 %}
+					{%- assign review_text				= section.blocks[0].settings.review_text -%}
+					{%- assign review_author_name		= section.blocks[0].settings.review_author_name -%}
+					{%- assign review_author_role		= section.blocks[0].settings.review_author_role -%}
+					{%- assign review_author_image		= section.blocks[0].settings.review_image -%}
+					{%- assign product					= section.blocks[0].settings.product -%}
+					{%- assign custom_image				= section.blocks[0].settings.custom_image -%}
+
+					{% render 'reviews-slide',
+						review_text: review_text,
+						review_author_name: review_author_name,
+						review_author_role: review_author_role,
+						review_image: review_author_image,
+						product: product,
+						custom_image: custom_image,
+						layout: layout
+					%}
+
+					{% if layout == 'small-product' %}
+						{% comment %} Need add additional slide that loop work properly {% endcomment %}
+						{% render 'reviews-slide',
+							review_text: review_text,
+							review_author_name: review_author_name,
+							review_author_role: review_author_role,
+							review_image: review_author_image,
+							product: product,
+							custom_image: custom_image,
+							layout: layout
+						%}
+					{% endif %}
+				{% endif %}
+			</div>
+
+			<div class="swiper-pagination need-animate"></div>
+		</div>
+	</section>
+
+	{%- render 'adastra' with '/src/scripts/component-swiper-modules.js' -%}
+	{%- render 'adastra' with '/src/scripts/section-reviews.js' -%}
+{%- endif -%}
+
+{%- schema -%}
+{
+	"name": "Reviews",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "select",
+			"id": "layout",
+			"label": "Layout",
+			"options": [
+				{
+					"value": "small-product",
+					"label": "Small product"
+				},
+				{
+					"value": "big-image",
+					"label": "Big image"
+				}
+			],
+			"default": "small-product"
+		},
+		{
+			"id": "heading",
+			"type": "text",
+			"label": "Heading",
+			"default": "Reviews"
+		},
+		{
+			"type": "checkbox",
+			"id": "enable_autoplay",
+			"label": "Autoplay",
+			"default": false
+		},
+		{
+			"type": "range",
+			"id": "autoplay_speed",
+			"min": 3,
+			"max": 10,
+			"step": 1,
+			"unit": "s",
+			"label": "Autoplay speed",
+			"default": 5
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 50
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 50
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"name": "Review",
+			"type": "review",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "review_image",
+					"label": "Author image"
+				},
+				{
+					"type": "text",
+					"id": "review_author_name",
+					"label": "Author name",
+					"default": "Author name"
+				},
+				{
+					"type": "text",
+					"id": "review_author_role",
+					"label": "Author role",
+					"default": "Author position"
+				},
+				{
+					"type": "textarea",
+					"id": "review_text",
+					"label": "Text",
+					"default": "Review text about the product"
+				},
+				{
+					"type": "product",
+					"id": "product",
+					"label": "Product"
+				},
+				{
+					"type": "image_picker",
+					"id": "custom_image",
+					"label": "Additional image",
+					"info": "When layout is 'Small product' this image will replace the product image."
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Reviews",
+			"settings": {},
+			"blocks": [
+				{
+					"type": "review",
+					"settings": {
+						"review_text": "Review text of 1st author",
+						"review_author_name": "Name of 1st author",
+						"review_author_role": "Role of 1st author"
+					}
+				},
+				{
+					"type": "review",
+					"settings": {
+						"review_text": "Review text of 2nd author",
+						"review_author_name": "Name of 2nd author",
+						"review_author_role": "Role of 2nd author"
+					}
+				},
+				{
+					"type": "review",
+					"settings": {
+						"review_text": "Review text of 3rd author",
+						"review_author_name": "Name of 3rd author",
+						"review_author_role": "Role of 3rd author"
+					}
+				},
+				{
+					"type": "review",
+					"settings": {
+						"review_text": "Review text of 4th author",
+						"review_author_name": "Name of 4th author",
+						"review_author_role": "Role of 4th author"
+					}
+				},
+				{
+					"type": "review",
+					"settings": {
+						"review_text": "Review text of 5th author",
+						"review_author_name": "Name of 5th author",
+						"review_author_role": "Role of 5th author"
+					}
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}

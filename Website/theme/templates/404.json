@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "404": {
+      "type": "404-template",
+      "settings": {
+        "label": "Ooopspspspsps...",
+        "heading": "404",
+        "subheading": "Page not found",
+        "text": "",
+        "button_text": "Home page",
+        "button_url": "/",
+        "button_style": "secondary",
+        "social_heading": "Find us in socials:",
+        "show_socials": true,
+        "image_first_desktop": "shopify://shop_images/brown-and-white-kitten-in-a-box.jpg",
+        "offset_top_desktop": 65,
+        "offset_bottom_desktop": 100,
+        "offset_top_mobile": 40,
+        "offset_bottom_mobile": 30
+      }
+    }
+  },
+  "order": [
+    "404"
+  ]
+}

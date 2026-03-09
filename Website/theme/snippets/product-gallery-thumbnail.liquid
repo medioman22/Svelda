@@ -1,0 +1,275 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Product gallery image
+	This snippet will output main image on product page
+
+	- image: image object (optional, object),
+	- is_lazy: is lazy load enable (optional, default: true, boolean)
+
+	{%- render "product-gallery-image", image: image, is_lazy: is_lazy -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- if image -%}
+	{% comment %}
+		Image width map
+	{% endcomment %}
+	{% assign base375 		  = 54 %}
+	{% assign base375_2x 	  = 108 %}
+	{% assign base420 		  = 62 %}
+	{% assign base420_2x 	  = 124 %}
+	{% assign base575 		  = 88 %}
+	{% assign base575_2x 	  = 176 %}
+	{% assign base767 		  = 120 %}
+	{% assign base767_2x 	  = 240 %}
+	{% assign base1199 		  = 130 %}
+	{% assign base1199_2x 	  = 260 %}
+	{%- if thumbnails_position == 'right' -%}
+		{% assign base1440 		  = 267 %}
+		{% assign base1440_2x 	  = 534 %}
+		{% assign base_default	  = 267 %}
+		{% assign base_default_2x = 534 %}
+	{%- else -%}
+		{% assign base1440 		  = 140 %}
+		{% assign base1440_2x 	  = 280 %}
+		{% assign base_default	  = 193 %}
+		{% assign base_default_2x = 386 %}
+	{%- endif -%}
+
+	{% if image.aspect_ratio > 1 %}
+		{% assign w375 	       = base375 | times: image.aspect_ratio | round %}
+		{% assign w375_2x	   = base375_2x | times: image.aspect_ratio | round %}
+		{% assign w420 	       = base420 | times: image.aspect_ratio | round %}
+		{% assign w420_2x	   = base420_2x | times: image.aspect_ratio | round %}
+		{% assign w575 	       = base575 | times: image.aspect_ratio | round %}
+		{% assign w575_2x	   = base575_2x | times: image.aspect_ratio | round %}
+		{% assign w767 	   	   = base767 | times: image.aspect_ratio | round %}
+		{% assign w767_2x	   = base767_2x | times: image.aspect_ratio | round %}
+		{% assign w1199 	   = base1199 | times: image.aspect_ratio | round %}
+		{% assign w1199_2x	   = base1199_2x | times: image.aspect_ratio | round %}
+		{% assign w1440 	   = base1440 | times: image.aspect_ratio | round %}
+		{% assign w1440_2x	   = base1440_2x | times: image.aspect_ratio | round %}
+		{% assign w_default    = base_default | times: image.aspect_ratio | round %}
+		{% assign w_default_2x = base_default_2x | times: image.aspect_ratio | round %}
+	{% else %}
+		{% assign w375 	       = base375 		 %}
+		{% assign w375_2x	   = base375_2x 	 %}
+		{% assign w420 	       = base420 		 %}
+		{% assign w420_2x	   = base420_2x 	 %}
+		{% assign w575 	       = base575 		 %}
+		{% assign w575_2x	   = base575_2x 	 %}
+		{% assign w767 	       = base767 		 %}
+		{% assign w767_2x	   = base767_2x 	 %}
+		{% assign w1199 	   = base1199 		 %}
+		{% assign w1199_2x	   = base1199_2x 	 %}
+		{% assign w1440 	   = base1440 		 %}
+		{% assign w1440_2x	   = base1440_2x 	 %}
+		{% assign w_default    = base_default 	 %}
+		{% assign w_default_2x = base_default_2x %}
+	{% endif %}
+
+	{% assign max_width = 9999 %}
+	{% if w375 > 		 max_width %}{% assign w375         = max_width %}{% endif %}
+	{% if w375_2x > 	 max_width %}{% assign w375_2x      = max_width %}{% endif %}
+	{% if w420 > 		 max_width %}{% assign w420         = max_width %}{% endif %}
+	{% if w420_2x > 	 max_width %}{% assign w420_2x      = max_width %}{% endif %}
+	{% if w575 > 		 max_width %}{% assign w575         = max_width %}{% endif %}
+	{% if w575_2x > 	 max_width %}{% assign w575_2x      = max_width %}{% endif %}
+	{% if w767 > 		 max_width %}{% assign w767         = max_width %}{% endif %}
+	{% if w767_2x > 	 max_width %}{% assign w767_2x      = max_width %}{% endif %}
+	{% if w1199 > 		 max_width %}{% assign w1199        = max_width %}{% endif %}
+	{% if w1199_2x > 	 max_width %}{% assign w1199_2x     = max_width %}{% endif %}
+	{% if w1440 > 		 max_width %}{% assign w1440        = max_width %}{% endif %}
+	{% if w1440_2x > 	 max_width %}{% assign w1440_2x     = max_width %}{% endif %}
+	{% if w_default >  	 max_width %}{% assign w_default    = max_width %}{% endif %}
+	{% if w_default_2x > max_width %}{% assign w_default_2x = max_width %}{% endif %}
+
+	{% assign w375         = w375 		  | append: 'x' | append: w375 %}
+	{% assign w375_2x      = w375_2x 	  | append: 'x' | append: w375_2x %}
+	{% assign w420         = w420 		  | append: 'x' | append: w420 %}
+	{% assign w420_2x      = w420_2x 	  | append: 'x' | append: w420_2x %}
+	{% assign w575         = w575 		  | append: 'x' | append: w575 %}
+	{% assign w575_2x      = w575_2x 	  | append: 'x' | append: w575_2x %}
+	{% assign w767         = w767 		  | append: 'x' | append: w767 %}
+	{% assign w767_2x      = w767_2x 	  | append: 'x' | append: w767_2x %}
+	{% assign w1199        = w1199 		  | append: 'x' | append: w1199 %}
+	{% assign w1199_2x     = w1199_2x 	  | append: 'x' | append: w1199_2x %}
+	{% assign w1440        = w1440 		  | append: 'x' | append: w1440 %}
+	{% assign w1440_2x     = w1440_2x 	  | append: 'x' | append: w1440_2x %}
+	{% assign w_default    = w_default 	  | append: 'x' | append: w_default %}
+	{% assign w_default_2x = w_default_2x | append: 'x' | append: w_default_2x %}
+	{% comment %}
+		End Image width map
+	{% endcomment %}
+
+	{%- if is_lazy -%}
+		<picture class="lazy">
+			<source
+				data-srcset="{{- image | img_url: w375, crop: 'center' }} 1x, {{ image | img_url: w375_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 375px)"
+				width="{{ base375 }}"
+				height="{{ base375 }}"
+			>
+
+			<source
+				data-srcset="{{- image | img_url: w420, crop: 'center' }} 1x, {{ image | img_url: w420_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 420px)"
+				width="{{ base420 }}"
+				height="{{ base420 }}"
+			>
+
+			<source
+				data-srcset="{{- image | img_url: w575, crop: 'center' }} 1x, {{ image | img_url: w575_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 575px)"
+				width="{{ base575 }}"
+				height="{{ base575 }}"
+			>
+
+			<source
+				data-srcset="{{- image | img_url: w767, crop: 'center' }} 1x, {{ image | img_url: w767_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 767px)"
+				width="{{ base767 }}"
+				height="{{ base767 }}"
+			>
+
+			<source
+				data-srcset="{{- image | img_url: w1199, crop: 'center' }} 1x, {{ image | img_url: w1199_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 1199px)"
+				width="{{ base1199 }}"
+				height="{{ base1199 }}"
+			>
+
+			<source
+				data-srcset="{{- image | img_url: w1440, crop: 'center' }} 1x, {{ image | img_url: w1440_2x, crop: 'center' }} 2x"
+				srcset="{{- image | img_url: '10x10' -}}"
+				media="(max-width: 1440px)"
+				width="{{ base1440 }}"
+				height="{{ base1440 }}"
+			>
+
+			<img
+				class="product-media__image"
+				data-srcset="{{- image | img_url: w_default, crop: 'center' }} 1x, {{ image | img_url: w_default_2x, crop: 'center' }} 2x"
+				data-src="{{- image | img_url: w_default, crop: 'center' }}"
+				srcset="{{- image | img_url: '10x10' -}}"
+				src="{{- image | img_url: '10x10' -}}"
+				alt="{{- image.alt -}}"
+				width="{{ base_default }}"
+				height="{{ base_default }}"
+			>
+		</picture>
+
+		<noscript>
+			<picture>
+				<source
+					srcset="{{- image | img_url: w375, crop: 'center' }} 1x, {{ image | img_url: w375_2x, crop: 'center' }} 2x"
+					media="(max-width: 375px)"
+					width="{{ base375 }}"
+					height="{{ base375 }}"
+				>
+
+				<source
+					srcset="{{- image | img_url: w420, crop: 'center' }} 1x, {{ image | img_url: w420_2x, crop: 'center' }} 2x"
+					media="(max-width: 420px)"
+					width="{{ base420 }}"
+					height="{{ base420 }}"
+				>
+
+				<source
+					srcset="{{- image | img_url: w575, crop: 'center' }} 1x, {{ image | img_url: w575_2x, crop: 'center' }} 2x"
+					media="(max-width: 575px)"
+					width="{{ base575 }}"
+					height="{{ base575 }}"
+				>
+
+				<source
+					srcset="{{- image | img_url: w767, crop: 'center' }} 1x, {{ image | img_url: w767_2x, crop: 'center' }} 2x"
+					media="(max-width: 767px)"
+					width="{{ base767 }}"
+					height="{{ base767 }}"
+				>
+
+				<source
+					srcset="{{- image | img_url: w1199, crop: 'center' }} 1x, {{ image | img_url: w1199_2x, crop: 'center' }} 2x"
+					media="(max-width: 1199px)"
+					width="{{ base1199 }}"
+					height="{{ base1199 }}"
+				>
+
+				<source
+					srcset="{{- image | img_url: w1440, crop: 'center' }} 1x, {{ image | img_url: w1440_2x, crop: 'center' }} 2x"
+					media="(max-width: 1440px)"
+					width="{{ base1440 }}"
+					height="{{ base1440 }}"
+				>
+
+				<img
+					class="product-media__image"
+					srcset="{{- image | img_url: w_default, crop: 'center' }} 1x, {{ image | img_url: w_default_2x, crop: 'center' }} 2x"
+					src="{{- image | img_url: w_default, crop: 'center' }}"
+					alt="{{- image.alt -}}"
+					width="{{ base_default }}"
+					height="{{ base_default }}"
+				>
+			</picture>
+		</noscript>
+	{%- else -%}
+		<picture>
+			<source
+				srcset="{{- image | img_url: w375, crop: 'center' }} 1x, {{ image | img_url: w375_2x, crop: 'center' }} 2x"
+				media="(max-width: 375px)"
+				width="{{ base375 }}"
+				height="{{ base375 }}"
+			>
+
+			<source
+				srcset="{{- image | img_url: w420, crop: 'center' }} 1x, {{ image | img_url: w420_2x, crop: 'center' }} 2x"
+				media="(max-width: 420px)"
+				width="{{ base420 }}"
+				height="{{ base420 }}"
+			>
+
+			<source
+				srcset="{{- image | img_url: w575, crop: 'center' }} 1x, {{ image | img_url: w575_2x, crop: 'center' }} 2x"
+				media="(max-width: 575px)"
+				width="{{ base575 }}"
+				height="{{ base575 }}"
+			>
+
+			<source
+				srcset="{{- image | img_url: w767, crop: 'center' }} 1x, {{ image | img_url: w767_2x, crop: 'center' }} 2x"
+				media="(max-width: 767px)"
+				width="{{ base767 }}"
+				height="{{ base767 }}"
+			>
+
+			<source
+				srcset="{{- image | img_url: w1199, crop: 'center' }} 1x, {{ image | img_url: w1199_2x, crop: 'center' }} 2x"
+				media="(max-width: 1199px)"
+				width="{{ base1199 }}"
+				height="{{ base1199 }}"
+			>
+
+			<source
+				srcset="{{- image | img_url: w1440, crop: 'center' }} 1x, {{ image | img_url: w1440_2x, crop: 'center' }} 2x"
+				media="(max-width: 1440px)"
+				width="{{ base1440 }}"
+				height="{{ base1440 }}"
+			>
+
+			<img
+				class="product-media__image"
+				srcset="{{- image | img_url: w_default, crop: 'center' }} 1x, {{ image | img_url: w_default_2x, crop: 'center' }} 2x"
+				src="{{- image | img_url: w_default, crop: 'center' }}"
+				alt="{{- image.alt -}}"
+				width="{{ base_default }}"
+				height="{{ base_default }}"
+			>
+		</picture>
+	{%- endif -%}
+{% endif %}

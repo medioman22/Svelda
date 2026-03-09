@@ -1,0 +1,79 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blog": {
+      "type": "blog-template",
+      "blocks": {
+        "article-1": {
+          "type": "article",
+          "settings": {
+            "article": ""
+          }
+        },
+        "article-2": {
+          "type": "article",
+          "settings": {
+            "article": ""
+          }
+        },
+        "article-3": {
+          "type": "article",
+          "settings": {
+            "article": ""
+          }
+        }
+      },
+      "block_order": [
+        "article-1",
+        "article-2",
+        "article-3"
+      ],
+      "settings": {
+        "paginate_by": 6,
+        "pagination_type": "lazy_load",
+        "lazy_load_button_type": "secondary",
+        "show_filter_by_tag": true,
+        "container_width": "inherit",
+        "offset_top_desktop": 20,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 20,
+        "offset_bottom_mobile": 50
+      }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {
+        "heading": "Shop Bestsellers",
+        "product_list": [
+          "svelda-janus-marble-bowl",
+          "bowl-1",
+          "tito"
+        ],
+        "layout": "4",
+        "show_arrows": false,
+        "show_banner": true,
+        "banner_image": "shopify://shop_images/brown-and-white-kitten-in-a-box.jpg",
+        "banner_heading": "",
+        "banner_text": "",
+        "overlay_color": "linear-gradient(180deg, rgba(0, 0, 0, 0) 54%, rgba(0, 0, 0, 0.5) 100%)",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 50
+      }
+    }
+  },
+  "order": [
+    "blog",
+    "featured-products"
+  ]
+}

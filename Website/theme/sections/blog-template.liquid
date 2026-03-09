@@ -1,0 +1,518 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Blog template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/blog.scss' -%}
+{%- render 'adastra' with '/src/styles/tabs-ui.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign paginate_by        		  = section.settings.paginate_by -%}
+{%- assign pagination_type    		  = section.settings.pagination_type -%}
+{%- assign lazy_load_button_type      = section.settings.lazy_load_button_type -%}
+{%- assign show_filter_by_tag 		  = section.settings.show_filter_by_tag -%}
+{%- assign container 				  = section.settings.container_width -%}
+{%- assign blocks 				      = section.blocks -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- assign show_date 		   = settings.show_date -%}
+{%- assign show_author 		   = settings.show_author -%}
+{%- assign show_tag 		   = settings.show_tag -%}
+{%- assign is_strip_title      = settings.is_strip_title -%}
+{%- assign is_strip_content    = settings.is_strip_content -%}
+{%- assign show_comments_count = settings.show_comments_count -%}
+{%- assign read_more_text 	   = settings.article_read_more_label  %}
+
+{%- if show_filter_by_tag and blog.all_tags.size > 0 -%}
+	{%- capture filter_items -%}
+		{%- for tag in blog.all_tags -%}
+			<li class="blog__filters-item">
+				{%- capture blog_filters_link_classes -%}
+					tabs-ui__tab focus-visible-outline blog__filters-link js-filter-link {{-  -}}
+					{% if current_tags contains tag %} is-active {%- endif -%}
+				{%- endcapture -%}
+
+				<a
+					class="{{- blog_filters_link_classes | strip_newlines -}}"
+					href="{{- blog.url -}}/tagged/{{- tag | handleize -}}"
+				>
+					{{- tag -}}
+				</a>
+			</li>
+		{%- endfor -%}
+	{%- endcapture -%}
+{%- endif -%}
+
+{%- if filter_items != blank -%}
+	{%- capture blog_filters -%}
+		<div class="blog__filters js-filter">
+			<ul class="blog__filters-list">
+				<li class="blog__filters-item">
+					{%- capture blog_filters_link_reset_classes -%}
+						tabs-ui__tab blog__filters-link blog__filters-link--reset js-filter-reset {{-  -}}
+						{% if current_tags == blank %} is-active {%- endif -%}
+					{%- endcapture -%}
+
+					<a class="{{- blog_filters_link_reset_classes | strip_newlines -}}"
+					   href="{{- blog.url -}}"
+					   {% unless current_tags %}
+						   tabindex="-1"
+					   {% endunless %}
+					>
+						{{- 'blogs.article.view_all' | t -}}
+					</a>
+				</li>
+
+				{{- filter_items -}}
+			</ul>
+		</div>
+	{%- endcapture -%}
+{%- endif -%}
+
+<section class="blog js-blog" id="{{- section.id -}}" style="--container-width: {{ container_width }};">
+	<div class="blog__container">
+		<h1 class="h1 blog__title">
+			{{- blog.title -}}
+		</h1>
+
+		{% if blocks.size > 0 %}
+			<div class="blog__slider swiper js-blog-slider">
+				<div class="swiper-wrapper">
+					{% for block in blocks %}
+						{%- assign article          = block.settings.article -%}
+						{%- assign article_title 	= article.title | default: 'Article title' -%}
+						{%- assign article_url 		= article.url | default: '#' -%}
+						{%- assign article_image 	= article.image | default: settings.article_default_image -%}
+						{%- assign author           = article.author -%}
+						{%- assign comments_count   = article.comments_count -%}
+						{%- assign tag 				= article.tags[0] -%}
+
+						{%- capture article_description_classes -%}
+							blog__slide-description {% if is_strip_content %} blog__slide-description--clipped {%- endif -%}
+						{%- endcapture -%}
+
+						{%- if article == blank -%}
+							{%- capture article_description_exmaple -%}
+								An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description. An example of a blog post description.
+							{%- endcapture -%}
+
+							{%- assign article_date_example 			= 'May 25, 2020' -%}
+							{%- assign article_author_example 			= 'Article author' -%}
+							{%- assign article_tag_example 				= 'Article tag' -%}
+							{%- assign article_comments_count_example	= '0' -%}
+						{%- endif-%}
+
+						<div class="swiper-slide blog__slide-card">
+							<div class="blog__slide-image-wrapper">
+								{%- if article.image == blank and settings.article_default_image != blank -%}
+									{%- capture img_focal -%}
+										--img-desktop-pos: {{ settings.article_default_image.presentation.focal_point }};
+									{%- endcapture -%}
+								{%- endif -%}
+
+								{%- if show_tag -%}
+									{%- if tag != blank or article == blank -%}
+										<div class="blog__slide-card-tag">
+										<span class="visually-hidden">
+											{{- 'blogs.article.tag' | t -}}
+										</span>
+
+											{%- if tag != blank -%}
+												{{- tag -}}
+											{%- elsif article == blank -%}
+												{{- article_tag_example -}}
+											{%- endif -%}
+										</div>
+									{%- endif -%}
+								{%- endif -%}
+
+								<a href="{{ article_url }}" class="blog__slide-image-link focus-visible-outline">
+									<picture>
+										<source
+											srcset="{{- article_image | img_url: '348x264', crop: 'center' }} 1x, {{ article_image | img_url: '696x528', crop: 'center' }} 2x"
+											width="348"
+											height="264"
+											media="(max-width: 380px)"
+										>
+
+										<source
+											srcset="{{- article_image | img_url: '388x294', crop: 'center' }} 1x, {{ article_image | img_url: '776x588', crop: 'center' }} 2x"
+											width="388"
+											height="294"
+											media="(max-width: 420px)"
+										>
+
+										<source
+											srcset="{{- article_image | img_url: '735x557', crop: 'center' }} 1x, {{ article_image | img_url: '1470x1114', crop: 'center' }} 2x"
+											width="735"
+											height="557"
+											media="(max-width: 767px)"
+										>
+
+										<source
+											srcset="{{- article_image | img_url: '480x327', crop: 'center' }} 1x, {{ article_image | img_url: '960x654', crop: 'center' }} 2x"
+											width="480"
+											height="327"
+											media="(max-width: 991px)"
+										>
+
+										<source
+											srcset="{{- article_image | img_url: '584x340', crop: 'center' }} 1x, {{ article_image | img_url: '1168x680', crop: 'center' }} 2x"
+											width="584"
+											height="340"
+											media="(max-width: 1199px)"
+										>
+
+										<source
+											srcset="{{- article_image | img_url: '784x457', crop: 'center' }} 1x, {{ article_image | img_url: '1568x914', crop: 'center' }} 2x"
+											width="784"
+											height="457"
+											media="(max-width: 1600px)"
+										>
+
+										<img
+											class="blog__slide-image"
+											src="{{- article_image | img_url: '944x550', crop: 'center' -}}"
+											srcset="{{- article_image | img_url: '944x550', crop: 'center' }} 1x, {{ article_image | img_url: '1888x1100', crop: 'center' }} 2x"
+											alt="{{- article_image.alt -}}"
+											width="944"
+											height="550"
+											loading="lazy"
+											{% if img_focal != blank %}
+												style="{{ img_focal }}"
+											{% endif %}
+										>
+									</picture>
+								</a>
+							</div>
+
+							<div class="blog__slide-content">
+								{%- if show_date or show_author or show_comments_count -%}
+									<ul class="blog__slide-info-wrapper">
+										{%- if show_date -%}
+											<li class="blog__info-item">
+												{%- if article != blank -%}
+													{{- article.published_at | time_tag: format: 'date' -}}
+												{%- else -%}
+													{{- article_date_example -}}
+												{%- endif -%}
+											</li>
+										{%- endif -%}
+
+										{%- if show_author -%}
+											<li class="blog__info-item">
+												{%- if author != blank -%}
+													{{- author -}}
+												{%- elsif article == blank -%}
+													{{- article_author_example -}}
+												{%- endif -%}
+											</li>
+										{%- endif -%}
+
+										{%- if show_comments_count -%}
+											<li class="blog__info-item">
+												<span class="visually-hidden">
+													{{- 'blogs.article.comments_count' | t -}}
+												</span>
+
+												{%- if comments_count != blank -%}
+													{{ comments_count }}
+
+													<span class="article-card__comments-count-label">
+														{% if comments_count != 1 %}{{ 'blogs.article.many_comments' | t }}{% else %}{{ 'blogs.article.one_comment' | t }}{% endif %}
+													</span>
+												{%- elsif article == blank -%}
+													{{- article_comments_count_example -}}
+													<span class="article-card__comments-count-label">{{ 'blogs.article.many_comments' | t }}</span>
+												{%- endif -%}
+											</li>
+										{%- endif -%}
+									</ul>
+								{%- endif -%}
+
+								<div
+									class="h3 blog__slide-title {% if is_strip_title %} blog__slide-title--clipped{%- endif -%}">
+									<a href="{{ article_url }}" class="focus-visible-outline">{{- article_title -}}</a>
+								</div>
+
+								{%- if article.excerpt_or_content != blank or article == blank -%}
+									<div class="{{- article_description_classes | strip_newlines -}}">
+										{%- if article.excerpt_or_content != blank -%}
+											{{- article.excerpt_or_content | strip_html -}}
+										{%- elsif article == blank -%}
+											{{- article_description_exmaple -}}
+										{%- endif -%}
+									</div>
+								{%- endif -%}
+
+								<a
+									class="button-link focus-visible-outline"
+									href="{{- article_url -}}"
+									aria-label="{{- 'blogs.article.learn_more_link_aria' | t: title: article_title | escape -}}"
+								>
+									{{ read_more_text }}
+								</a>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				{% if blocks.size > 1 %}
+					<div class="blog__slider-pagination-wrapper">
+						<button
+							class="swiper-button swiper-button-prev js-blog-slider-prev"
+						>
+							{% render 'icons', icon: 'arrow-left' %}
+						</button>
+
+						<div class="blog__pagination js-blog-slider-pagination"></div>
+
+						<button
+							class="swiper-button swiper-button-next js-blog-slider-next"
+						>
+							{% render 'icons', icon: 'arrow-right' %}
+						</button>
+					</div>
+				{% endif %}
+			</div>
+		{% endif %}
+
+		{%- if blog.articles.size > 0 -%}
+			{%- paginate blog.articles by paginate_by -%}
+				{%- if blog_filters != blank -%}
+					{{- blog_filters -}}
+				{%- endif -%}
+
+				<div class="blog__grid js-blog-grid" aria-busy="false">
+					{%- for article in blog.articles -%}
+						<div class="blog__col">
+							{%- render 'article-card', article: article -%}
+						</div>
+					{%- endfor -%}
+				</div>
+
+				{%- if pagination_type == 'pagination' -%}
+					<div class="blog__pagination-wrapper js-pagination">
+						{%- if paginate.pages > 1 -%}
+							{%- render 'pagination', paginate: paginate -%}
+						{%- endif -%}
+					</div>
+				{%- elsif pagination_type == "infinite_scroll" -%}
+					{%- capture blog_infinite_scroll_classes -%}
+						blog__infinite-scroll no-js-hidden js-infinite-scroll {{-  -}}
+						{% unless paginate.next.url %} is-hidden {%- endunless -%}
+					{% endcapture %}
+
+					<div class="{{- blog_infinite_scroll_classes | strip_newlines -}}"
+						{%- if paginate.next.url -%}
+							data-next-url="{{- paginate.next.url -}}"
+						{%- else -%}
+							data-next-url=""
+						{%- endif -%}
+					></div>
+				{%- else -%}
+					{% capture blog_lazy_load_classes %}
+						button button--{{- lazy_load_button_type }} blog__lazy-load-button js-lazy-load {{-  -}}
+						{% unless paginate.next.url %} is-hidden {%- endunless -%}
+					{% endcapture %}
+
+					<div class="blog__lazy-load-button-wrapper no-js-hidden">
+						<button class="{{- blog_lazy_load_classes | strip_newlines -}}"
+							{%- if paginate.next.url -%}
+								data-next-url="{{- paginate.next.url -}}"
+							{%- else -%}
+								data-next-url=""
+							{%- endif -%}
+						>
+							{{- 'blogs.general.lazy_load_button' | t -}}
+						</button>
+					</div>
+				{%- endif -%}
+
+				{%- unless pagination_type == 'pagination' -%}
+					<noscript>
+						<div class="blog__pagination-wrapper">
+							{%- if paginate.pages > 1 -%}
+								{%- render 'pagination', paginate: paginate -%}
+							{%- endif -%}
+						</div>
+					</noscript>
+				{%- endunless -%}
+
+				{%- render 'adastra' with '/src/scripts/blog-template.js' -%}
+			{%- endpaginate -%}
+		{%- else -%}
+			<h2 class="h2 blog__title blog__title--empty">
+				{{- 'blogs.general.empty_blog' | t -}}
+			</h2>
+		{%- endif -%}
+	</div>
+</section>
+
+{%- schema -%}
+{
+	"name": "Blog",
+	"settings": [
+		{
+			"type": "range",
+			"id": "paginate_by",
+			"min": 6,
+			"max": 24,
+			"step": 1,
+			"label": "Paginate by",
+			"default": 9
+		},
+		{
+			"type": "select",
+			"id": "pagination_type",
+			"label": "Pagination type",
+			"options": [
+				{
+					"value": "pagination",
+					"label": "Pagination"
+				},
+				{
+					"value": "lazy_load",
+					"label": "Load more"
+				},
+				{
+					"value": "infinite_scroll",
+					"label": "Infinite scroll"
+				}
+			],
+			"default": "pagination"
+		},
+		{
+			"type": "select",
+			"id": "lazy_load_button_type",
+			"label": "Load more button style",
+			"options": [
+				{
+					"value": "primary",
+					"label": "Primary"
+				},
+				{
+					"value": "secondary",
+					"label": "Secondary"
+				},
+				{
+					"value": "primary-border",
+					"label": "Primary with border"
+				},
+				{
+					"value": "secondary-border",
+					"label": "Secondary with border"
+				}
+			],
+			"default": "secondary"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_filter_by_tag",
+			"label": "Show filter by tag",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 24
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 48
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 16
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 32
+		}
+	],
+	"blocks": [
+		{
+			"type": "article",
+			"name": "Article",
+			"settings": [
+				{
+					"type": "article",
+					"id": "article",
+					"label": "Article"
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}

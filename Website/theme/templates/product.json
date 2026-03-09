@@ -1,0 +1,496 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "product-template": {
+      "type": "product-template",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "progress_range_BdiErN": {
+          "type": "progress_range",
+          "disabled": true,
+          "settings": {
+            "is_show_item_1": true,
+            "heading_1": "Heading",
+            "range_1": 10,
+            "is_show_item_2": true,
+            "heading_2": "Heading",
+            "range_2": 10,
+            "is_show_item_3": true,
+            "heading_3": "Heading",
+            "range_3": 10,
+            "is_show_item_4": true,
+            "heading_4": "Heading",
+            "range_4": 10,
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "description_R9iHhr": {
+          "type": "description",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "text_Gadt6D": {
+          "type": "text",
+          "settings": {
+            "text": "",
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "drawers": {
+          "type": "drawers",
+          "disabled": true,
+          "settings": {
+            "drawer_content_1": "<p>trggtre</p>",
+            "drawer_toggle_text_1": "Size",
+            "drawer_title_1": "Drawer 1",
+            "drawer_content_2": "",
+            "drawer_toggle_text_2": "",
+            "drawer_title_2": "Drawer 2",
+            "drawer_content_3": "",
+            "drawer_toggle_text_3": "Drawer 3",
+            "drawer_title_3": "Drawer 3",
+            "drawer_content_4": "",
+            "drawer_toggle_text_4": "Drawer 4",
+            "drawer_title_4": "Drawer 4",
+            "offset_top_desktop": 20,
+            "offset_bottom_desktop": 20,
+            "offset_top_mobile": 20,
+            "offset_bottom_mobile": 20
+          }
+        },
+        "badges": {
+          "type": "badges",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "inventory_status": {
+          "type": "inventory_status",
+          "settings": {
+            "inv_low_stock_text": "Low stock",
+            "inv_high_stock_text": "In stock, ready to ship",
+            "low_stock_threshold": 10,
+            "show_inventory_quantity": false,
+            "show_background": true,
+            "inv_high_stock_color": "#45a935",
+            "inv_high_stock_background": "#ecf9ea",
+            "inv_low_stock_color": "#e41616",
+            "inv_low_stock_background": "#f5c3c3",
+            "background_opacity": 35,
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "countdown_timer": {
+          "type": "countdown_timer",
+          "settings": {
+            "text": "Sale ends in:",
+            "text_color": "#535353",
+            "timer_text_color": "#000000",
+            "timer_background_color": "#e1e1e1",
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "disabled": true,
+          "settings": {
+            "show_sku": true,
+            "sku_text": "Art: {SKU}",
+            "show_vendor": true,
+            "make_vendor_link": true,
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "options": {
+          "type": "options",
+          "settings": {
+            "variant_picker": "select",
+            "color_swatch_type": "big-square",
+            "enable_swatch_preview": false,
+            "enable_swatch_max_height": false,
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "quantity": {
+          "type": "quantity",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "ask_question": {
+          "type": "ask_question",
+          "settings": {
+            "button_label": "Have a question? Let us know.",
+            "heading": "Have a question?",
+            "email_placeholder": "Email",
+            "name_placeholder": "Name",
+            "phone_placeholder": "Phone",
+            "product_url": "Reference URL",
+            "message_placeholder": "Write message",
+            "success_message": "Email has been successfully sent",
+            "submit_button_label": "Submit",
+            "button_style": "secondary",
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "notify_me": {
+          "type": "notify_me",
+          "settings": {
+            "notify_me_button_label": "Email me when available",
+            "notify_me_form_heading": "Notified by email when this product becomes available",
+            "notify_me_form_email_placeholder": "Your email",
+            "notify_me_form_submit_button_label": "Notify me when available",
+            "button_style": "secondary",
+            "notify_me_form_success_message": "Email has been successfully sent",
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "gift_wrap_product": {
+          "type": "gift_wrap_product",
+          "settings": {
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "custom_field": {
+          "type": "custom_field",
+          "settings": {
+            "field_label": "Order info:",
+            "required_text": "",
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "add_to_cart": {
+          "type": "add_to_cart",
+          "settings": {
+            "button_type": "secondary",
+            "button_buy_it_type": "secondary-border",
+            "show_additional_buttons": true,
+            "show_gift_card_recipient": true,
+            "offset_top_desktop": 24,
+            "offset_bottom_desktop": 24,
+            "offset_top_mobile": 24,
+            "offset_bottom_mobile": 24
+          }
+        },
+        "sales_point": {
+          "type": "sales_point",
+          "settings": {
+            "sales_point_text": "",
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        },
+        "pickup_availability": {
+          "type": "pickup_availability",
+          "settings": {
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "heading": "You May Also Like",
+            "offset_top_desktop": 20,
+            "offset_bottom_desktop": 20,
+            "offset_top_mobile": 20,
+            "offset_bottom_mobile": 20
+          }
+        },
+        "product_combination_8nGhng": {
+          "type": "product_combination",
+          "settings": {
+            "option_name": "aaa",
+            "option_value_metafield": "",
+            "product_list": []
+          }
+        },
+        "socials": {
+          "type": "socials",
+          "settings": {
+            "show_facebook": true,
+            "show_twitter": true,
+            "show_pinterest": true,
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "benefits": {
+          "type": "benefits",
+          "disabled": true,
+          "settings": {
+            "title_1": "Designed by SVELDA in Switzerland",
+            "link_text_1": "Learn more",
+            "link_url_1": "",
+            "title_2": "Unique Designs",
+            "link_text_2": "Learn more",
+            "link_url_2": "",
+            "title_3": "Bespoke Items",
+            "link_text_3": "Learn more",
+            "link_url_3": "",
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        }
+      },
+      "block_order": [
+        "title",
+        "progress_range_BdiErN",
+        "description_R9iHhr",
+        "text_Gadt6D",
+        "drawers",
+        "badges",
+        "inventory_status",
+        "countdown_timer",
+        "vendor",
+        "options",
+        "quantity",
+        "price",
+        "ask_question",
+        "notify_me",
+        "gift_wrap_product",
+        "custom_field",
+        "add_to_cart",
+        "sales_point",
+        "pickup_availability",
+        "complementary",
+        "product_combination_8nGhng",
+        "socials",
+        "benefits"
+      ],
+      "settings": {
+        "is_zoom_enabled": true,
+        "show_arrows_mobile": true,
+        "media_layout": "carousel",
+        "thumbnails_position": "bottom",
+        "media_height": "square",
+        "image_object_fit": "contain",
+        "is_enable_media_scroller": true,
+        "show_taxes_included": true,
+        "show_pay_installments": true,
+        "show_sticky_add_to_cart": true,
+        "show_size_guide": false,
+        "size_guide_button_placement": "under-options",
+        "size_guide_button_text": "Size guide",
+        "size_guide_button_icon": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM.jpg",
+        "size_guide_drawer_title": "Size guide",
+        "size_guide_tab_general_name": "Dimensions",
+        "size_guide_tab_model_name": "Model parameters",
+        "ui_button_color": "#000000",
+        "ui_button_background_color": "#ffffff",
+        "ui_button_border_color": "#e9e9e9",
+        "container_width": "inherit",
+        "offset_top_desktop": 20,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 20,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "image-with-text-1": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "heading": "COMFORTABLE",
+        "subheading": "",
+        "text_content": "<p>Ergonomics plays a pivotal role in NOOM's design philosophy, ensuring that its products are aesthetically pleasing and incredibly comfortable. The Flock Chair, characterized by its smooth wide backrest and spacious, comfortable seat, results from extensive research, numerous prototypes, and the meticulous craftsmanship of local artisans under the designer's close supervision.</p>",
+        "button_label": "Show more",
+        "button_aria_label": "Show more button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "image-with-text-2": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "heading": "SCULPTURAL",
+        "subheading": "",
+        "text_content": "<p>The geometric structure of the lamps will always look like a small art objects in your house.</p>",
+        "button_label": "Show more",
+        "button_aria_label": "Show more button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "image-with-text-3": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "heading": "SHAPE",
+        "subheading": "",
+        "text_content": "<p>The collection inspired from the shorelines of lakes and aerial views of their sinuous shapes.</p><p>The designers have emphasized the contrast between the fluid shapes of the glass and the straight lines of the mirror base.</p>",
+        "button_label": "Show more",
+        "button_aria_label": "Show more button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "image-with-text-4": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "heading": "HAND CRAFTED",
+        "subheading": "",
+        "text_content": "<p>Every single piece unique and involves careful manual work by our craftsmen.</p>",
+        "button_label": "Show more",
+        "button_aria_label": "Show more button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "gallery": {
+      "type": "gallery",
+      "settings": {
+        "title": "NOOM",
+        "text": "Ergonomics plays a pivotal role in NOOM's design philosophy, ensuring that its products are aesthetically pleasing and incredibly comfortable.",
+        "button_label": "Button label",
+        "button_link": "",
+        "button_style": "secondary-border",
+        "text_color": "#535353",
+        "background_color": "#cdcdcd",
+        "overlay_color": "rgba(0,0,0,.5)",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "heading": "Recommendations",
+        "products_to_show": 5,
+        "tab_label": "Related products",
+        "enable_shopify_recommendations": true,
+        "collection": "eat",
+        "show_recently_viewed": true,
+        "recently_viewed_label": "Recently viewed",
+        "layout": "alternative",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    }
+  },
+  "order": [
+    "product-template",
+    "image-with-text-1",
+    "image-with-text-2",
+    "image-with-text-3",
+    "image-with-text-4",
+    "gallery",
+    "product-recommendations"
+  ]
+}

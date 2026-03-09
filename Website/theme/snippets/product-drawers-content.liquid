@@ -1,0 +1,140 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Snippet: Product Drawers Content
+------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- assign drawers = blocks | where: 'type', 'drawers' | first -%}
+
+{%- if drawers != nil -%}
+	{%- comment -%}
+		Drawer 1 variables
+	{%- endcomment -%}
+	{%- assign drawer_content_1 		= drawers.settings.drawer_content_1 -%}
+	{%- assign drawer_toggle_text_1 	= drawers.settings.drawer_toggle_text_1 -%}
+	{%- assign drawer_title_1 			= drawers.settings.drawer_title_1 -%}
+	{%- assign show_drawer_1 			= false -%}
+
+	{%- if drawer_content_1 != blank and drawer_toggle_text_1 != blank -%}
+		{%- assign show_drawer_1 = true -%}
+	{%- endif -%}
+
+	{%- comment -%}
+		Drawer 2 variables
+	{%- endcomment -%}
+	{%- assign drawer_content_2 		= drawers.settings.drawer_content_2 -%}
+	{%- assign drawer_toggle_text_2 	= drawers.settings.drawer_toggle_text_2 -%}
+	{%- assign drawer_title_2 			= drawers.settings.drawer_title_2 | default: drawer_content_2.title -%}
+	{%- assign show_drawer_2 			= false -%}
+
+	{%- if drawer_content_2 != blank and drawer_content_2.content != blank and drawer_toggle_text_2 != blank -%}
+		{%- assign show_drawer_2 = true -%}
+	{%- endif -%}
+
+	{% comment %}
+		Drawer 3 variables
+	{% endcomment %}
+	{% assign drawer_content_3 		= drawers.settings.drawer_content_3 %}
+	{% assign drawer_toggle_text_3 	= drawers.settings.drawer_toggle_text_3 %}
+	{% assign drawer_title_3 		= drawers.settings.drawer_title_3 | default: drawer_content_3.title %}
+	{% assign show_drawer_3 		= false %}
+
+	{% if drawer_content_3 != blank and drawer_content_3.content != blank and drawer_toggle_text_3 != blank %}
+		{% assign show_drawer_3 = true %}
+	{% endif %}
+
+	{% comment %}
+		Drawer 4 variables
+	{% endcomment %}
+	{% assign drawer_content_4     = drawers.settings.drawer_content_4 %}
+	{% assign drawer_toggle_text_4 = drawers.settings.drawer_toggle_text_4 %}
+	{% assign drawer_title_4       = drawers.settings.drawer_title_4 | default: drawer_content_4.title %}
+	{% assign show_drawer_4        = false %}
+
+	{% if drawer_content_4 != blank and drawer_content_4.content != blank and drawer_toggle_text_4 != blank %}
+		{% assign show_drawer_4 = true %}
+	{% endif %}
+
+	{%- capture drawer_popup_1 -%}
+		{% assign toggle_id = 'productDrawer1-' | append: section.id %}
+
+		{%- render 'product-form-drawer',
+			title: drawer_title_1,
+			content: drawer_content_1,
+			toggle_id: toggle_id,
+			class_body: 'rte-product-drawer'
+		-%}
+	{%- endcapture -%}
+
+	{%- capture drawer_popup_2 -%}
+		{% assign toggle_id = 'productDrawer2-' | append: section.id %}
+
+		{%- render 'product-form-drawer',
+			title: drawer_title_2,
+			content: drawer_content_2.content,
+			toggle_id: toggle_id,
+			class_body: 'rte-product-drawer'
+		-%}
+	{%- endcapture -%}
+
+	{%- capture drawer_popup_3 -%}
+		{% assign toggle_id = 'productDrawer3-' | append: section.id %}
+
+		{%- render 'product-form-drawer',
+			title: drawer_title_3,
+			content: drawer_content_3.content,
+			toggle_id: toggle_id,
+			class_body: 'rte-product-drawer'
+		-%}
+	{%- endcapture -%}
+
+	{%- capture drawer_popup_4 -%}
+		{% assign toggle_id = 'productDrawer4-' | append: section.id %}
+
+		{%- render 'product-form-drawer',
+			title: drawer_title_4,
+			content: drawer_content_4.content,
+			toggle_id: toggle_id,
+			class_body: 'rte-product-drawer'
+		-%}
+	{%- endcapture -%}
+
+	{%- if show_drawer_1 or show_drawer_2 or show_drawer_3 or show_drawer_4 -%}
+		{%- if show_drawer_1 -%}
+			{{- drawer_popup_1 -}}
+		{%- endif -%}
+
+		{%- if show_drawer_2 -%}
+			{{- drawer_popup_2 -}}
+		{%- endif -%}
+
+		{%- if show_drawer_3 -%}
+			{{- drawer_popup_3 -}}
+		{%- endif -%}
+
+		{%- if show_drawer_4 -%}
+			{{- drawer_popup_4 -}}
+		{%- endif -%}
+	{%- endif -%}
+{%- endif -%}
+
+
+{% assign show_size_guide = section.settings.show_size_guide %}
+
+{%- if show_size_guide -%}
+	{%- assign size_guide_page = product.metafields.size_guide.page.value -%}
+
+	{%- if size_guide_page != blank and size_guide_page.content != blank -%}
+		{% assign toggle_id = 'productSizeGuideDrawer-' | append: section.id %}
+		{% assign size_guide_page_content = size_guide_page.content | replace: '<img', '<img loading="lazy"'%}
+
+		{% render 'product-size-guide-popup',
+			product: product,
+			title: section.settings.size_guide_drawer_title,
+			content: size_guide_page_content,
+			toggle_id: toggle_id,
+			tab_general_name: section.settings.size_guide_tab_general_name,
+			tab_model_name: section.settings.size_guide_tab_model_name
+		%}
+	{%- endif -%}
+{%- endif -%}

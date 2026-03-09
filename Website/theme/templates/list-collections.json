@@ -1,0 +1,138 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "list-collections-template": {
+      "type": "list-collections-template",
+      "disabled": true,
+      "settings": {
+        "custom_collections": [
+          "eat",
+          "play",
+          "rest"
+        ],
+        "sort_by": "published_at",
+        "heading": "All collections",
+        "paginate_by": 8,
+        "text_alignment": "right",
+        "show_products_count": false,
+        "overlay_color": "",
+        "color_text": "#525252",
+        "container_width": "inherit",
+        "offset_top_desktop": 24,
+        "offset_bottom_desktop": 60,
+        "offset_top_mobile": 24,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "collection_list_BdKnqV": {
+      "type": "collection-list",
+      "blocks": {
+        "collection_zRBX6P": {
+          "type": "collection",
+          "settings": {
+            "collection": "eat"
+          }
+        },
+        "collection_Enz8f8": {
+          "type": "collection",
+          "settings": {
+            "collection": "rest"
+          }
+        },
+        "collection_fwiFHR": {
+          "type": "collection",
+          "settings": {
+            "collection": "play"
+          }
+        }
+      },
+      "block_order": [
+        "collection_zRBX6P",
+        "collection_Enz8f8",
+        "collection_fwiFHR"
+      ],
+      "name": "Collections grid",
+      "settings": {
+        "heading": "Our collections",
+        "link_url": "shopify://collections/rest",
+        "link_text": "",
+        "link_aria_label_text": "",
+        "button_style": "secondary-border",
+        "text_alignment": "center",
+        "text_position": "under_image",
+        "aspect_ratio": "square",
+        "cards_per_row": "3",
+        "center_on_desktop": false,
+        "show_products_count": true,
+        "overlay_color": "",
+        "color_text": "#fff",
+        "container_width": "inherit",
+        "offset_top_desktop": 60,
+        "offset_bottom_desktop": 60,
+        "offset_top_mobile": 30,
+        "offset_bottom_mobile": 30
+      }
+    },
+    "banner_with_scroll_images_L3kBG6": {
+      "type": "banner-with-scroll-images",
+      "blocks": {
+        "first_column_TxQLni": {
+          "type": "first_column",
+          "settings": {
+            "block_image": "shopify://shop_images/Generated_Image_January_31_2026_-_2_52PM.jpg"
+          }
+        },
+        "second_column_jqm8F7": {
+          "type": "second_column",
+          "settings": {
+            "block_image": "shopify://shop_images/Generated_Image_January_31_2026_-_2_55PM.jpg"
+          }
+        },
+        "third_column_PTqNcY": {
+          "type": "third_column",
+          "settings": {
+            "block_image": "shopify://shop_images/Generated_Image_January_31_2026_-_4_15PM.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "first_column_TxQLni",
+        "second_column_jqm8F7",
+        "third_column_PTqNcY"
+      ],
+      "disabled": true,
+      "name": "Banner with scroll images",
+      "settings": {
+        "desktop_height": "650px",
+        "title": "Banner with scroll images",
+        "label": "Label",
+        "text": "",
+        "button_label": "Shop All",
+        "button_aria_label": "Button aria-label",
+        "button_link": "/",
+        "button_style": "primary",
+        "section_background": "#000000",
+        "overlay_color": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4) 100%)",
+        "text_color": "#ffffff",
+        "container_width": "inherit",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "list-collections-template",
+    "collection_list_BdKnqV",
+    "banner_with_scroll_images_L3kBG6"
+  ]
+}

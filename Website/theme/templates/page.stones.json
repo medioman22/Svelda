@@ -1,0 +1,528 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "settings": {
+        "offset_top_desktop": 60,
+        "offset_bottom_desktop": 0,
+        "offset_top_mobile": 30,
+        "offset_bottom_mobile": 30
+      }
+    },
+    "richtext_GyAU6y": {
+      "type": "richtext",
+      "name": "Rich text",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "text_content": "<p>At <strong>SVELDA</strong>, we view the home as a curated ecosystem where the permanent and the ephemeral exist in perfect equilibrium. While our textiles provide the soft, bioactive climate for rest, our stone collection provides the architectural foundation. These are not merely vessels; they are deliberate mineral anchors designed to ground a room. Each piece is a functional sculpture—a fragment of Earth’s deep history, meticulously finished and plated for the modern interior.</p><p>The integration of natural stone into the domestic environment serves a purpose beyond the aesthetic. In a world of synthetic surfaces, the raw mineralogy of marble and limestone offers an honest, cooling touch that benefits both the creature and the curator. These stones act as silent guardians of the home's temperature, remaining refreshingly cool in the height of summer and retaining a steady, comforting presence in the winter. From the crystalline luminosity of Italian calcite to the tectonic weight of Spanish breccia, our collection is a study in geological contrast, intended to harmonize with the most sophisticated textures of contemporary design.</p>",
+        "text_alignment": "left",
+        "enable_read_more": false,
+        "read_more_text": "Show more",
+        "show_less_text": "Show less",
+        "background_color": "",
+        "text_color": "",
+        "link_color": "",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 0
+      }
+    },
+    "cards_grid_hEY8GG": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_9Ngiqk": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_39PM.jpg",
+            "title": "TEMPO • Sand",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_XtKqaz": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_52PM.jpg",
+            "title": "TEMPO • Earth",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_eyhbYm": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_11_03PM.jpg",
+            "title": "Short heading",
+            "text": "Some short text about some feature on your site",
+            "link_url": ""
+          }
+        },
+        "card_LVVWXG": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_37PM.jpg",
+            "title": "Short heading",
+            "text": "Some short text about some feature on your site",
+            "link_url": ""
+          }
+        },
+        "card_BnxqjA": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_11_01PM.jpg",
+            "title": "Short heading",
+            "text": "Some short text about some feature on your site",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_9Ngiqk",
+        "card_XtKqaz",
+        "card_eyhbYm",
+        "card_LVVWXG",
+        "card_BnxqjA"
+      ],
+      "disabled": true,
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "3",
+        "aspect_ratio": "landscape",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "blocks_gXQHb4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_dLHDYD": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_dLHDYD"
+      ],
+      "settings": {}
+    },
+    "image_with_text_QKdtfP": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_39PM.jpg",
+        "heading": "CARRARA White",
+        "subheading": "Apuan Alps, Tuscany, Italy",
+        "text_content": "<p>A metamorphic masterpiece from the Apuan Alps of Tuscany, Carrara White is the global gold standard for elegance. It is recognized by its brilliant, luminous white base and iconic, feathery grey veining that drifts across the surface like silk. This stone has defined luxury since antiquity, used in the world’s most celebrated sculptures and palaces. Its fine-grained texture and light-reflecting qualities effortlessly lift the profile of any room, creating a crisp, clean aesthetic. It is a non-porous mineral of exceptional purity, offering a cool, serene environment that remains eternally in fashion.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "1769969780ec9d1ac8": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_PT7VFT": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_PT7VFT"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "gallery_JYKyn3": {
+      "type": "gallery",
+      "blocks": {
+        "block_Ur7X6T": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_30PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_K3DNBU": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_20PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_n4ie7Y": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_iQtLjM": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "block_Ur7X6T",
+        "block_K3DNBU",
+        "block_n4ie7Y",
+        "block_iQtLjM"
+      ],
+      "disabled": true,
+      "name": "Image gallery",
+      "settings": {
+        "title": "",
+        "text": "",
+        "button_label": "View More",
+        "button_link": "",
+        "button_style": "secondary-border",
+        "text_color": "#333333",
+        "background_color": "#fafaf4",
+        "overlay_color": "rgba(0,0,0,.5)",
+        "container_width": "inherit",
+        "offset_top_desktop": 32,
+        "offset_bottom_desktop": 32,
+        "offset_top_mobile": 32,
+        "offset_bottom_mobile": 32
+      }
+    },
+    "image_with_text_BYBULf": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "right",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_52PM.jpg",
+        "heading": "MARQUINA Black",
+        "subheading": "Basque Country, Spain",
+        "text_content": "<p>Quarried in the Basque Country of Spain, <strong>marquina Black</strong> represents the peak of architectural drama. Its structure is the antithesis of the soft Carrara; it is an intense, obsidian expanse defined by sharp, tectonic fractures. The lightning-white veins are crisp and geometric, cutting through the dark base with high-definition precision. This high-contrast mineral provides an intense mirror-finish when polished, making it the ultimate statement piece for an avant-garde interior—a powerful visual anchor that emphasizes form and shadow.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "cards_grid_k4nEKr": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_VhfemR": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_30PM.jpg",
+            "title": "TEMPO • Ash",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_ifWNTN": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_20PM.jpg",
+            "title": "TEMPO • Leaf",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_n8YnKX": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+            "title": "AUTUNNO • Slate",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_KBPD6B": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "title": "AUTUNNO • Bark",
+            "text": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_VhfemR",
+        "card_ifWNTN",
+        "card_n8YnKX",
+        "card_KBPD6B"
+      ],
+      "disabled": true,
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "4",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "blocks_qaGjGL": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_MEiWy6": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_MEiWy6"
+      ],
+      "disabled": true,
+      "settings": {}
+    },
+    "image_with_text_xPNNNG": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_10_37PM.jpg",
+        "heading": "INDIAN FOREST Green",
+        "subheading": "Rajasthan, India",
+        "text_content": "<p>Quarried in the Bidasar region of Rajasthan, this deep serpentinite marble is a geological portrait of a primal landscape. It is celebrated for its mossy, variegated base that ranges from deep emerald to olive, creating a rich tapestry of color that feels alive. Its most striking feature is its dendritic veining—intricate brown and black \"root\" patterns that mimic the organic chaos of a forest canopy. In a modern interior, this stone acts as a vivid, biophilic bridge, bringing a complex, natural energy that balances the clean lines of contemporary furniture.</p><p></p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "image_with_text_E4ddcb": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "right",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_11_01PM.jpg",
+        "heading": "EMPERADOR Brown",
+        "subheading": "Murcia Region, Spain",
+        "text_content": "<p>Sourced from the sun-drenched region of Murcia, Spain, the <strong>Emperador Brown</strong> is a stone of opulent warmth and timeless sophistication. It features a deep, chocolate-toned base struck through with irregular \"crema\" clusters and crystalline fragments that catch the light with subtle brilliance. The appearance is one of understated luxury, offering a tonal depth that feels both classic and sartorial. Architecturally, it is the perfect companion for dark hardwoods and warm metallic accents, providing a stable, weighted presence grounded in Mediterranean heritage.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "image_with_text_t6JdJm": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_11_03PM.jpg",
+        "heading": "PORTUGUÊS Pink",
+        "subheading": "Alentejo, Portugal",
+        "text_content": "<p>This rare and radiant marble, sourced from the ancient quarries of Portugal, is known for its translucent, crystalline quality. <strong>Português Pink</strong> offers a soft rose and cream palette that seems to glow from within, with flowing vein patterns that shift beautifully under different lighting conditions. In the home, it functions as a delicate focal point, providing a sophisticated alternative to traditional monochrome stones. It adds a layer of sculptural femininity and warmth to a space, making every ritual feel like a moment captured in the golden hour.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "cards_grid_pMWFcn": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_PU4UAc": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_20PM.jpg",
+            "title": "INVERNO • Coal",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_jqGccD": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_56PM_2.jpg",
+            "title": "INVERNO • Mist",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_yyXhEy": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM.jpg",
+            "title": "INVERNO • Cream",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_xARV8j": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_42PM_2.jpg",
+            "title": "INVERNO • Petal",
+            "text": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_PU4UAc",
+        "card_jqGccD",
+        "card_yyXhEy",
+        "card_xARV8j"
+      ],
+      "disabled": true,
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "4",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "image_with_text_EXYdqP": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "right",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_January_31_2026_-_11_08PM_1.jpg",
+        "heading": "CLASSIC Travertine",
+        "subheading": "Tivoli, Lazio, Italy",
+        "text_content": "<p>The <strong>Classic Travertine</strong> is a storied limestone from the historic springs of Lazio, Italy. Having formed the backbone of Italian architecture since the Roman Empire, it carries a sense of undeniable permanence and nobility. Its honeyed, creamy hue and signature matte texture offer an \"unfinished\" beauty that is unique among luxury materials. The natural, airy pores of the stone provide a tactile, architectural neutrality that softens the starkness of minimalist decor, bringing the sun-baked soul of Italian history into the modern sanctuary.</p><p></p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "richtext_GyAU6y",
+    "cards_grid_hEY8GG",
+    "blocks_gXQHb4",
+    "image_with_text_QKdtfP",
+    "1769969780ec9d1ac8",
+    "gallery_JYKyn3",
+    "image_with_text_BYBULf",
+    "cards_grid_k4nEKr",
+    "blocks_qaGjGL",
+    "image_with_text_xPNNNG",
+    "image_with_text_E4ddcb",
+    "image_with_text_t6JdJm",
+    "cards_grid_pMWFcn",
+    "image_with_text_EXYdqP"
+  ]
+}

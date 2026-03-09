@@ -1,0 +1,160 @@
+<!doctype html>
+<html class="no-js" lang="{{- request.locale.iso_code -}}">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta name="theme-color" content="{{- settings.color_button -}}">
+		<meta name="format-detection" content="telephone=no">
+
+		{%- if settings.hide_search_engine -%}
+			<meta name="robots" content="noindex">
+		{%- endif -%}
+
+		<link rel="canonical" href="{{- canonical_url -}}">
+		<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+		{%- if settings.favicon != blank -%}
+			<link rel="icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+		{%- endif -%}
+
+		<link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+
+		{%- capture seo_title -%}
+			{%- if template == 'search' and search.performed == true -%}
+				{{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+			{%- else -%}
+				{{ page_title }}
+			{%- endif -%}
+
+			{%- if current_tags -%}
+				{%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+			{%- endif -%}
+
+			{%- if current_page != 1 -%}
+				&ndash; {{ 'general.meta.page' | t: page: current_page }}
+			{%- endif -%}
+
+			{%- assign escaped_page_title = page_title | escape -%}
+			{%- unless escaped_page_title contains shop.name -%}
+				&ndash; {{ shop.name }}
+			{%- endunless -%}
+		{%- endcapture -%}
+
+		<title>
+			{{- seo_title | strip -}}
+		</title>
+
+		{%- if page_description -%}
+			<meta name="description" content="{{- page_description | escape -}}">
+		{%- endif -%}
+
+		{%- render 'social-meta-tags' -%}
+		{%- render 'head-theme-meta', layout: 'theme' -%}
+
+		{%- render 'custom-variables.css' -%}
+
+		<link rel="preload" as="style" href="{{ 'main.build.css' | asset_url }}">
+
+		{%- render 'adastra' with '/src/styles/main.scss' -%}
+
+		{%- if template.directory == 'customers' or settings.show_shipping_rates_calculator -%}
+			<script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+		{%- endif -%}
+
+			<script>
+			window.themeCore = window.themeCore || {};
+			window.themeCore.productPlaceholderImage = {{- settings.product_default_image | img_url: "master" | replace: "//", "https://" | json -}};
+			window.themeCore.productPlaceholderImageFocal = {{ settings.product_default_image.presentation.focal_point | json }};
+			{%- if settings.enable_compare_products -%}
+				window.themeCore.compareProductsTitle = {{ settings.compare_products_heading |  json }};
+			{%- endif -%}
+			{% if settings.cart_reminder_enable %}
+				window.themeCore.CartReminder = {
+					config: {
+						cookieTime: {{- settings.cart_reminder_cookie_time | json -}},
+						displayFrequency: {{- settings.cart_reminder_display_frequency | json -}},
+						text: {{- settings.cart_reminder_text | json -}},
+						colorText: {{- settings.cart_reminder_color_text | json -}},
+						colorBg: {{- settings.cart_reminder_color_bg | json -}},
+						colorIcon: {{- settings.cart_reminder_color_icon | json -}},
+						colorButtonClose: {{- settings.cart_reminder_color_button_close | json -}},
+						cartType: {{- settings.cart_type | json -}},
+						cartRoute: {{- routes.cart_url | json -}},
+						cartLinkA11y: {{- "cart.reminder.accessibility.cart" | t | escape | json -}},
+						cartButtonA11y: {{- "cart.reminder.accessibility.cart_drawer" | t | escape | json -}},
+						closeButtonA11y: {{- "cart.reminder.accessibility.close_button" | t | escape | json -}}
+					}
+				}
+			{% endif %}
+		</script>
+
+		{%- render 'translations-methods' -%}
+		{%- render 'translations' -%}
+
+		{{ content_for_header }}
+
+		<script>
+			document.querySelector("html").classList.remove("no-js");
+		</script>
+	</head>
+
+	<body class="template-{{ template | split: '.' | first }}">
+		<a
+			href="#MainContent"
+			class="skip-content-link visually-hidden"
+		>
+			{{- "general.accessibility.skip_to_content" | t -}}
+		</a>
+
+		{%- if template.name != 'cart' and settings.cart_type == 'drawer' -%}
+			{%- sections 'header-group-with-cart-drawer' -%}
+		{%- else -%}
+			{%- sections 'header-group' -%}
+		{%- endif -%}
+
+		{%- sections 'popup-group' -%}
+
+		{%- if settings.enable_search -%}
+			{%- render 'predictive-search' -%}
+		{%- endif -%}
+
+		{%- if settings.enable_compare_products -%}
+			{%- render 'compare-products-popup-button' -%}
+		{%- endif -%}
+
+		<main id="MainContent" class="content" role="main" tabindex="-1">
+			{%- if settings.show_breadcrumbs -%}
+				{%- render "breadcrumbs" -%}
+			{%- endif -%}
+
+			{{ content_for_layout }}
+		</main>
+
+		{%- sections 'footer-group' -%}
+
+		{%- render 'page-preloader' -%}
+
+		{%- render 'js-objects' -%}
+
+		{%- render 'adastra' with '/src/styles/carousel.scss' -%}
+
+		{%- render 'adastra' with '/src/styles/deferred-main.scss' -%}
+
+		{% render 'js-animate-observer' %}
+
+		{%- render 'adastra' with '/src/scripts/main.js' -%}
+
+		{% if settings.enable_compare_products %}
+			{%- render 'adastra' with '/src/styles/compare-products.scss' -%}
+			{%- render 'adastra' with '/src/scripts/component-compare-products.js' -%}
+		{% endif %}
+
+		{% if settings.cart_reminder_enable %}
+			{%- render 'adastra' with '/src/styles/cart-reminder.scss' -%}
+			{%- render 'adastra' with '/src/scripts/component-cart-reminder.js' -%}
+		{% endif %}
+
+		{%- render 'adastra' with '/src/scripts/component-ar-model.js' -%}
+	</body>
+</html>

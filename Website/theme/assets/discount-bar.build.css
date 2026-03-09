@@ -1,0 +1,153 @@
+.discount-bar .discount-bar__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  column-gap: 16px;
+  padding: 12px 16px 11px;
+  border-bottom: 1px solid var(--discount-bar-bg-color);
+  background-color: var(--discount-bar-bg-color);
+  transition-property: background-color, border-color;
+  transition-duration: var(--timing-short);
+  transition-timing-function: var(--easing-linear);
+}
+.discount-bar .discount-bar__main-text,
+.discount-bar .discount-bar__additional-text {
+  font-size: calc(var(--body-font-size) * 0.875);
+  line-height: 1.286;
+  text-align: center;
+  transition-property: color;
+  transition-duration: var(--timing-short);
+}
+.discount-bar .discount-bar__main-text {
+  font-weight: 500;
+  color: var(--discount-bar-main-text);
+}
+.discount-bar .discount-bar__additional-text {
+  font-weight: 400;
+  color: var(--discount-bar-additional-text);
+}
+.discount-bar .discount-bar__successful, .discount-bar .discount-bar__copy-button {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-size: calc(var(--body-font-size) * 0.875);
+  font-weight: 500;
+  line-height: 1.286;
+  color: var(--discount-bar-button-label);
+  transition-property: color;
+  transition-duration: var(--timing-short);
+  transition-timing-function: var(--easing-linear);
+}
+.discount-bar .discount-bar__successful .icon, .discount-bar .discount-bar__copy-button .icon {
+  width: 16px;
+  height: 16px;
+}
+.discount-bar .discount-bar__copy-button {
+  display: inline-flex;
+  padding: 0;
+  transition-property: opacity, color;
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .discount-bar .discount-bar__copy-button:hover {
+    opacity: 0.7;
+  }
+}
+.discount-bar .discount-bar__code {
+  font-size: calc(var(--body-font-size) * 0.75);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.17;
+  color: var(--discount-bar-code);
+  transition-property: color;
+  transition-duration: var(--timing-short);
+  transition-timing-function: var(--easing-linear);
+}
+.discount-bar .discount-bar__button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 240px;
+  padding: 7px 12px;
+  border-radius: 12px;
+  gap: 12px;
+  border: 1px solid var(--discount-bar-button-border);
+  background-color: var(--discount-bar-button-background);
+  transition-property: background-color, border;
+  transition-duration: var(--timing-short);
+  transition-timing-function: var(--easing-linear);
+}
+.discount-bar .discount-bar__button-wrapper.discount-bar__button-wrapper--copied .discount-bar__successful {
+  display: inline-flex;
+}
+.discount-bar .discount-bar__button-wrapper.discount-bar__button-wrapper--copied .discount-bar__copy-button, .discount-bar .discount-bar__button-wrapper.discount-bar__button-wrapper--copied .discount-bar__code, .discount-bar .discount-bar__button-wrapper.discount-bar__button-wrapper--copied .discount-bar__separator {
+  display: none;
+}
+.discount-bar .discount-bar__separator {
+  width: 1px;
+  height: 12px;
+  background-color: var(--discount-bar-button-border);
+  transition-property: background-color;
+  transition-duration: var(--timing-short);
+  transition-timing-function: var(--easing-linear);
+}
+@media (min-width: 768px) {
+  .discount-bar .discount-bar__container {
+    padding: 7px 16px 6px;
+  }
+}
+@media (min-width: 1200px) {
+  .discount-bar .discount-bar__container {
+    border-top-left-radius: calc(var(--global-border-radius) / 2);
+    border-top-right-radius: calc(var(--global-border-radius) / 2);
+  }
+}
+@media (min-width: 1200px) {
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__container {
+    border-bottom: 1px solid var(--discount-bar-border-bottom);
+    background-color: var(--discount-bar-bg-color-transparent);
+    backdrop-filter: blur(var(--header-background-blur));
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__main-text {
+    color: var(--discount-bar-main-text-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__additional-text {
+    color: var(--discount-bar-additional-text-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__successful, .header-section.header-section--transparent.header-section--top-position .discount-bar__copy-button {
+    color: var(--discount-bar-button-label-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__code {
+    color: var(--discount-bar-code-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__button-wrapper {
+    border-color: var(--discount-bar-button-border-transparent);
+    background-color: var(--discount-bar-button-background-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position .discount-bar__separator {
+    background-color: var(--discount-bar-button-border-transparent);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__container {
+    background-color: var(--discount-bar-bg-color);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__main-text {
+    color: var(--discount-bar-main-text);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__additional-text {
+    color: var(--discount-bar-additional-text);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__successful, .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__copy-button {
+    color: var(--discount-bar-button-label);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__code {
+    color: var(--discount-bar-code);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__button-wrapper {
+    border-color: var(--discount-bar-button-border);
+    background-color: var(--discount-bar-button-background-color);
+  }
+  .header-section.header-section--transparent.header-section--top-position.is-hover .discount-bar__separator {
+    background-color: var(--discount-bar-button-border);
+  }
+}

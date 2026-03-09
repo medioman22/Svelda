@@ -1,0 +1,356 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: 404 template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/404-template.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign heading = section.settings.heading -%}
+{%- assign subheading = section.settings.subheading -%}
+{%- assign text = section.settings.text -%}
+{%- assign button_url = section.settings.button_url -%}
+{%- assign button_text = section.settings.button_text -%}
+{%- assign button_style = section.settings.button_style -%}
+{%- assign label = section.settings.label -%}
+{%- assign social_heading = section.settings.social_heading -%}
+{%- assign show_socials = section.settings.show_socials -%}
+{%- assign image_first_desktop = section.settings.image_first_desktop -%}
+{%- assign image_second_desktop = section.settings.image_second_desktop -%}
+{%- assign image_first_mobile = section.settings.image_first_mobile | default: image_first_desktop -%}
+{%- assign image_second_mobile = section.settings.image_second_mobile | default: image_second_desktop -%}
+
+<section class="page-404">
+	<div class="page-404__container">
+		{% if image_first_desktop != blank %}
+			{%- capture first_desktop_image_focal -%}
+				--img-first-desktop-pos: {{ image_first_desktop.presentation.focal_point }};
+			{%- endcapture -%}
+
+			<div class="page-404__image-wrapper page-404__image-wrapper--desktop">
+				<div class="page-404__aspect-ratio">
+					<picture>
+						<source
+							srcset="{{- image_first_desktop | img_url: '312x430', crop: 'center' }} 1x, {{ image_first_desktop | img_url: '624x860', crop: 'center' }} 2x"
+							width="312"
+							height="430"
+							media="(max-width: 991px)"
+						>
+
+						<source
+							srcset="{{- image_first_desktop | img_url: '382x525', crop: 'center' }} 1x, {{ image_first_desktop | img_url: '764x1050', crop: 'center' }} 2x"
+							width="382"
+							height="525"
+							media="(max-width: 1199px)"
+						>
+
+						<img class="page-404__image"
+							 src="{{ image_first_desktop | img_url: '400x550', crop: 'center' }}"
+							 srcset="{{ image_first_desktop | img_url: '400x550', crop: 'center' }} 1x, {{ image_first_desktop | img_url: '800x1100', crop: 'center' }} 2x"
+							 style="{{ first_desktop_image_focal }}"
+							 alt="{{ image_first_desktop.alt | escape }}">
+					</picture>
+				</div>
+			</div>
+		{% endif %}
+
+		<div class="page-404__content">
+			{%- if label != blank -%}
+				<h2 class="h3 page-404__label">
+					{{- label -}}
+				</h2>
+			{%- endif -%}
+
+			{%- if heading != blank -%}
+				<h1 class="page-404__heading">
+					{{- heading -}}
+				</h1>
+			{%- endif -%}
+
+			{%- if subheading != blank -%}
+				<p class="page-404__subheading">
+					{{- subheading -}}
+				</p>
+			{%- endif -%}
+
+			{%- if text != blank -%}
+				<div class="page-404__text-wrapper rte">
+					{{- text -}}
+				</div>
+			{%- endif -%}
+
+			{%- if button_url != blank and button_text != blank -%}
+				<a class="page-404__button button button--{{ button_style }}" href="{{- button_url -}}">
+					{{- button_text -}}
+				</a>
+			{%- endif -%}
+
+			{% if show_socials %}
+				<div class="page-404__social-links">
+					{% if social_heading != blank %}
+						<h3 class="page-404__social-links_heading">{{ social_heading }}</h3>
+					{% endif %}
+
+					{%- render 'social-links' -%}
+				</div>
+			{% endif %}
+
+			{% if image_first_desktop != blank or image_second_desktop != blank %}
+				<div class="page-404__images-wrapper">
+					{% if image_first_desktop != blank %}
+						{%- capture first_mobile_image_focal -%}
+							--img-first-mobile-pos: {{ image_first_mobile.presentation.focal_point }};
+						{%- endcapture -%}
+
+						<div class="page-404__image-wrapper page-404__image-wrapper--mobile">
+							<div class="page-404__aspect-ratio">
+								<picture>
+									<source
+										srcset="{{- image_first_mobile | img_url: '166x166', crop: 'center' }} 1x, {{ image_first_mobile | img_url: '332x332', crop: 'center' }} 2x"
+										width="166"
+										height="166"
+										media="(max-width: 380px)"
+									>
+
+									<source
+										srcset="{{- image_first_mobile | img_url: '186x186', crop: 'center' }} 1x, {{ image_first_mobile | img_url: '372x372', crop: 'center' }} 2x"
+										width="186"
+										height="186"
+										media="(max-width: 420px)"
+									>
+
+									<img class="page-404__image"
+										 src="{{ image_first_mobile | img_url: '360x360' }}"
+										 srcset="{{- image_first_mobile | img_url: '360x360', crop: 'center' }} 1x, {{ image_first_mobile | img_url: '720x720', crop: 'center' }} 2x"
+										 style="{{ first_mobile_image_focal }}"
+										 alt="{{ image_first_mobile.alt | escape }}">
+								</picture>
+							</div>
+						</div>
+					{% endif %}
+
+					{% if image_second_desktop != blank %}
+						{%- capture second_mobile_image_focal -%}
+							--img-second-mobile-pos: {{ image_second_mobile.presentation.focal_point }};
+						{%- endcapture -%}
+
+						<div class="page-404__image-wrapper page-404__image-wrapper--mobile">
+							<div class="page-404__aspect-ratio">
+								<picture>
+									<source
+										srcset="{{- image_second_mobile | img_url: '166x166', crop: 'center' }} 1x, {{ image_second_mobile | img_url: '332x332', crop: 'center' }} 2x"
+										width="166"
+										height="166"
+										media="(max-width: 380px)"
+									>
+
+									<source
+										srcset="{{- image_second_mobile | img_url: '186x186', crop: 'center' }} 1x, {{ image_second_mobile | img_url: '372x372', crop: 'center' }} 2x"
+										width="186"
+										height="186"
+										media="(max-width: 420px)"
+									>
+
+									<img class="page-404__image"
+										 src="{{ image_second_mobile | img_url: '360x360' }}"
+										 srcset="{{- image_second_mobile | img_url: '360x360', crop: 'center' }} 1x, {{ image_second_mobile | img_url: '720x720', crop: 'center' }} 2x"
+										 style="{{ second_mobile_image_focal }}"
+										 alt="{{ image_second_mobile.alt | escape }}">
+								</picture>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+
+		{% if image_second_desktop != blank %}
+			{%- capture second_desktop_image_focal -%}
+				--img-second-desktop-pos: {{ image_second_desktop.presentation.focal_point }};
+			{%- endcapture -%}
+
+			<div class="page-404__image-wrapper page-404__image-wrapper--desktop">
+				<div class="page-404__aspect-ratio">
+					<picture>
+						<source
+							srcset="{{- image_second_desktop | img_url: '312x430', crop: 'center' }} 1x, {{ image_second_desktop | img_url: '624x860', crop: 'center' }} 2x"
+							width="312"
+							height="430"
+							media="(max-width: 991px)"
+						>
+
+						<source
+							srcset="{{- image_second_desktop | img_url: '382x525', crop: 'center' }} 1x, {{ image_second_desktop | img_url: '764x1050', crop: 'center' }} 2x"
+							width="382"
+							height="525"
+							media="(max-width: 1199px)"
+						>
+
+						<img class="page-404__image"
+							 src="{{ image_second_desktop | img_url: '400x550', crop: 'center' }}"
+							 srcset="{{ image_second_desktop | img_url: '400x550', crop: 'center' }} 1x, {{ image_second_desktop | img_url: '800x1100', crop: 'center' }} 2x"
+							 style="{{ second_desktop_image_focal }}"
+							 alt="{{ image_second_desktop.alt | escape }}">
+					</picture>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</section>
+
+{%- schema -%}
+	{
+		"name": "Page 404",
+		"settings": [
+			{
+				"type": "text",
+				"id": "label",
+				"label": "Label",
+				"default": "Ooops..."
+			},
+			{
+				"type": "text",
+				"id": "heading",
+				"label": "Heading",
+				"default": "404"
+			},
+			{
+				"type": "text",
+				"id": "subheading",
+				"label": "Subheading",
+				"default": "Page not found"
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text"
+			},
+			{
+				"type": "text",
+				"id": "button_text",
+				"label": "Button label",
+				"default": "Home page"
+			},
+			{
+				"type": "url",
+				"id": "button_url",
+				"label": "Button link",
+				"default": "/"
+			},
+			{
+				"id": "button_style",
+				"type": "select",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "secondary"
+			},
+			{
+				"type": "text",
+				"id": "social_heading",
+				"label": "Social heading",
+				"default": "Find us in socials:"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_socials",
+				"label": "Show socials",
+				"default": true
+			},
+			{
+				"type": "image_picker",
+				"id": "image_first_desktop",
+				"label": "Image first desktop"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_first_mobile",
+				"label": "Image first mobile"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_second_desktop",
+				"label": "Image second desktop"
+			},
+			{
+				"type": "image_picker",
+				"id": "image_second_mobile",
+				"label": "Image second mobile"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 65
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 100
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 30
+			}
+		]
+	}
+{%- endschema -%}

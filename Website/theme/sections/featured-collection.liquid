@@ -1,0 +1,506 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Featured collection
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/featured-collection.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign collection 					= section.settings.collection -%}
+{%- assign heading 						= section.settings.heading -%}
+{%- assign label 						= section.settings.label -%}
+{%- assign button_label 				= section.settings.button_label -%}
+{%- assign button_aria_label 			= section.settings.button_aria_label -%}
+{%- assign banner_image 				= section.settings.banner_image | default: collection.featured_image -%}
+{%- assign banner_position 				= section.settings.banner_position -%}
+{%- assign show_product_description 	= section.settings.show_product_description -%}
+{%- assign text_content_color 			= section.settings.text_content_color -%}
+{%- assign text_color 					= section.settings.text_color -%}
+{%- assign button_background 			= section.settings.button_background -%}
+{%- assign button_text_color 			= section.settings.button_color -%}
+{%- assign button_border_color 			= section.settings.button_border_color -%}
+{%- assign button_background_hover 		= section.settings.button_background_hover -%}
+{%- assign button_text_color_hover 			= section.settings.button_color_hover -%}
+{%- assign button_border_color_hover 		= section.settings.button_border_color_hover -%}
+{%- assign container 					= section.settings.container_width -%}
+{%- assign products 					= collection.products -%}
+
+{%- if container == 'inherit' -%}
+	{% assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- assign is_lazy = true -%}
+
+{%- if section.index == 1 -%}
+	{%- assign is_lazy = false -%}
+{%- endif -%}
+
+{% capture style %}
+	--text-content-color: {{ text_content_color }}; {{- -}}
+	--text-color: {{ text_color }}; {{- -}}
+	--button-background: {{ button_background }}; {{- -}}
+	--button-text-color: {{ button_text_color }}; {{- -}}
+	--button-border-color: {{ button_border_color }}; {{- -}}
+	--button-background-hover: {{ button_background_hover }}; {{- -}}
+	--button-text-color-hover: {{ button_text_color_hover }}; {{- -}}
+	--button-border-color-hover: {{ button_border_color_hover }}; {{- -}}
+	--container-width: {{ container_width }}; {{- -}}
+{% endcapture %}
+
+{%- capture product_wrapper -%}
+	<div class="featured-collection__wrapper">
+		{%- capture banner -%}
+			{%- assign bg_size_width = 936 -%}
+			{%- assign bg_size_height = 935 -%}
+			{%- assign bg_size_width_2x = bg_size_width | times: 2 -%}
+			{%- assign bg_size_height_2x = bg_size_height | times: 2 -%}
+
+			{%- assign bg_size_width_1199 = 576 -%}
+			{%- assign bg_size_height_1199 = 575 -%}
+			{%- assign bg_size_width_1199_2x = bg_size_width_1199 | times: 2 -%}
+			{%- assign bg_size_height_1199_2x = bg_size_height_1199 | times: 2 -%}
+
+			{%- assign bg_size_width_991 = 959 -%}
+			{%- assign bg_size_height_991 = 1119 -%}
+			{%- assign bg_size_width_991_2x = bg_size_width_991 | times: 2 -%}
+			{%- assign bg_size_height_991_2x = bg_size_height_991 | times: 2 -%}
+
+			{%- assign bg_size_width_767 = 735 -%}
+			{%- assign bg_size_height_767 = 857 -%}
+			{%- assign bg_size_width_767_2x = bg_size_width_767 | times: 2 -%}
+			{%- assign bg_size_height_767_2x = bg_size_height_767 | times: 2 -%}
+
+			{%- assign bg_size_width_420 = 388 -%}
+			{%- assign bg_size_height_420 = 452 -%}
+			{%- assign bg_size_width_420_2x = bg_size_width_420 | times: 2 -%}
+			{%- assign bg_size_height_420_2x = bg_size_height_420 | times: 2 -%}
+
+			{%- assign bg_size_width_375 = 343 -%}
+			{%- assign bg_size_height_375 = 400 -%}
+			{%- assign bg_size_width_375_2x = bg_size_width_375 | times: 2 -%}
+			{%- assign bg_size_height_375_2x = bg_size_height_375 | times: 2 -%}
+
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ banner_image.presentation.focal_point }};
+			{%- endcapture -%}
+
+			<div class="featured-collection__banner">
+				<div class="featured-collection__banner-wrap">
+					{%- if banner_image != balnk -%}
+						<picture class="{% if is_lazy %}lazy{% endif %}">
+							<source
+								{% if is_lazy %}
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width_375, height: bg_size_height_375 }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_375_2x, height: bg_size_height_375_2x }} 2x"
+								{% else %}
+									srcset="{{ banner_image | image_url: width: bg_size_width_375, height: bg_size_height_375 }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_375_2x, height: bg_size_height_375_2x }} 2x"
+								{% endif %}
+								media="(max-width: 375px)"
+								width="{{ bg_size_width_375 }}"
+								height="{{ bg_size_height_375 }}"
+							>
+
+							<source
+								{% if is_lazy %}
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width_420, height: bg_size_height_420 }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_420_2x, height: bg_size_height_420_2x }} 2x"
+								{% else %}
+									srcset="{{ banner_image | image_url: width: bg_size_width_420, height: bg_size_height_420 }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_420_2x, height: bg_size_height_420_2x }} 2x"
+								{% endif %}
+								media="(max-width: 420px)"
+								width="{{ bg_size_width_420 }}"
+								height="{{ bg_size_height_420 }}"
+							>
+
+							<source
+								{% if is_lazy %}
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width_767, height: bg_size_height_767 }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_767_2x, height: bg_size_height_767_2x }} 2x"
+								{% else %}
+									srcset="{{ banner_image | image_url: width: bg_size_width_767, height: bg_size_height_767 }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_767_2x, height: bg_size_height_767_2x }} 2x"
+								{% endif %}
+								media="(max-width: 767px)"
+								width="{{ bg_size_width_767 }}"
+								height="{{ bg_size_height_767 }}"
+							>
+
+							<source
+								{% if is_lazy %}
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width_991, height: bg_size_height_991 }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_991_2x, height: bg_size_height_991_2x }} 2x"
+								{% else %}
+									srcset="{{ banner_image | image_url: width: bg_size_width_991, height: bg_size_height_991 }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_991_2x, height: bg_size_height_991_2x }} 2x"
+								{% endif %}
+								media="(max-width: 991px)"
+								width="{{ bg_size_width_991 }}"
+								height="{{ bg_size_height_991 }}"
+							>
+
+							<source
+								{% if is_lazy %}
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width_1199, height: bg_size_height_1199 }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_1199_2x, height: bg_size_height_1199_2x }} 2x"
+								{% else %}
+									srcset="{{ banner_image | image_url: width: bg_size_width_1199, height: bg_size_height_1199 }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_1199_2x, height: bg_size_height_1199_2x }} 2x"
+								{% endif %}
+								media="(max-width: 1199px)"
+								width="{{ bg_size_width_1199 }}"
+								height="{{ bg_size_height_1199 }}"
+							>
+
+							<img
+								class="featured-collection__banner-image"
+								{% if is_lazy %}
+									src="{{ banner_image | image_url: width: 10, height: 10 }}"
+									srcset="{{ banner_image | image_url: width: 10, height: 10 }} 1x,
+											{{ banner_image | image_url: width: 20, height: 20 }} 2x"
+									data-src="{{ banner_image | image_url: width: bg_size_width, height: bg_size_height }}"
+									data-srcset="{{ banner_image | image_url: width: bg_size_width, height: bg_size_height }} 1x,
+												 {{ banner_image | image_url: width: bg_size_width_2x, height: bg_size_height_2x }} 2x"
+								{% else %}
+									src="{{ banner_image | image_url: width: bg_size_width, height: bg_size_height }}"
+									srcset="{{ banner_image | image_url: width: bg_size_width, height: bg_size_height }} 1x,
+											{{ banner_image | image_url: width: bg_size_width_2x, height: bg_size_height_2x }} 2x"
+								{% endif %}
+								alt="{{ banner_image.alt | escape }}"
+								width="{{ bg_size_width }}"
+								height="{{ bg_size_height }}"
+								style="{{- img_focal -}}"
+							>
+						</picture>
+					{%- else -%}
+						{{ 'collection-apparel-1' | placeholder_svg_tag: 'featured-collection__banner-image' }}
+					{%- endif -%}
+				</div>
+
+				<div class="featured-collection__banner-box-text">
+					<div class="featured-collection__banner-inner">
+						{%- if label != blank -%}
+							<div class="featured-collection__banner-label">
+								{{- label -}}
+							</div>
+						{%- endif -%}
+
+						<h3 class="featured-collection__banner-title h2">
+							{%- if collection != blank -%}
+								{{- collection.title -}}
+							{%- else -%}
+								{{- 'sections.collection_list.card_title' | t -}}
+							{%- endif -%}
+						</h3>
+					</div>
+
+					{%- if button_label != blank -%}
+						<a
+							class="focus-visible-outline button featured-collection__banner-button"
+							{% if collection.url != blank %}
+								href="{{- collection.url -}}"
+							{% endif %}
+							{% if button_aria_label != blank %}
+								aria-label="{{- button_aria_label | escape -}}"
+							{% endif %}
+						>
+							{{- button_label -}}
+						</a>
+					{%- endif -%}
+				</div>
+			</div>
+		{%- endcapture -%}
+
+		{%- capture products -%}
+			<div class="featured-collection__products">
+				{%- if collection != blank -%}
+					{%- for product in products limit: 2 -%}
+						{% assign size = 460 %}
+						{% assign tablet_size = 360 %}
+						{% assign mobile_size = 186 %}
+
+						<div class="featured-collection__product">
+							{%- render 'product-card',
+								product: product,
+								size: size,
+								tablet_size: tablet_size,
+								mobile_size: mobile_size,
+								is_lazy: is_lazy,
+								is_horizontal_layout: true,
+								show_product_description: show_product_description
+							-%}
+						</div>
+
+						<div class="featured-collection__product featured-collection__product--mobile">
+							{%- render 'product-card',
+								product: product,
+								size: size,
+								tablet_size: tablet_size,
+								mobile_size: mobile_size,
+								is_lazy: is_lazy
+							-%}
+						</div>
+					{%- endfor -%}
+				{%- else -%}
+					{% for product in (1..2) %}
+						<div class="featured-collection__product">
+							{%- render 'product-card',
+								is_horizontal_layout: true,
+								show_product_description: show_product_description
+							%}
+						</div>
+
+						<div class="featured-collection__product featured-collection__product--mobile">
+							{%- render 'product-card' %}
+						</div>
+					{% endfor %}
+				{%- endif -%}
+			</div>
+		{%- endcapture -%}
+
+		{%- if banner_position == 'banner-left' -%}
+			{{- banner -}}
+			{{- products -}}
+		{%- elsif banner_position == 'banner-right' -%}
+			{{- products -}}
+			{{- banner -}}
+		{%- endif -%}
+	</div>
+{%- endcapture -%}
+
+<section
+	class="featured-collection need-animate js-animate{% if request.visual_preview_mode or section.index == 1 %} animated{% endif %}"
+	style="{{- style -}}">
+	<div class="featured-collection__container">
+		{%- if heading != blank -%}
+			<h2 class="h2 featured-collection__heading">
+				{{- heading -}}
+			</h2>
+		{%- endif -%}
+
+		{{- product_wrapper -}}
+	</div>
+</section>
+
+{%- schema -%}
+{
+	"name": "Featured collection",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "collection",
+			"id": "collection",
+			"label": "Collection"
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading"
+		},
+		{
+			"type": "text",
+			"id": "label",
+			"label": "Label",
+			"default": "Check this out"
+		},
+		{
+			"type": "text",
+			"id": "button_label",
+			"label": "Button label"
+		},
+		{
+			"type": "text",
+			"id": "button_aria_label",
+			"label": "Button aria-label",
+			"info": "Need for good accessibility, e.g. 'View all products of summer collection.'"
+		},
+		{
+			"type": "image_picker",
+			"id": "banner_image",
+			"label": "Banner image"
+		},
+		{
+			"type": "select",
+			"id": "banner_position",
+			"label": "Banner position",
+			"options": [
+				{
+					"value": "banner-left",
+					"label": "Left"
+				},
+				{
+					"value": "banner-right",
+					"label": "Right"
+				}
+			],
+			"default": "banner-right"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_product_description",
+			"label": "Show product description",
+			"default": true,
+			"info": "Visible only on desktop"
+		},
+		{
+			"type": "header",
+			"content": "Color"
+		},
+		{
+			"type": "color_background",
+			"id": "text_content_color",
+			"label": "Text content",
+			"default": "rgba(0,0,0, 0.4)"
+		},
+		{
+			"type": "color",
+			"id": "text_color",
+			"label": "Text",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "button_color",
+			"label": "Button color",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "button_background",
+			"label": "Button background",
+			"default": "transparent"
+		},
+		{
+			"type": "color",
+			"id": "button_border_color",
+			"label": "Button border",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "button_color_hover",
+			"label": "Button color (hover)",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "button_background_hover",
+			"label": "Button background (hover)",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "button_border_color_hover",
+			"label": "Button border (hover)",
+			"default": "#ffffff"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": " if you select 'Inherite of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"presets": [
+		{
+			"name": "Featured collection",
+			"settings": {
+				"heading": "Featured collection",
+				"button_label": "Button label"
+			}
+		}
+	]
+}
+{%- endschema -%}

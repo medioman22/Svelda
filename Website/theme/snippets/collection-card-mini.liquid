@@ -1,0 +1,143 @@
+{% comment %}
+	------------------------------------------------------------------------------
+	Snippet: Collection card mini
+	- collection: Collection object
+	- image: image object
+	- is_lazy: boolean,
+	- size_width_420: image size
+	- size_height_420: image size
+	- size_width_575: image size
+	- size_height_575: image size
+	- size_width_991: image size
+	- size_height_991: image size
+	- size_width: image size
+	- size_height: image size
+	------------------------------------------------------------------------------
+{% endcomment %}
+
+{% render "adastra" with "/src/styles/collection-card-mini.scss" %}
+
+
+{%- assign scaled_size_width_420 		= size_width_420 | times: 1.15 -%}
+{%- assign scaled_size_height_420 		= size_height_420 | times: 1.15 -%}
+{%- assign scaled_size_width_575 		= size_width_575 | times: 1.15 -%}
+{%- assign scaled_size_height_575 		= size_height_575 | times: 1.15 -%}
+{%- assign scaled_size_width_991 		= size_width_991 | times: 1.15 -%}
+{%- assign scaled_size_height_991 		= size_height_991 | times: 1.15 -%}
+{%- assign scaled_size_width	 		= size_width | times: 1.15 -%}
+{%- assign scaled_size_height 			= size_height | times: 1.15 -%}
+
+{%- assign scaled_size_width_420_2x     = scaled_size_width_420 | times: 2 -%}
+{%- assign scaled_size_height_420_2x 	= scaled_size_height_420 | times: 2 -%}
+{%- assign scaled_size_width_575_2x 	= scaled_size_width_575 | times: 2 -%}
+{%- assign scaled_size_height_575_2x 	= scaled_size_height_575 | times: 2 -%}
+{%- assign scaled_size_width_991_2x 	= scaled_size_width_991 | times: 2 -%}
+{%- assign scaled_size_height_991_2x 	= scaled_size_height_991 | times: 2 -%}
+{%- assign scaled_size_width_2x 		= scaled_size_width | times: 2 -%}
+{%- assign scaled_size_height_2x 		= scaled_size_height | times: 2 -%}
+
+{%- assign min = 1 -%}
+{%- assign max = 6 -%}
+{%- assign diff = max | minus: min -%}
+
+<a class="collection-card-mini focus-visible-outline"
+	{% if collection != blank %}
+		href="{{- collection.url -}}"
+		aria-label="{{- 'collections.general.collection_card_link_aria_label' | t: title: collection.title | escape -}}"
+	{% endif %}
+	{% if collection == blank %}
+		role="link" aria-disabled="true"
+	{% endif %}
+>
+	<div class="collection-card-mini__box-image{% if image == blank %} collection-card-mini__box-image--no-image{% endif %}">
+		{%- if collection != blank -%}
+			{%- if image != blank -%}
+				{%- capture img_focal -%}
+					--img-desktop-pos: {{ image.presentation.focal_point }};
+				{%- endcapture -%}
+
+				<picture class="{% if is_lazy %}lazy{% endif %}">
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: scaled_size_width_420, height: scaled_size_height_420, crop: 'center' }} 1x,
+									 	 {{ image | image_url: width: scaled_size_width_420_2x, height: scaled_size_height_420_2x, crop: 'center' }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: scaled_size_width_420, height: scaled_size_height_420, crop: 'center' }} 1x,
+									{{ image | image_url: width: scaled_size_width_420_2x, height: scaled_size_height_420_2x, crop: 'center' }} 2x"
+						{% endif %}
+						media="(max-width: 420px)"
+						width="{{- size_width_420 -}}"
+						height="{{- size_height_420 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: scaled_size_width_575, height: scaled_size_height_575, crop: 'center' }} 1x,
+									 	 {{ image | image_url: width: scaled_size_width_575_2x, height: scaled_size_height_575_2x, crop: 'center' }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: scaled_size_width_575, height: scaled_size_height_575, crop: 'center' }} 1x,
+									{{ image | image_url: width: scaled_size_width_575_2x, height: scaled_size_height_575_2x, crop: 'center' }} 2x"
+						{% endif %}
+						media="(max-width: 575px)"
+						width="{{- size_width_575 -}}"
+						height="{{- size_height_575 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: scaled_size_width_991, height: scaled_size_height_991, crop: 'center' }} 1x,
+									 	 {{ image | image_url: width: scaled_size_width_991_2x, height: scaled_size_height_991_2x, crop: 'center' }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: scaled_size_width_991, height: scaled_size_height_991, crop: 'center' }} 1x,
+									{{ image | image_url: width: scaled_size_width_991_2x, height: scaled_size_height_991_2x, crop: 'center' }} 2x"
+						{% endif %}
+						media="(max-width: 991px)"
+						width="{{- size_width_991 -}}"
+						height="{{- size_height_991 -}}"
+					>
+
+					<img
+						class="collection-card-mini__img"
+						{% if is_lazy %}
+							src="{{ image | image_url: width: 10, height: 10 }}"
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-src="{{ image | image_url: width: scaled_size_width, height: scaled_size_height, crop: 'center' }}"
+							data-srcset="{{ image | image_url: width: scaled_size_width, height: scaled_size_height, crop: 'center' }} 1x,
+									 	 {{ image | image_url: width: scaled_size_width_2x, height: scaled_size_height_2x, crop: 'center' }} 2x"
+						{% else %}
+							src="{{ image | image_url: width: scaled_size_width, height: scaled_size_height, crop: 'center' }}"
+							srcset="{{ image | image_url: width: scaled_size_width, height: scaled_size_height, crop: 'center' }} 1x,
+									{{ image | image_url: width: scaled_size_width_2x, height: scaled_size_height_2x, crop: 'center' }} 2x"
+						{% endif %}
+						width="{{- size_width -}}"
+						height="{{- size_height -}}"
+						alt="{{- image.alt | escape -}}"
+						{% if img_focal != blank %}
+							style="{{ img_focal }}"
+						{% endif %}
+					>
+				</picture>
+			{%- endif -%}
+		{%- else -%}
+			{%- assign random_number = "now" | date: "%N" | modulo: diff | plus: min -%}
+			{%- assign placeholder_svg_name = 'collection-' | append: random_number -%}
+
+			{{- placeholder_svg_name | placeholder_svg_tag: 'collection-card-mini__img collection-card-mini__img--placeholder' -}}
+		{%- endif -%}
+	</div>
+
+	<div class="collection-card-mini__title">
+		{%- if collection == blank -%}
+			{{ 'sections.collection_list.card_title' | t }}
+		{%- else -%}
+			{{- collection.title -}}
+		{%- endif -%}
+	</div>
+</a>

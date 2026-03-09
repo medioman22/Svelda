@@ -1,0 +1,244 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "disabled": true,
+      "settings": {
+        "layout": "simple_text",
+        "show_close_button": true,
+        "background_image_type": "cover",
+        "phone_number": "",
+        "email_address": "<a href=\"mailto:info@noom-home.com?\" target=\"_blank\">info@sveldadesign.com</a>",
+        "enable_autoplay": true,
+        "autoplay_speed": 5,
+        "text_content_desktop": "<p>Download free 3D models of our products</p>",
+        "text_content_mobile": "",
+        "text_desktop": "Set the date for the timer",
+        "text_mobile": "",
+        "timer_month": "0",
+        "timer_day": "1",
+        "timer_hour": "0",
+        "timer_timezone": "+0",
+        "button_text": "",
+        "button_link": "",
+        "ticker_hide_bullets": false,
+        "ticker_text": "<p>Announcement bar text</p><p>Announcement bar text</p><p>Announcement bar text</p>",
+        "desktop_movement_speed": 20,
+        "mobile_movement_speed": 35,
+        "additional_menu": "",
+        "background_color": "#ffffff",
+        "text_color": "#525252",
+        "text_timer": "#535353",
+        "link_color": "#333333",
+        "button_color": "#ffffff",
+        "button_background": "#000000",
+        "button_border": "#000000",
+        "button_color_hover": "#000000",
+        "button_background_hover": "#757575",
+        "button_border_hover": "#757575",
+        "button_cross_color": "#000000",
+        "button_cross_hover": "#757575"
+      }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "megamenu-grid-images": {
+          "type": "megamenu-grid-images",
+          "settings": {
+            "menu_handle": "sdasda",
+            "highlight_color": "#000000",
+            "highlight_color_transparent": "#ffffff",
+            "highlight_background_color": "#ff0000",
+            "highlight_background_color_transparent": "#36ba20",
+            "highlight_icon": "shopify://shop_images/image_2_copy_5_8c167583-debd-4ebf-af39-65c445c9268a.png",
+            "image1": "shopify://shop_images/image_2_copy_6.png",
+            "heading1": "DECOR",
+            "subheading1": "",
+            "link1": "",
+            "image2": "shopify://shop_images/image_2_copy.png",
+            "heading2": "FURNITURE",
+            "subheading2": "",
+            "link2": "",
+            "image3": "shopify://shop_images/image_7.jpg",
+            "heading3": "LIGHTING",
+            "subheading3": "",
+            "link3": "",
+            "image4": "shopify://shop_images/image_3_copy.png",
+            "heading4": "LIMITED EDITION",
+            "subheading4": "",
+            "link4": ""
+          }
+        },
+        "megamenu-half-to-half": {
+          "type": "megamenu-half-to-half",
+          "settings": {
+            "menu_handle": "fdsfsd",
+            "highlight_color": "#000000",
+            "highlight_color_transparent": "#ffffff",
+            "highlight_background_color": "rgba(0,0,0,0)",
+            "highlight_background_color_transparent": "#e41616",
+            "heading": "LIMITED EDITION",
+            "subheading": "Don't waste your time PRE-ORDER NOW!",
+            "button_label1": "Show allcsacaa",
+            "button_link1": "/",
+            "button1_style": "secondary",
+            "button_label2": "fff",
+            "button_link2": "shopify://products/bowl-1-copy",
+            "button2_style": "secondary",
+            "show_socials": true,
+            "button_icon_color_social": "#000000",
+            "button_background_color_social": "#ffffff",
+            "button_border_color_social": "#dcdcdc",
+            "button_icon_color_social_hover": "#ffffff",
+            "button_background_color_social_hover": "#000000",
+            "button_border_color_social_hover": "#000000"
+          }
+        },
+        "megamenu": {
+          "type": "megamenu",
+          "settings": {
+            "menu_handle": "",
+            "highlight_color": "#000000",
+            "highlight_color_transparent": "#ffffff",
+            "highlight_background_color": "rgba(0,0,0,0)",
+            "highlight_background_color_transparent": "#e41616",
+            "heading": "Leading design",
+            "subheading": "by NOOM",
+            "link": "",
+            "heading2": "All collections",
+            "subheading2": "review",
+            "link2": "",
+            "link3": ""
+          }
+        }
+      },
+      "block_order": [
+        "megamenu-grid-images",
+        "megamenu-half-to-half",
+        "megamenu"
+      ],
+      "settings": {
+        "header_type": "sticky",
+        "is_show_box_shadow": true,
+        "is_show_language_selector": true,
+        "is_show_country_selector": true,
+        "show_dropdown_arrows": true,
+        "enable_transparent_header": true,
+        "background_opacity": 10,
+        "background_blur": 5,
+        "logo": "shopify://shop_images/text_90e24d8a-3484-454a-91e3-4b0a997e8a15.png",
+        "logo_width": 250,
+        "logo_position": "middle",
+        "menu": "main-menu-1",
+        "menu_type_desktop": "dropdown",
+        "open_menu_type": "hover",
+        "make_first_lvl_clickable": false,
+        "enable_discount_bar": false,
+        "discount_bar_main_text": "Announce a promotion",
+        "discount_bar_additional_text": "Share something special with your customers.",
+        "discount_bar_code": "DISCOUNTCODE",
+        "discount_bar_button_label": "Copy Code",
+        "discount_bar_button_successful_label": "Copied",
+        "discount_bar_bg_color": "#f6f6f6",
+        "discount_bar_bg_color_transparent": "#000000",
+        "discount_bar_border_bottom": "#ffffff",
+        "discount_bar_main_text_color": "#000000",
+        "discount_bar_main_text_color_transparent": "#ffffff",
+        "discount_bar_additional_text_color": "#535353",
+        "discount_bar_additional_text_color_transparent": "#ffffff",
+        "discount_bar_code_color": "#535353",
+        "discount_bar_code_color_transparent": "#ffffff",
+        "discount_bar_button_label_color": "#000000",
+        "discount_bar_button_label_color_transparent": "#ffffff",
+        "discount_bar_button_background_color": "#ffffff",
+        "discount_bar_button_background_color_transparent": "#ffffff",
+        "discount_bar_button_border_color": "#dcdcdc",
+        "discount_bar_button_border_color_transparent": "#dcdcdc",
+        "header_bg": "#e1e1e1",
+        "header_bg_transparent": "#000000",
+        "mobile_menu_bg": "#f6f6f6",
+        "text_color": "#000000",
+        "text_color_transparent": "#ffffff",
+        "main_mega_menu_text_color": "#525252",
+        "main_mega_menu_background_color": "rgba(0,0,0,0)",
+        "main_mega_menu_text_color_selected": "#000000",
+        "main_mega_menu_background_color_selected": "#ffffff",
+        "icon_color": "#000000",
+        "icon_color_transparent": "#ffffff",
+        "count_text_color": "#ffffff",
+        "count_text_color_transparent": "#000000",
+        "count_text_bg": "#333333",
+        "count_text_bg_transparent": "#ffffff",
+        "megamenu_image_text": "#ffffff",
+        "megamenu_overlay_color": ""
+      }
+    },
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "blocks": {
+        "block-richtext": {
+          "type": "richtext",
+          "settings": {
+            "text": "<strong>NOOM</strong> is the place where design meets art!",
+            "icon": "shopify://shop_images/tabby-cat-lounging-around.jpg",
+            "text_color": "#000000",
+            "text_background_color": "#e1e1e1"
+          }
+        },
+        "items": {
+          "type": "items",
+          "settings": {}
+        },
+        "upsell": {
+          "type": "upsell",
+          "settings": {
+            "heading": "You might also like",
+            "product_list": [],
+            "is_default": true
+          }
+        },
+        "selling": {
+          "type": "shipping",
+          "settings": {
+            "amount": 1000,
+            "message": "You are only {amount} away from free shipping",
+            "congratulatory_message": "You got free shipping",
+            "bar_color": "#c2c2c2",
+            "fill_color": "#333333"
+          }
+        }
+      },
+      "block_order": [
+        "block-richtext",
+        "items",
+        "upsell",
+        "selling"
+      ],
+      "settings": {
+        "heading": "Your Cart",
+        "show_cart_items_count": true,
+        "show_gift_wrap_button": true,
+        "upsell_heading": "Upsell products",
+        "empty_products_heading": "Recommended products",
+        "empty_products": []
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header",
+    "cart-drawer"
+  ]
+}

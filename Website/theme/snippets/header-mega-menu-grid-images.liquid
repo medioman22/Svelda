@@ -1,0 +1,134 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Header mega menu images
+	Render header mega menu images
+	- menu: Menu object (required)
+	- megamenu_object: blocks object using for output media content.
+
+	Usage:
+	{%- render 'header-mega-menu-grid-images', menu: first_level_link, megamenu_object: megamenu_object -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign image1			= megamenu_object.settings.image1 -%}
+{%- assign image2           = megamenu_object.settings.image2 -%}
+{%- assign image3           = megamenu_object.settings.image3 -%}
+{%- assign image4           = megamenu_object.settings.image4 -%}
+
+{%- assign no_content = true -%}
+
+{%- if image1 != blank or image2 != blank or image3 != blank or image4 != blank -%}
+	{%- assign no_content = false -%}
+{%- endif -%}
+
+<div
+	id="headerMegaMenu:{{- menu.title | handleize -}}"
+	class="header-mega-menu is-hidden js-header-mega-menu"
+>
+	<span class="visually-hidden">
+		{{- "layout.navigation.mega_menu" | t -}}
+	</span>
+
+	<div class="header-mega-menu__container js-header-mega-menu-content">
+		<div class="header-mega-menu__block header-mega-menu__block--grid-images">
+			{% for i in (1..4) %}
+				{% assign image_key 		= 'image' |  append: i %}
+				{% assign heading_key 		= 'heading' | append: i %}
+				{% assign subheading_key 	= 'subheading' | append: i %}
+				{% assign link_key 			= 'link' | append: i %}
+
+				{% assign image 			= megamenu_object.settings[image_key] %}
+				{% assign heading 			= megamenu_object.settings[heading_key] -%}
+				{% assign subheading 		= megamenu_object.settings[subheading_key] %}
+				{% assign link 				= megamenu_object.settings[link_key] %}
+
+				{% case i %}
+					{% when 1 %}
+						{% assign img_width = 906 %}
+						{% assign img_width_2x = img_width | times: 2 %}
+						{% assign img_width_1500 = 700 %}
+						{% assign img_width_1500_2x = img_width_1500 | times: 2 %}
+					{% when 2 %}
+						{% assign img_width = 445 %}
+						{% assign img_width_2x = img_width | times: 2 %}
+						{% assign img_width_1500 = 340 %}
+						{% assign img_width_1500_2x = img_width_1500 | times: 2 %}
+					{% when 3 %}
+						{% assign img_width = 445 %}
+						{% assign img_width_2x = img_width | times: 2 %}
+						{% assign img_width_1500 = 340 %}
+						{% assign img_width_1500_2x = img_width_1500 | times: 2 %}
+					{% when 4 %}
+						{% assign img_width = 906 %}
+						{% assign img_width_2x = img_width | times: 2 %}
+						{% assign img_width_1500 = 700 %}
+						{% assign img_width_1500_2x = img_width_1500 | times: 2 %}
+				{% endcase %}
+
+				{%- if image != blank or no_content == true -%}
+					{% if image != blank or no_content == true %}
+						{%- capture img_focal -%}
+							--img-desktop-pos: {{ image.presentation.focal_point }};
+						{%- endcapture -%}
+
+						{%- capture image_capture -%}
+							{%- if no_content -%}
+								{%- assign svg_name = "hero-apparel-" | append: i -%}
+
+								{%- if i == 4 -%}
+									{%- assign svg_name = "hero-apparel-1" -%}
+								{%- endif -%}
+
+								{{- svg_name | placeholder_svg_tag: 'header-mega-menu__image' -}}
+							{%- else -%}
+								<picture>
+									<source
+										srcset="{{ image | image_url: width: img_width_1500 }} 1x, {{ image | image_url: width: img_width_1500_2x }} 2x"
+										media="(max-width: 1500px)"
+									/>
+
+									<img
+										class="header-mega-menu__image"
+										src="{{- image | image_url: width: img_width -}}"
+										srcset="{{- image | image_url: width: img_width }} 1x, {{ image | image_url: width: img_width_2x }} 2x"
+										alt="{{- image.alt | escape -}}"
+										style="{{ img_focal }}"
+										loading="lazy"
+									>
+								</picture>
+							{%- endif -%}
+
+							{%- if subheading != blank or heading != blank -%}
+								<div class="header-mega-menu__image-text-content">
+									{%- if heading != blank -%}
+										<div class="header-mega-menu__image-heading">
+											{{- heading -}}
+										</div>
+									{%- endif -%}
+
+									{%- if subheading != blank -%}
+										<p class="header-mega-menu__image-subheading">
+											{{- subheading -}}
+										</p>
+									{%- endif -%}
+								</div>
+							{%- endif -%}
+						{%- endcapture -%}
+
+						<div class="header-mega-menu__image-container">
+							{%- if link != blank -%}
+								<a href="{{- link -}}" class="header-mega-menu__image-wrapper header-mega-menu__image-wrapper--hover">
+									{{- image_capture -}}
+								</a>
+							{%- else -%}
+								<div class="header-mega-menu__image-wrapper">
+									{{- image_capture -}}
+								</div>
+							{%- endif -%}
+						</div>
+					{%- endif -%}
+				{%- endif -%}
+			{% endfor %}
+		</div>
+	</div>
+</div>

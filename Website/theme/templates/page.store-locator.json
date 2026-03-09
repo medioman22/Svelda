@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "settings": {
+        "offset_bottom_desktop": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "store-location-1": {
+      "type": "store-location",
+      "settings": {}
+    },
+    "store-location-2": {
+      "type": "store-location",
+      "settings": {
+        "reverse_content": true
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "store-location-1",
+    "store-location-2"
+  ]
+}

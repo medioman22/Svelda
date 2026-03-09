@@ -1,0 +1,314 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Ticker
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign hide_bullets			  = section.settings.hide_bullets -%}
+{%- assign font			  		  = section.settings.font -%}
+{%- assign font_size_desktop	  = section.settings.font_size_desktop -%}
+{%- assign font_size_mobile		  = section.settings.font_size_mobile -%}
+{%- assign enable_border  		  = section.settings.enable_border -%}
+{%- assign border_width  		  = section.settings.border_width -%}
+{%- assign direction			  = section.settings.direction -%}
+{%- assign desktop_movement_speed = section.settings.desktop_movement_speed -%}
+{%- assign mobile_movement_speed  = section.settings.mobile_movement_speed -%}
+{%- assign section_background	  = section.settings.section_background -%}
+{%- assign text_color			  = section.settings.text_color -%}
+{%- assign border_color			  = section.settings.border_color -%}
+{%- assign inner_indent			  = section.settings.inner_indent -%}
+{%- assign blocks				  = section.blocks -%}
+
+<style>{{- section.settings.font | font_face: font_display: 'swap' -}}</style>
+
+{%- capture ticker_styles -%}
+	--font-family: {{ font.family | replace: '"', "'" }}, {{ font.fallback_families }}; {{-  -}}
+	--text-color: {{ text_color }}; {{-  -}}
+	--text-size-desktop: {{ font_size_desktop }}px; {{-  -}}
+	--text-size-mobile: {{ font_size_mobile }}px; {{-  -}}
+	--section-background: {{ section_background }}; {{-  -}}
+	--inner-indent: {{ inner_indent }}px; {{-  -}}
+	--desktop-movement-speed: {{ desktop_movement_speed -}}s; {{-  -}}
+	--mobile-movement-speed: {{ mobile_movement_speed -}}s; {{-  -}}
+	--border-color: {{ border_color }}; {{-  -}}
+	--border-width: {{ border_width }}px; {{-  -}}
+	--display-bullets: {% if hide_bullets %}none{% endif %}; {{-  -}}
+	--direction: {% if direction == 'left_to_right' %}normal{% else %}reverse{% endif %}; {{-  -}}
+	--radius-multiplier-desktop: {% if font_size_desktop < 24 %}0.375{% else %}0.75{% endif %}; {{-  -}}
+	--radius-multiplier-mobile: {% if font_size_mobile < 24 %}0.375{% else %}0.75{% endif %}; {{-  -}}
+{%- endcapture -%}
+
+{%- if blocks.size > 0 -%}
+	{%- render 'adastra' with '/src/styles/ticker.scss' -%}
+
+	<section
+		class="ticker{% if enable_border %} ticker--border{% endif %} js-ticker-container js-animate tr-dur-1 is-loading {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+		style="{{- ticker_styles -}}"
+	>
+		<div class="ticker__items js-ticker-content-container">
+			{% for block in blocks %}
+				{% assign image = block.settings.image %}
+				{% assign text = block.settings.text %}
+
+				<div class="ticker__item">
+					{% if image != blank %}
+						{% assign image_size_desktop = font_size_desktop | times: 1.68 %}
+						{% assign image_size_desktop_x2 = image_size_desktop | times: 2 %}
+						{% assign image_size_mobile = font_size_mobile | times: 1.71 %}
+						{% assign image_size_mobile_x2 = image_size_mobile | times: 2 %}
+
+						<div class="ticker__icon-wrapper">
+							<picture>
+								<source
+									srcset="{{ image | image_url: width: image_size_mobile, height: image_size_mobile }} 1x,
+											{{ image | image_url: width: image_size_mobile_x2, height: image_size_mobile_x2 }} 2x"
+									media="(max-width: 768px)"
+									width="{{- image_size_mobile -}}"
+									height="{{- image_size_mobile -}}"
+								/>
+
+								<img
+									class="ticker__icon"
+									srcset="{{ image | image_url: width: image_size_desktop, height: image_size_desktop }} 1x,
+											{{ image | image_url: width: image_size_desktop_x2, height: image_size_desktop_x2 }} 2x"
+									src="{{- image | image_url: width: image_size_desktop, height: image_size_desktop -}}"
+									alt="{{- image.alt | escape -}}"
+									width="{{- image_size_desktop -}}"
+									height="{{- image_size_desktop -}}"
+									loading="lazy"
+								>
+							</picture>
+						</div>
+					{% endif %}
+
+					<div>
+						{{- text -}}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</section>
+
+	{%- render 'adastra' with '/src/scripts/section-ticker.js' -%}
+{% endif %}
+
+{% schema %}
+	{
+		"name": "Ticker",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "checkbox",
+				"id": "hide_bullets",
+				"label": "Hide bullets",
+				"default": true
+			},
+			{
+				"type": "font_picker",
+				"id": "font",
+				"label": "Font",
+				"default": "inter_n4"
+			},
+			{
+				"type": "range",
+				"id": "font_size_desktop",
+				"min": 14,
+				"max": 48,
+				"step": 1,
+				"unit": "px",
+				"label": "Font size (Desktop)",
+				"default": 24
+			},
+			{
+				"type": "range",
+				"id": "font_size_mobile",
+				"min": 14,
+				"max": 48,
+				"step": 1,
+				"unit": "px",
+				"label": "Font size (Mobile)",
+				"default": 16
+			},
+			{
+				"type": "checkbox",
+				"id": "enable_border",
+				"label": "Enable border",
+				"default": true
+			},
+			{
+				"type": "range",
+				"id": "border_width",
+				"min": 2,
+				"max": 10,
+				"step": 2,
+				"unit": "px",
+				"label": "Border width",
+				"default": 4
+			},
+			{
+				"type": "select",
+				"id": "direction",
+				"label": "Direction",
+				"options": [
+					{
+						"value": "left_to_right",
+						"label": "Left to right"
+					},
+					{
+						"value": "right_to_left",
+						"label": "Right to left"
+					}
+				],
+				"default": "left_to_right",
+				"info": "Direction of movement of the content"
+			},
+			{
+				"type": "range",
+				"id": "desktop_movement_speed",
+				"label": "Movement speed (desktop)",
+				"min": 4,
+				"max": 100,
+				"unit": "s",
+				"default": 20
+			},
+			{
+				"type": "range",
+				"id": "mobile_movement_speed",
+				"label": "Movement speed (mobile)",
+				"min": 4,
+				"max": 100,
+				"unit": "s",
+				"default": 35
+			},
+			{
+				"type": "header",
+				"content": "Colors"
+			},
+			{
+				"type": "color_background",
+				"id": "section_background",
+				"label": "Background",
+				"default": "#FFD875"
+			},
+			{
+				"type": "color",
+				"id": "text_color",
+				"label": "Text",
+				"default": "#000000"
+			},
+			{
+				"type": "color",
+				"id": "border_color",
+				"label": "Border",
+				"default": "#000000"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "range",
+				"id": "inner_indent",
+				"min": 0,
+				"max": 35,
+				"step": 1,
+				"unit": "px",
+				"label": "Inner indent",
+				"default": 24,
+				"info": "With this setting, you can change the height of the ticker."
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"name": "Content",
+				"type": "content",
+				"settings": [
+					{
+						"type": "inline_richtext",
+						"id": "text",
+						"label": "Text",
+						"default": "Place the ticker text here"
+					},
+					{
+						"type": "image_picker",
+						"id": "image",
+						"label": "Image",
+						"info": "128 x 128px .jpg recommended"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Ticker",
+				"blocks": [
+					{
+						"type": "content"
+					},
+					{
+						"type": "content"
+					},
+					{
+						"type": "content"
+					}
+				]
+			}
+		]
+	}
+{% endschema %}

@@ -1,0 +1,98 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Snippet: Product Progress Range
+------------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign is_shown_1 = block.settings.is_show_item_1 %}
+{% assign is_shown_2 = block.settings.is_show_item_2 %}
+{% assign is_shown_3 = block.settings.is_show_item_3 %}
+{% assign is_shown_4 = block.settings.is_show_item_4 %}
+{% assign range_1 = block.settings.range_1 %}
+{% assign range_2 = block.settings.range_2 %}
+{% assign range_3 = block.settings.range_3 %}
+{% assign range_4 = block.settings.range_4 %}
+{% assign heading_1 = block.settings.heading_1 %}
+{% assign heading_2 = block.settings.heading_2 %}
+{% assign heading_3 = block.settings.heading_3 %}
+{% assign heading_4 = block.settings.heading_4 %}
+{% assign show_block = false %}
+
+{%- for i in (1..4) -%}
+	{% if i == 1 and is_shown_1 and heading_1 != blank %}
+		{% assign show_block = true %}
+	{% elsif i == 2 and is_shown_2 and heading_2 != blank %}
+		{% assign show_block = true %}
+	{% elsif i == 3 and is_shown_3 and heading_3 != blank %}
+		{% assign show_block = true %}
+	{% elsif i == 4 and is_shown_4 and heading_4 != blank %}
+		{% assign show_block = true %}
+	{% endif %}
+
+	{%- break -%}
+{%- endfor -%}
+
+{%- if show_block -%}
+	{%- capture styles -%}
+		--range-1: {{ range_1 }}%; {{- -}}
+		--range-2: {{ range_2 }}%; {{- -}}
+		--range-3: {{ range_3 }}%; {{- -}}
+		--range-4: {{ range_4 }}%; {{- -}}
+		--offset-top-desktop: {{ block.settings.offset_top_desktop }}px; {{- -}}
+		--offset-bottom-desktop: {{ block.settings.offset_bottom_desktop }}px; {{- -}}
+		--offset-top-mobile: {{ block.settings.offset_top_mobile }}px; {{- -}}
+		--offset-bottom-mobile: {{ block.settings.offset_bottom_mobile }}px;
+	{%- endcapture -%}
+
+	<div class="product-progress-range" style="{{ styles }}">
+		<div class="product-progress-range__content">
+			{% for i in (1..4) %}
+				{% assign is_shown = false %}
+
+				{% if i == 1 and is_shown_1 and heading_1 != blank %}
+					{% assign is_shown = true %}
+				{% elsif i == 2 and is_shown_2 and heading_2 != blank %}
+					{% assign is_shown = true %}
+				{% elsif i == 3 and is_shown_3 and heading_3 != blank %}
+					{% assign is_shown = true %}
+				{% elsif i == 4 and is_shown_4 and heading_4 != blank %}
+					{% assign is_shown = true %}
+				{% endif %}
+
+				{% if is_shown %}
+					<div class="product-progress-range__scale-wrapper">
+						<p class="product-progress-range__heading">
+							{% case i %}
+								{% when 1 %}
+									{{- heading_1 -}}
+								{% when 2 %}
+									{{- heading_2 -}}
+								{% when 3 %}
+									{{- heading_3 -}}
+								{% when 4 %}
+									{{- heading_4 -}}
+							{%- endcase -%}
+						</p>
+
+						<div class="product-progress-range__scale" data-index="{{ i }}">
+							<div class="product-progress-range__scale-item"></div>
+						</div>
+
+						<div class="product-progress-range__tooltip">
+							{% case i %}
+								{% when 1 %}
+									{{- range_1 -}}
+								{% when 2 %}
+									{{- range_2 -}}
+								{% when 3 %}
+									{{- range_3 -}}
+								{% when 4 %}
+									{{- range_4 -}}
+							{%- endcase -%}%
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+{%- endif -%}

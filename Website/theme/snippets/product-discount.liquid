@@ -1,0 +1,50 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Snippet: Product Discount
+------------------------------------------------------------------------------
+{% endcomment %}
+
+{% assign heading = block.settings.heading %}
+{% assign text = block.settings.text %}
+{% assign discount_code = block.settings.discount_code %}
+
+{%- capture styles -%}
+	--offset-top-desktop: {{ block.settings.offset_top_desktop }}px; {{- -}}
+	--offset-bottom-desktop: {{ block.settings.offset_bottom_desktop }}px; {{- -}}
+	--offset-top-mobile: {{ block.settings.offset_top_mobile }}px; {{- -}}
+	--offset-bottom-mobile: {{ block.settings.offset_bottom_mobile }}px;
+{%- endcapture -%}
+
+{% assign is_heading_or_text = false %}
+
+{% if heading != blank or text != blank %}
+	{% assign is_heading_or_text = true %}
+{% endif %}
+
+{% if is_heading_or_text and discount_code != blank %}
+	<div class="product-discount" style="{{ styles }}">
+		<div class="product-discount__content">
+			<div class="product-discount__text-wrapper">
+				{% if heading != blank %}
+					<p class="product-discount__heading">{{ heading }}</p>
+				{% endif %}
+
+				{% if text != blank %}
+					<p class="product-discount__text">{{ text }}</p>
+				{% endif %}
+			</div>
+
+			<button class="product-discount__button js-discount-button" type="button">
+				<p class="product-discount__button-content js-discount-code"
+				   data-discount-button-status="not-active">{{ discount_code }}</p>
+				<p class="product-discount__button-content is-hidden"
+				   data-discount-button-status="active">{{ 'products.discount.copied' | t: product: product.title | escape }}</p>
+
+				<div class="product-discount__button-content"
+					 data-discount-button-status="not-active">{% render 'icons', icon: 'copy-3' %}</div>
+				<div class="product-discount__button-content is-hidden"
+					 data-discount-button-status="active">{% render 'icons', icon: 'check' %}</div>
+			</button>
+		</div>
+	</div>
+{% endif %}

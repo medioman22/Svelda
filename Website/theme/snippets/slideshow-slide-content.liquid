@@ -1,0 +1,83 @@
+{%- if enable_glass_effect == true -%}
+	{%- assign glass_effect = 'slideshow__slide-content-inner--glass' -%}
+{%- endif -%}
+
+{%- if enable_content_offset == true -%}
+	{%- assign content_offset ='slideshow__slide-content-inner--offset' -%}
+{%- endif -%}
+
+{%- assign is_button = false -%}
+
+{%- if button_text != blank and button_link != blank -%}
+	{%- assign is_button = true -%}
+{%- elsif second_button_text != blank and second_button_link != blank -%}
+	{%- assign is_button = true -%}
+{%- endif -%}
+
+{%- if heading != blank or description != blank or is_button != blank -%}
+	<div class="slideshow__slide-content {% if index == 1 %}js-need-animate-after-load{% else %}need-animate{% endif %}">
+		<div class="slideshow__slide-content-inner {{ glass_effect }} {{ content_offset }}">
+			{%- if heading != blank -%}
+				<h2
+					class="h2 slideshow__slide-heading"
+					{%- if enable_parallax -%}
+						data-swiper-parallax="-400"
+					{%- endif -%}
+				>
+					{{- heading -}}
+				</h2>
+			{%- endif -%}
+
+			{%- if description != blank -%}
+				<div
+					class="slideshow__slide-description rte"
+					{%- if enable_parallax -%}
+						data-swiper-parallax="-300"
+					{%- endif -%}
+				>
+					{{- description -}}
+				</div>
+			{%- endif -%}
+
+			{%- if is_button -%}
+				<div class="slideshow__slide-button-wrapper"
+					{% if enable_parallax %}
+					data-swiper-parallax="-200"
+					{% endif %}
+				>
+					{% if button_text != blank and button_link != blank %}
+						<a
+							class="button button--secondary slideshow__slide-button js-button"
+							href="{{- button_link -}}"
+							{% if button_aria_label != blank %}
+								aria-label="{{- button_aria_label | escape -}}"
+							{% endif %}
+							{% if open_in_new_tab %}
+								target="_blank"
+								rel="nofollow"
+							{% endif %}
+						>
+							{{- button_text -}}
+						</a>
+					{% endif %}
+
+					{% if second_button_text != blank and second_button_link != blank %}
+						<a
+							class="button button--secondary slideshow__slide-button slideshow__slide-button--second js-button"
+							href="{{- second_button_link -}}"
+							{% if second_button_aria_label != blank %}
+								aria-label="{{- second_button_aria_label | escape -}}"
+							{% endif %}
+							{% if second_open_in_new_tab %}
+								target="_blank"
+								rel="nofollow"
+							{% endif %}
+						>
+							{{- second_button_text -}}
+						</a>
+					{% endif %}
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+{%- endif -%}

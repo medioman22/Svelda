@@ -1,0 +1,45 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Product drawer button
+
+	- icon: image,
+	- target: string,
+	- text: string
+
+	{%- render "product-drawer-button", icon: image, target: target, text: text -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+<div class="product-drawers__item">
+	<button
+		type="button"
+		class="product-drawers__item-toggle"
+		data-target="{{ target }}"
+		data-js-toggle="{{ target }}"
+	>
+		<div class="product-drawers__title-wrapper">
+			{%- if icon != blank -%}
+				{%- capture img_focal -%}
+					--img-desktop-pos: {{ icon.presentation.focal_point }};
+				{%- endcapture -%}
+
+				<img
+					srcset="{{ icon | image_url: width: 24, height: 24 }} 1x,
+									{{ icon | image_url: width: 48, height: 48 }} 2x"
+					src="{{- icon | image_url: width: 24, height: 24 -}}"
+					aria-hidden="true"
+					width="24"
+					height="24"
+					style="{{ img_focal }}"
+					alt=""
+				/>
+			{%- endif -%}
+
+			{{- text -}}
+		</div>
+
+		<div class="product-drawers__icon">
+			{% render 'icons', icon: 'slider-arrow-right' %}
+		</div>
+	</button>
+</div>

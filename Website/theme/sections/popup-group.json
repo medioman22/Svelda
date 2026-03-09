@@ -1,0 +1,101 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "custom.popup",
+  "name": "Popups group",
+  "sections": {
+    "cookie-bar": {
+      "type": "cookie-bar",
+      "disabled": true,
+      "settings": {
+        "is_cookie_bar_enabled": true,
+        "cookie_bar_cookie_time": "1",
+        "cookie_bar_heading": "Cookies",
+        "cookie_bar_text": "This website uses cookies to ensure you get the best experience on your device.",
+        "cookie_bar_button_label": "Accept all cookies",
+        "cookie_bar_show_shadow": false,
+        "cookie_bar_background_color": "#ffffff",
+        "cookie_bar_text_color": "#393939",
+        "cookie_bar_button_close_color": "#393939",
+        "cookie_bar_button_background_color": "rgba(0,0,0,0)",
+        "cookie_bar_button_border_color": "#000000",
+        "cookie_bar_button_label_color": "#000000",
+        "cookie_bar_button_background_hover_color": "#525252",
+        "cookie_bar_button_border_hover_color": "#525252",
+        "cookie_bar_button_label_hover_color": "#ffffff"
+      }
+    },
+    "newsletter_popup": {
+      "type": "newsletter-popup",
+      "disabled": true,
+      "settings": {
+        "is_newsletter_popup_enabled": true,
+        "newsletter_popup_cookie_time": "1",
+        "newsletter_popup_heading": "Subscribe to our newsletter",
+        "newsletter_popup_text": "Be the first to know about sales, exclusive offers and promotions.",
+        "newsletter_popup_input_placeholder": "Enter email address...",
+        "newsletter_popup_input_button_submit_text": "Sign Up",
+        "is_newsletter_popup_show_socials": true,
+        "newsletter_popup_color_background": "#ffffff",
+        "newsletter_popup_color_heading": "#000000",
+        "newsletter_popup_color_text": "#535353",
+        "newsletter_popup_color_input_text": "#000000",
+        "newsletter_popup_color_input_placeholder": "#757575",
+        "newsletter_popup_color_input_border": "#dcdcdc",
+        "newsletter_popup_color_input_border_focus": "#000000",
+        "newsletter_popup_color_support_attention": "#e41616",
+        "newsletter_popup_color_support_success": "#36ba20",
+        "newsletter_popup_color_button_close_icon": "#000000",
+        "newsletter_popup_color_button_close_icon_border": "#e9e9e9",
+        "newsletter_popup_color_button_close_icon_background": "#ffffff",
+        "newsletter_popup_color_button_text": "#ffffff",
+        "newsletter_popup_color_button_background": "#000000",
+        "newsletter_popup_color_button_text_hover": "#ffffff",
+        "newsletter_popup_color_button_background_hover": "#292929",
+        "newsletter_popup_color_button_social_icon": "#000000",
+        "newsletter_popup_color_button_social_background": "#ffffff",
+        "newsletter_popup_color_button_social_border": "#dcdcdc",
+        "newsletter_popup_color_button_social_icon_hover": "#ffffff",
+        "newsletter_popup_color_button_social_background_hover": "#000000",
+        "newsletter_popup_color_button_social_border_hover": "#000000"
+      }
+    },
+    "promotion_banner_popup_GhxUBg": {
+      "type": "promotion-banner-popup",
+      "disabled": true,
+      "name": "Promotion banner",
+      "settings": {
+        "is_promo_banner_enabled": true,
+        "promo_banner_cookie_time": "1",
+        "promo_banner_title": "New Collection",
+        "promo_banner_subtitle": "Get 10% off",
+        "promo_banner_button_text": "Shop now",
+        "promo_banner_link": "",
+        "promo_banner_popup_button_style": "secondary",
+        "promo_banner_product_list": [],
+        "promo_banner_show_shadow": false,
+        "promo_banner_background": "#9f0000",
+        "promo_banner_text": "#ffffff",
+        "promo_button_close": "#ffffff",
+        "promo_banner_button_background_color": "#000000",
+        "promo_banner_button_text_color": "#ffffff",
+        "promo_banner_button_border_color": "#000000",
+        "promo_banner_button_background_hover_color": "#000000",
+        "promo_banner_button_text_hover_color": "#ffffff",
+        "promo_banner_button_border_hover_color": "#000000"
+      }
+    }
+  },
+  "order": [
+    "cookie-bar",
+    "newsletter_popup",
+    "promotion_banner_popup_GhxUBg"
+  ]
+}

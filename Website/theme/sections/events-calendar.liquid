@@ -1,0 +1,380 @@
+{% assign title 							= section.settings.title %}
+{% assign center_blocks_on_desktop 			= section.settings.center_blocks_on_desktop %}
+{% assign container 						= section.settings.container_width %}
+{% assign is_lazy 								= true %}
+
+{% if section.index == 1 %}
+	{% assign is_lazy = false %}
+{% endif %}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- render 'adastra' with '/src/styles/events-calendar.scss' -%}
+
+<section class="events-calendar js-animate{% if request.visual_preview_mode or section.index == 1 %} animated{% endif %}" style="--container-width: {{ container_width }};">
+	{% if title != blank %}
+		<div class="events-calendar__header">
+			<h2 class="events-calendar__title h2 need-animate tr-dur-0-8">{{ title }}</h2>
+		</div>
+	{% endif %}
+
+	{% if section.blocks.size > 0 %}
+		{% assign delay_step = 0 %}
+
+		<ul class="events-calendar__list {% if center_blocks_on_desktop %}events-calendar__item--centered{% endif %}">
+			{% for block in section.blocks %}
+				{% assign event_image 			= block.settings.image %}
+				{% assign event_title 			= block.settings.title %}
+				{% assign event_text 			= block.settings.text %}
+				{% assign event_location_text	= block.settings.location_text %}
+				{% assign event_time_text		= block.settings.time_text %}
+				{% assign event_link_text 		= block.settings.link_text %}
+				{% assign event_link_url 		= block.settings.link_url %}
+				{% assign event_date 			= block.settings.event_date %}
+				{% assign event_date_month 		= block.settings.event_date_month %}
+				{% assign delay_step 			= delay_step | plus: 0.25 %}
+
+				{% assign show_event_date = false %}
+				{% assign show_event_link = false %}
+
+				{% if event_date != blank or event_date_month != blank %}
+					{% assign show_event_date = true %}
+				{% endif %}
+
+				{% if event_link_text != blank and event_link_url != blank %}
+					{% assign show_event_link = true %}
+				{% endif %}
+
+				<li class="events-calendar__item need-animate tr-dur-0-5" style="transition-delay: {{ delay_step }}s;">
+					{% if event_image != blank %}
+						<div class="events-calendar__item-media">
+							<picture class="events-calendar__item-image-wrapper{% if is_lazy %} lazy{% endif %}">
+								<source
+									{% if is_lazy %}
+										srcset="{{ event_image | image_url: width: 10, height: 10 }}"
+										data-srcset="{{ event_image | image_url: width: 388, height: 204 }} 1x,
+													 {{ event_image | image_url: width: 776, height: 408 }} 2x"
+									{% else %}
+										srcset="{{ event_image | image_url: width: 388, height: 204 }} 1x,
+												{{ event_image | image_url: width: 776, height: 408 }} 2x"
+									{% endif %}
+										media="(max-width: 420px)"
+										width="388"
+										height="204"
+								>
+
+								<source
+									{% if is_lazy %}
+										srcset="{{ event_image | image_url: width: 10, height: 10 }}"
+										data-srcset="{{ event_image | image_url: width: 543, height: 285 }} 1x,
+													 {{ event_image | image_url: width: 1086, height: 570 }} 2x"
+									{% else %}
+										srcset="{{ event_image | image_url: width: 543, height: 285 }} 1x,
+												{{ event_image | image_url: width: 1086, height: 570 }} 2x"
+									{% endif %}
+										media="(max-width: 575px)"
+										width="543"
+										height="285"
+								>
+
+								<source
+									{% if is_lazy %}
+										srcset="{{ event_image | image_url: width: 10, height: 10 }}"
+										data-srcset="{{ event_image | image_url: width: 360, height: 189 }} 1x,
+													 {{ event_image | image_url: width: 720, height: 378 }} 2x"
+									{% else %}
+										srcset="{{ event_image | image_url: width: 360, height: 189 }} 1x,
+												{{ event_image | image_url: width: 720, height: 378 }} 2x"
+									{% endif %}
+										media="(max-width: 767px)"
+										width="360"
+										height="189"
+								>
+
+								<source
+									{% if is_lazy %}
+										srcset="{{ event_image | image_url: width: 10, height: 10 }}"
+										data-srcset="{{ event_image | image_url: width: 472, height: 234 }} 1x,
+													 {{ event_image | image_url: width: 944, height: 470 }} 2x"
+									{% else %}
+										srcset="{{ event_image | image_url: width: 472, height: 234 }} 1x,
+												{{ event_image | image_url: width: 944, height: 468 }} 2x"
+									{% endif %}
+										media="(max-width: 991px)"
+										width="472"
+										height="234"
+								>
+
+								<img class="events-calendar__item-image"
+									{% if is_lazy %}
+										src="{{ event_image | image_url: width: 10, height: 10 }}"
+										srcset="{{ event_image | image_url: width: 10, height: 10 }} 1x,
+											 	{{ event_image | image_url: width: 20, height: 20 }} 2x"
+										data-src="{{ event_image | image_url: width: 619, height: 308 }}"
+										data-srcset="{{ event_image | image_url: width: 619, height: 308 }} 1x,
+												  	 {{ event_image | image_url: width: 1238, height: 616 }} 2x"
+									{% else %}
+										src="{{ event_image | image_url: width: 619, height: 308 }}"
+										srcset="{{ event_image | image_url: width: 619, height: 308 }} 1x,
+												{{ event_image | image_url: width: 1238, height: 616 }} 2x"
+									{% endif %}
+									 alt="{{ event_image.alt | escape }}"
+									 style="--img-pos: {{ event_image.presentation.focal_point }};"
+									 width="619"
+									 height="308"
+								>
+							</picture>
+
+							{% if show_event_date %}
+								<div class="events-calendar__item-date-block">
+									{% if event_date != blank %}
+										<span class="events-calendar__item-date-day">{{ event_date }}</span>
+									{% endif %}
+
+									{%- if event_date_month != blank -%}
+										{{- event_date_month -}}
+									{%- endif -%}
+								</div>
+							{% endif %}
+						</div>
+					{% elsif show_event_date %}
+						<div class="events-calendar__item-date-block events-calendar__item-date-block--single">
+							{% if event_date != blank %}
+								<span class="events-calendar__item-date-day">{{ event_date }}</span>
+							{% endif %}
+
+							{%- if event_date_month != blank -%}
+								{{- event_date_month -}}
+							{%- endif -%}
+						</div>
+					{% endif %}
+
+					<div class="events-calendar__item-content">
+						{% if event_title != blank %}
+							<h3 class="events-calendar__item-title h4">{{ event_title }}</h3>
+						{% endif %}
+
+						{% if event_text != blank %}
+							<p class="events-calendar__item-text">
+								{{- event_text -}}
+							</p>
+						{% endif %}
+
+						{% if event_location_text != blank %}
+							<div class="events-calendar__item-location">
+								{%- render 'icons', icon: 'location' -%}
+
+								<p class="events-calendar__item-location-text">
+									{{- event_location_text -}}
+								</p>
+							</div>
+						{% endif %}
+
+						{% if event_time_text != blank %}
+							<div class="events-calendar__item-time">
+								{%- render 'icons', icon: 'clock' -%}
+
+								<p class="events-calendar__item-time-text">
+									{{- event_time_text -}}
+								</p>
+							</div>
+						{% endif %}
+
+						{% if show_event_link %}
+							<div class="events-calendar__item-link-wrapper">
+								<a href="{{ event_link_url }}" class="button-link focus-visible-outline">{{ event_link_text }}</a>
+							</div>
+						{% endif %}
+					</div>
+				</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+</section>
+
+
+{% schema %}
+{
+	"name": "Events calendar",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "text",
+			"id": "title",
+			"label": "Heading",
+			"default": "Events"
+		},
+		{
+			"type": "checkbox",
+			"id": "center_blocks_on_desktop",
+			"label": "Center blocks on desktop",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"name": "Event",
+			"type": "event",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+					"type": "text",
+					"id": "title",
+					"label": "Heading",
+					"default": "Event name"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "text",
+					"label": "Text",
+					"default": "Some information about the event, time, location, schedule etc.."
+				},
+				{
+					"type": "inline_richtext",
+					"id": "location_text",
+					"label": "Location text",
+					"default": "Event Location Name"
+				},
+				{
+					"type": "inline_richtext",
+					"id": "time_text",
+					"label": "Time text",
+					"default": "7.00pm - 11.00 pm"
+				},
+				{
+					"type": "text",
+					"id": "link_text",
+					"label": "Link label",
+					"default": "Read more"
+				},
+				{
+					"type": "url",
+					"id": "link_url",
+					"label": "Link url"
+				},
+				{
+					"type": "text",
+					"id": "event_date",
+					"label": "Start day",
+					"default": "01"
+				},
+				{
+					"type": "text",
+					"id": "event_date_month",
+					"label": "Start month",
+					"default": "Jan"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Events calendar",
+			"blocks": [
+				{
+					"type": "event"
+				},
+				{
+					"type": "event"
+				},
+				{
+					"type": "event"
+				}
+			]
+		}
+	]
+}
+{% endschema %}

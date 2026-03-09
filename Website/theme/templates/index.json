@@ -1,0 +1,1312 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "slideshow-main": {
+      "type": "slideshow",
+      "blocks": {
+        "slide-2": {
+          "type": "image",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Generated_Image_January_31_2026_-_3_00PM.jpg",
+            "image_mobile": "shopify://shop_images/Generated_Image_January_31_2026_-_3_00PM.jpg",
+            "heading": "Up for a treat?",
+            "description": "<p><strong>Dinner is served, with a side of design. </strong><br/>Bowls that are too good for just food.</p>",
+            "button_text": "Meet the EAT Collection",
+            "button_aria_label": "",
+            "button_link": "shopify://collections/eat",
+            "open_in_new_tab": true,
+            "make_link_full_slide": false,
+            "second_button_text": "",
+            "second_button_aria_label": "",
+            "second_button_link": "/",
+            "second_open_in_new_tab": false,
+            "text_alignment_inside_block_desktop": "center",
+            "text_alignment_inside_block_mobile": "center",
+            "content_alignment_horizontal_desktop": "left",
+            "content_alignment_vertical_desktop": "bottom",
+            "content_alignment_vertical_mobile": "middle",
+            "background_color": "#757575",
+            "background_content": "",
+            "enable_glass_effect": false,
+            "heading_color": "#646464",
+            "description_color": "#525252",
+            "button_text_color": "#525252",
+            "button_background_color": "rgba(0,0,0,0)",
+            "button_border_color": "#525252",
+            "button_text_color_hover": "#ffffff",
+            "button_background_color_hover": "#646464",
+            "button_border_color_hover": "#646464",
+            "second_button_text_color": "#ffffff",
+            "second_button_background_color": "rgba(0,0,0,0)",
+            "second_button_border_color": "#ffffff",
+            "second_button_text_color_hover": "#000000",
+            "second_button_background_color_hover": "#ffffff",
+            "second_button_border_color_hover": "#ffffff",
+            "overlay_color": ""
+          }
+        },
+        "slide-1": {
+          "type": "image",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Generated_Image_January_31_2026_-_3_33PM.jpg",
+            "image_mobile": "shopify://shop_images/Generated_Image_January_31_2026_-_3_30PM.jpg",
+            "heading": "Tired ?",
+            "description": "<p><strong>Check our premium, natural beds!</strong> <br/>Soft, sensual forms made from the finest organic materials for a peaceful rest.</p>",
+            "button_text": "Review the REST Collection",
+            "button_aria_label": "",
+            "button_link": "shopify://collections/rest",
+            "open_in_new_tab": false,
+            "make_link_full_slide": false,
+            "second_button_text": "",
+            "second_button_aria_label": "",
+            "second_button_link": "/",
+            "second_open_in_new_tab": false,
+            "text_alignment_inside_block_desktop": "center",
+            "text_alignment_inside_block_mobile": "center",
+            "content_alignment_horizontal_desktop": "left",
+            "content_alignment_vertical_desktop": "bottom",
+            "content_alignment_vertical_mobile": "bottom",
+            "background_color": "rgba(0,0,0,0)",
+            "background_content": "",
+            "enable_glass_effect": false,
+            "heading_color": "#ffffff",
+            "description_color": "#ffffff",
+            "button_text_color": "#ffffff",
+            "button_background_color": "rgba(0,0,0,0)",
+            "button_border_color": "#ffffff",
+            "button_text_color_hover": "#646464",
+            "button_background_color_hover": "#ffffff",
+            "button_border_color_hover": "rgba(0,0,0,0)",
+            "second_button_text_color": "#ffffff",
+            "second_button_background_color": "rgba(0,0,0,0)",
+            "second_button_border_color": "#ffffff",
+            "second_button_text_color_hover": "#000000",
+            "second_button_background_color_hover": "#ffd875",
+            "second_button_border_color_hover": "#ffd875",
+            "overlay_color": ""
+          }
+        },
+        "slide-3": {
+          "type": "image",
+          "settings": {
+            "image_desktop": "shopify://shop_images/Generated_Image_January_31_2026_-_2_48PM.png",
+            "image_mobile": "shopify://shop_images/Generated_Image_January_31_2026_-_2_48PM.png",
+            "heading": "Do I know you?",
+            "description": "<p><strong>A new kind of playtime!</strong> <br/>Our toys are crafted from the same luxurious, natural materials as our beds.</p>",
+            "button_text": "PLAY by SVELDA",
+            "button_aria_label": "",
+            "button_link": "/",
+            "open_in_new_tab": false,
+            "make_link_full_slide": false,
+            "second_button_text": "",
+            "second_button_aria_label": "",
+            "second_button_link": "/",
+            "second_open_in_new_tab": false,
+            "text_alignment_inside_block_desktop": "center",
+            "text_alignment_inside_block_mobile": "center",
+            "content_alignment_horizontal_desktop": "right",
+            "content_alignment_vertical_desktop": "middle",
+            "content_alignment_vertical_mobile": "middle",
+            "background_color": "#757575",
+            "background_content": "",
+            "enable_glass_effect": false,
+            "heading_color": "#646464",
+            "description_color": "#525252",
+            "button_text_color": "#525252",
+            "button_background_color": "rgba(0,0,0,0)",
+            "button_border_color": "#646464",
+            "button_text_color_hover": "#646464",
+            "button_background_color_hover": "#f9f9f9",
+            "button_border_color_hover": "#f9f9f9",
+            "second_button_text_color": "#ffffff",
+            "second_button_background_color": "rgba(0,0,0,0)",
+            "second_button_border_color": "#ffffff",
+            "second_button_text_color_hover": "#000000",
+            "second_button_background_color_hover": "#ffffff",
+            "second_button_border_color_hover": "#ffffff",
+            "overlay_color": ""
+          }
+        },
+        "three_col_dixGpM": {
+          "type": "three_col",
+          "settings": {
+            "autoplay": "autoplay",
+            "media_type_col_1": "image",
+            "image_desktop_col_1": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM_f3e571fb-3585-49c8-a79c-51978fb10fad.jpg",
+            "video_url_desktop_col_1": "",
+            "video_url_mobile_col_1": "",
+            "heading": "Heading",
+            "description": "Text",
+            "button_text": "Button label",
+            "button_aria_label": "",
+            "button_link": "/",
+            "open_in_new_tab": false,
+            "make_link_full_slide": false,
+            "text_alignment_inside_block_desktop": "center",
+            "text_alignment_inside_block_mobile": "center",
+            "content_alignment_vertical_desktop": "middle",
+            "image_desktop_first_col_3": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "image_desktop_second_col_3": "shopify://shop_images/Generated_Image_February_01_2026_-_5_50PM.jpg",
+            "background_color": "#ffffff",
+            "heading_color": "#000000",
+            "description_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_background_color": "#000000",
+            "button_border_color": "#000000",
+            "button_text_color_hover": "#ffffff",
+            "button_background_color_hover": "#292929",
+            "button_border_color_hover": "#292929"
+          }
+        },
+        "three_col_Jj7HXN": {
+          "type": "three_col",
+          "settings": {
+            "autoplay": "autoplay",
+            "media_type_col_1": "image",
+            "image_desktop_col_1": "shopify://shop_images/Generated_Image_January_31_2026_-_3_46PM.jpg",
+            "video_url_desktop_col_1": "",
+            "video_url_mobile_col_1": "",
+            "heading": "Heading",
+            "description": "Text",
+            "button_text": "Button label",
+            "button_aria_label": "",
+            "button_link": "/",
+            "open_in_new_tab": false,
+            "make_link_full_slide": false,
+            "text_alignment_inside_block_desktop": "center",
+            "text_alignment_inside_block_mobile": "center",
+            "content_alignment_vertical_desktop": "middle",
+            "image_desktop_first_col_3": "shopify://shop_images/Generated_Image_January_31_2026_-_10_37PM.jpg",
+            "image_desktop_second_col_3": "shopify://shop_images/Generated_Image_January_31_2026_-_11_01PM.jpg",
+            "background_color": "#ffffff",
+            "heading_color": "#000000",
+            "description_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_background_color": "#000000",
+            "button_border_color": "#000000",
+            "button_text_color_hover": "#ffffff",
+            "button_background_color_hover": "#292929",
+            "button_border_color_hover": "#292929"
+          }
+        }
+      },
+      "block_order": [
+        "slide-2",
+        "slide-1",
+        "slide-3",
+        "three_col_dixGpM",
+        "three_col_Jj7HXN"
+      ],
+      "settings": {
+        "show_arrows": true,
+        "show_thumbnails": false,
+        "show_pagination": true,
+        "show_progress_bar": true,
+        "enable_loop": true,
+        "enable_autoplay": true,
+        "autoplay_speed": 10,
+        "animation_speed": 1,
+        "animation_type": "slide",
+        "background_color": "#ffffff",
+        "progress_bar_color": "#ffffff",
+        "pagination_color": "#ffffff",
+        "pagination_color_opacity": 10,
+        "pagination_color_active": "#ffffff",
+        "arrows_background_color": "#ffffff",
+        "arrows_background_color_opacity": 10,
+        "arrows_color": "#000000",
+        "arrows_border_color": "#ffffff",
+        "arrows_border_color_opacity": 30,
+        "arrows_background_color_hover": "#ffd875",
+        "arrows_background_color_opacity_hover": 50,
+        "arrows_color_hover": "#000000",
+        "arrows_border_color_hover": "#ffd875",
+        "arrows_border_color_opacity_hover": 100,
+        "thumbnail_border_color_active": "#ffd875",
+        "thumbnails_background_color": "#000000",
+        "thumbnails_background_color_opacity": 20,
+        "container_width": "100%",
+        "height_desktop": 100,
+        "height_mobile": 30,
+        "subtract_header_height": false,
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 15,
+        "offset_bottom_mobile": 50
+      }
+    },
+    "cards-grid": {
+      "type": "cards-grid",
+      "settings": {
+        "label": "",
+        "title": "SVELDA",
+        "text": "<h3>For your cat, for your home, for you.</h3><p></p><p>Welcome to SVELDA. We believe that simple, beautiful things make a life better. Our collection of essentials for your cat is meticulously crafted with natural materials, designed to bring harmony and style to your home. It's about a better life, together.</p>",
+        "button_label": "",
+        "button_link": "shopify://collections",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "3",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": true,
+        "container_width": "100%",
+        "offset_top_desktop": 60,
+        "offset_bottom_desktop": 0,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "collection-list": {
+      "type": "collection-list",
+      "blocks": {
+        "collection-1": {
+          "type": "collection",
+          "settings": {
+            "collection": "eat"
+          }
+        },
+        "collection-2": {
+          "type": "collection",
+          "settings": {
+            "collection": "rest"
+          }
+        },
+        "collection-3": {
+          "type": "collection",
+          "settings": {
+            "collection": "play"
+          }
+        }
+      },
+      "block_order": [
+        "collection-1",
+        "collection-2",
+        "collection-3"
+      ],
+      "settings": {
+        "heading": "",
+        "link_url": "shopify://collections",
+        "link_text": "Explore all our collections",
+        "link_aria_label_text": "",
+        "button_style": "secondary-border",
+        "text_alignment": "right",
+        "text_position": "inside_image",
+        "aspect_ratio": "square",
+        "cards_per_row": "3",
+        "center_on_desktop": true,
+        "show_products_count": false,
+        "overlay_color": "",
+        "color_text": "#333333",
+        "container_width": "1432px",
+        "offset_top_desktop": 15,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "cards_grid_hDzEAd": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_RVMrQK": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_4_15PM_1.jpg",
+            "title": "Svelda One",
+            "text": "",
+            "link_url": "shopify://products/bowl-1"
+          }
+        },
+        "card_dDTkpH": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_4_15PM.jpg",
+            "title": "Svelda Arc",
+            "text": "",
+            "link_url": "shopify://products/bowl-1-copy"
+          }
+        },
+        "card_VE7jVT": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_January_31_2026_-_3_46PM.jpg",
+            "title": "Svelda Janus",
+            "text": "",
+            "link_url": "shopify://products/svelda-janus-marble-bowl"
+          }
+        }
+      },
+      "block_order": [
+        "card_RVMrQK",
+        "card_dDTkpH",
+        "card_VE7jVT"
+      ],
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "shopify://collections",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "3",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": true,
+        "container_width": "100%",
+        "offset_top_desktop": 80,
+        "offset_bottom_desktop": 100,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image-with-text-1": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_horizontal",
+        "first_desktop_image": "shopify://shop_images/image_2.png",
+        "heading": "PREMIUM MARBLE BOWLS",
+        "subheading": "Our Marble Bowls: A Timeless Design for Your Home and Cat",
+        "text_content": "<p>The SVELDA marble bowl is more than an object; it is an invitation to live beautifully. Each piece is a harmonious blend of form and function, designed to elevate your home while celebrating the daily life you share with your companion.</p><p>Meticulously crafted from natural <strong>marble</strong> and <strong>travertine</strong>, our bowls are a testament to the enduring beauty of the earth. We use a food-safe polish wax to enhance the stone's natural elegance and protect your pet. The subtle variations in veining and tone ensure that no two bowls are exactly alike.</p><p>Yours will be a one-of-a-kind piece, just like your cat.</p><h6><strong>A Collection That Adapts to Your Style</strong></h6><p></p><p>With a clean, minimalist design, our bowls seamlessly integrate into any modern or classic interior. Choose from our distinct bowl shapes and pair them with a selection of bases: warm, natural <strong>solid wood</strong> or sleek, polished <strong>metal</strong>.</p><p>This is not just a feeding bowl. It's an essential part of your home’s aesthetic, designed for a beautiful life, together.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image-with-text-2": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/image_3_copy.png",
+        "heading": "PURE WOOL MATS",
+        "subheading": "Designed to Belong: A Perfect Union of Comfort and Home Decor",
+        "text_content": "<p>The life you share with your pet is one of harmony. Our beds are designed to reflect this, providing a perfect union of your pet's comfort and your home's design. Meticulously crafted <strong>in Italy</strong>, we’ve sourced materials that not only feel incredible but also look impeccable, including a variety of <strong>wools</strong>, <strong>cashmere</strong>, and durable <strong>cotton</strong>. The result is a collection of beds and mats that are both a luxurious retreat for your companion and a natural, sophisticated element of your living space. With thoughtful details and an emphasis on timeless style, our beds are made to be treasured, because the best design is one that makes both you and your pet feel right at home.</p>",
+        "button_label": "Follow",
+        "button_aria_label": "Follow button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image-with-text-3": {
+      "type": "image-with-text",
+      "disabled": true,
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "left",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/image_2_copy4.png",
+        "heading": "TOPINI",
+        "subheading": "The SVELDA Toy Collection: An Artful Addition.",
+        "text_content": "<p>A playful cat is a happy cat. </p><p>Our collection of toys—from the playful \"Topini\" mice to the charming \"Pesciolini\" fish—is a testament to this philosophy. These are not ordinary toys. We craft them from the same organic, high-quality materials as our luxurious textiles, ensuring they are not only safe and durable but also a natural fit for your elegant home. With the thoughtful detail of a matching toy included with every mat, we invite you to discover a world where every piece, no matter how small, is an expression of our commitment to quality and a celebration of the beautiful life you share.</p>",
+        "button_label": "Follow",
+        "button_aria_label": "Follow button",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image-with-text-4": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "center",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_horizontal",
+        "first_desktop_image": "shopify://shop_images/WhiteCarrara.jpg",
+        "heading": "STONE COLLECTION",
+        "subheading": "Nature’s Palette",
+        "text_content": "<p>Every stone carries its own history and character. Explore our selection of hand-picked marble and travertine, each defined by unique veining and organic textures that ensure no two pieces are ever the same.<br/></p>",
+        "button_label": "Browse our Stone Collection",
+        "button_aria_label": "Follow Home Page",
+        "button_url": "shopify://pages/the-svelda-stone-collection",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image_with_text_GTkByX": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "right",
+        "text_alignment": "center",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_horizontal",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM_f3e571fb-3585-49c8-a79c-51978fb10fad.jpg",
+        "first_mobile_image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM.jpg",
+        "heading": "FABRIC COLLECTION",
+        "subheading": "A Selection of Fine Textiles",
+        "text_content": "<p><br/>From the warmth of pure wool and cashmere to the breathable durability of premium cotton, explore the organic materials we source from Italy. Each fabric is selected for its sensory appeal and lasting quality.<br/></p>",
+        "button_label": "Browse our Textiles",
+        "button_aria_label": "Follow Home Page",
+        "button_url": "shopify://pages/fabrics",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "image_with_text_RK33gq": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "center",
+        "content_vertical_alignment": "center",
+        "two_images_layout": "double_horizontal",
+        "first_desktop_image": "shopify://shop_images/Copy_of_ciotolsbassa-518_1.jpg",
+        "heading": "THE PERFECT GIFT",
+        "subheading": "Bablablabalbalablabla",
+        "text_content": "<p>Bla? blablablabla!</p>",
+        "button_label": "Packaging and Accessories",
+        "button_aria_label": "Follow Home Page",
+        "button_url": "shopify://pages/fabrics",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "shop-the-look": {
+      "type": "shop-the-look",
+      "blocks": {
+        "block-1": {
+          "type": "look",
+          "settings": {
+            "image": "shopify://shop_images/image_2_616b818c-4edb-4fab-bc8e-d8bc12e41469.png",
+            "product_1": "bowl-1",
+            "point_position_top_1": 85,
+            "point_position_left_1": 41,
+            "point_position_top_mobile_1": 57,
+            "point_position_left_mobile_1": 62,
+            "product_2": "",
+            "point_position_top_2": 60,
+            "point_position_left_2": 35,
+            "point_position_top_mobile_2": 60,
+            "point_position_left_mobile_2": 35,
+            "product_3": "",
+            "point_position_top_3": 50,
+            "point_position_left_3": 70,
+            "point_position_top_mobile_3": 50,
+            "point_position_left_mobile_3": 70,
+            "product_4": "",
+            "point_position_top_4": 35,
+            "point_position_left_4": 60,
+            "point_position_top_mobile_4": 35,
+            "point_position_left_mobile_4": 60
+          }
+        },
+        "block-2": {
+          "type": "look",
+          "settings": {
+            "product_1": "",
+            "point_position_top_1": 48,
+            "point_position_left_1": 35,
+            "point_position_top_mobile_1": 40,
+            "point_position_left_mobile_1": 30,
+            "product_2": "",
+            "point_position_top_2": 60,
+            "point_position_left_2": 35,
+            "point_position_top_mobile_2": 60,
+            "point_position_left_mobile_2": 35,
+            "product_3": "",
+            "point_position_top_3": 50,
+            "point_position_left_3": 70,
+            "point_position_top_mobile_3": 50,
+            "point_position_left_mobile_3": 70,
+            "product_4": "",
+            "point_position_top_4": 35,
+            "point_position_left_4": 60,
+            "point_position_top_mobile_4": 35,
+            "point_position_left_mobile_4": 60
+          }
+        },
+        "block-3": {
+          "type": "look",
+          "settings": {
+            "product_1": "",
+            "point_position_top_1": 88,
+            "point_position_left_1": 22,
+            "point_position_top_mobile_1": 84,
+            "point_position_left_mobile_1": 12,
+            "product_2": "",
+            "point_position_top_2": 79,
+            "point_position_left_2": 35,
+            "point_position_top_mobile_2": 86,
+            "point_position_left_mobile_2": 35,
+            "product_3": "",
+            "point_position_top_3": 15,
+            "point_position_left_3": 51,
+            "point_position_top_mobile_3": 45,
+            "point_position_left_mobile_3": 50,
+            "product_4": "",
+            "point_position_top_4": 10,
+            "point_position_left_4": 29,
+            "point_position_top_mobile_4": 35,
+            "point_position_left_mobile_4": 17
+          }
+        }
+      },
+      "block_order": [
+        "block-1",
+        "block-2",
+        "block-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Heading",
+        "text": "<p>Text</p>",
+        "make_first_opened": true,
+        "overlay_color": "#000000",
+        "overlay_opacity": 10,
+        "hot_spot": "#ffffff",
+        "hot_spot_background": "#8f7868",
+        "hot_spot_active": "#000000",
+        "hot_spot_background_active": "#e1e1e1",
+        "thumbs_slider_overlay_color": "#000000",
+        "thumbs_slider_overlay_opacity": 20,
+        "thumb_active_desktop": "#e1e1e1",
+        "thumb_active_mobile": "#000000",
+        "container_width": "100%",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 60,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "ticker": {
+      "type": "ticker",
+      "blocks": {
+        "block-1": {
+          "type": "content",
+          "settings": {
+            "text": "NOOM is a place where design meets art."
+          }
+        },
+        "block-2": {
+          "type": "content",
+          "settings": {
+            "text": "Balancing between expression and function."
+          }
+        },
+        "block-3": {
+          "type": "content",
+          "settings": {
+            "text": "NOOM is a place where design meets art."
+          }
+        }
+      },
+      "block_order": [
+        "block-1",
+        "block-2",
+        "block-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "hide_bullets": true,
+        "font": "inter_n4",
+        "font_size_desktop": 42,
+        "font_size_mobile": 16,
+        "enable_border": true,
+        "border_width": 2,
+        "direction": "left_to_right",
+        "desktop_movement_speed": 80,
+        "mobile_movement_speed": 82,
+        "section_background": "#ffffff",
+        "text_color": "#333333",
+        "border_color": "#000000",
+        "inner_indent": 5,
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 60,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 40
+      }
+    },
+    "video": {
+      "type": "video",
+      "disabled": true,
+      "settings": {
+        "type": "popup",
+        "label": "",
+        "heading": "",
+        "text_content": "",
+        "button_label": "Button label",
+        "button_link": "",
+        "button_style": "secondary-border",
+        "aspect_ratio": "sixteen-nine",
+        "image": "shopify://shop_images/image_3.jpg",
+        "video_type": "youtube_vimeo",
+        "external_video_url_desktop": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "external_video_url_mobile": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+        "container_width": "inherit",
+        "button_text_color_play": "#000000",
+        "button_background_color_play": "#ffffff",
+        "button_text_color_play_hover": "#ffffff",
+        "button_background_color_play_hover": "#000000",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 70,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 50
+      }
+    },
+    "featured-product": {
+      "type": "featured-product",
+      "blocks": {
+        "badges": {
+          "type": "badges",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "settings": {
+            "show_sku": false,
+            "sku_text": "Art: {SKU}",
+            "show_vendor": true,
+            "make_vendor_link": true,
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "countdown-timer": {
+          "type": "countdown_timer",
+          "settings": {
+            "text": "Sale ends in:",
+            "text_color": "#535353",
+            "timer_text_color": "#000000",
+            "timer_background_color": "#e1e1e1",
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "options": {
+          "type": "options",
+          "settings": {
+            "variant_picker": "radio",
+            "color_swatch_type": "small-square",
+            "enable_swatch_preview": false,
+            "enable_swatch_max_height": false,
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "quantity": {
+          "type": "quantity",
+          "settings": {
+            "offset_top_desktop": 16,
+            "offset_bottom_desktop": 16,
+            "offset_top_mobile": 12,
+            "offset_bottom_mobile": 12
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "add-to-cart": {
+          "type": "add_to_cart",
+          "settings": {
+            "button_type": "secondary",
+            "button_buy_it_type": "secondary-border",
+            "show_additional_buttons": true,
+            "show_gift_card_recipient": true,
+            "offset_top_desktop": 24,
+            "offset_bottom_desktop": 24,
+            "offset_top_mobile": 24,
+            "offset_bottom_mobile": 24
+          }
+        },
+        "pickup-availability": {
+          "type": "pickup_availability",
+          "settings": {
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        },
+        "drawers": {
+          "type": "drawers",
+          "settings": {
+            "drawer_content_1": "",
+            "drawer_toggle_text_1": "Drawer 1",
+            "drawer_title_1": "Drawer 1",
+            "drawer_content_2": "",
+            "drawer_toggle_text_2": "Drawer 2",
+            "drawer_title_2": "Drawer 2",
+            "drawer_content_3": "",
+            "drawer_toggle_text_3": "Drawer 3",
+            "drawer_title_3": "Drawer 3",
+            "drawer_content_4": "",
+            "drawer_toggle_text_4": "Drawer 4",
+            "drawer_title_4": "Drawer 4",
+            "offset_top_desktop": 20,
+            "offset_bottom_desktop": 20,
+            "offset_top_mobile": 20,
+            "offset_bottom_mobile": 20
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "heading": "You May Also Like",
+            "offset_top_desktop": 20,
+            "offset_bottom_desktop": 20,
+            "offset_top_mobile": 20,
+            "offset_bottom_mobile": 20
+          }
+        },
+        "sales-point": {
+          "type": "sales_point",
+          "settings": {
+            "sales_point_text": "",
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        },
+        "gift-wrap-product": {
+          "type": "gift_wrap_product",
+          "settings": {
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        },
+        "benefits": {
+          "type": "benefits",
+          "disabled": true,
+          "settings": {
+            "icon_1": "shopify://shop_images/image_3.png",
+            "title_1": "Handmade",
+            "link_text_1": "Learn more",
+            "link_url_1": "",
+            "title_2": "Unique Designs",
+            "link_text_2": "Learn more",
+            "link_url_2": "",
+            "title_3": "Bespoke Items",
+            "link_text_3": "Learn more",
+            "link_url_3": "",
+            "offset_top_desktop": 15,
+            "offset_bottom_desktop": 15,
+            "offset_top_mobile": 15,
+            "offset_bottom_mobile": 15
+          }
+        },
+        "socials": {
+          "type": "socials",
+          "settings": {
+            "show_facebook": true,
+            "show_twitter": true,
+            "show_pinterest": true,
+            "offset_top_desktop": 10,
+            "offset_bottom_desktop": 10,
+            "offset_top_mobile": 10,
+            "offset_bottom_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "badges",
+        "vendor",
+        "title",
+        "countdown-timer",
+        "options",
+        "quantity",
+        "price",
+        "add-to-cart",
+        "pickup-availability",
+        "drawers",
+        "complementary",
+        "sales-point",
+        "gift-wrap-product",
+        "benefits",
+        "socials"
+      ],
+      "disabled": true,
+      "settings": {
+        "product": "",
+        "show_arrows_mobile": true,
+        "media_layout": "carousel",
+        "thumbnails_position": "bottom",
+        "media_height": "square",
+        "image_object_fit": "cover",
+        "is_enable_media_scroller": false,
+        "show_taxes_included": true,
+        "show_pay_installments": true,
+        "show_size_guide": true,
+        "size_guide_button_placement": "under-options",
+        "size_guide_button_text": "Size guide",
+        "size_guide_drawer_title": "Size guide",
+        "size_guide_tab_general_name": "Dimensions",
+        "size_guide_tab_model_name": "Model parameters",
+        "ui_button_color": "#000000",
+        "ui_button_background_color": "#ffffff",
+        "ui_button_border_color": "#e9e9e9",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "best-sellers": {
+      "type": "best-sellers",
+      "blocks": {
+        "block-1": {
+          "type": "product_item",
+          "settings": {
+            "product": "bowl-1",
+            "product_title": ""
+          }
+        },
+        "block-2": {
+          "type": "product_item",
+          "settings": {
+            "product": "tito",
+            "product_title": ""
+          }
+        },
+        "block-3": {
+          "type": "product_item",
+          "settings": {
+            "product": "",
+            "product_title": ""
+          }
+        },
+        "block-4": {
+          "type": "product_item",
+          "settings": {
+            "product": "",
+            "product_title": ""
+          }
+        }
+      },
+      "block_order": [
+        "block-1",
+        "block-2",
+        "block-3",
+        "block-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "Browse our limited edition:",
+        "show_numeric": true,
+        "background_color": "#161e13",
+        "text_color": "#9d9d9d",
+        "border_color": "#323930",
+        "link_active_color": "#ffffff",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "gallery": {
+      "type": "gallery",
+      "blocks": {
+        "block_gqEz63": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/cat-enjoying-the-view.jpg",
+            "url": "shopify://collections/eat",
+            "open_in_new_tab": false
+          }
+        },
+        "block_edg7ic": {
+          "type": "block",
+          "settings": {
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_EQmi8q": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/tabby-cat-lounging-around.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_79iBRt": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/kitten-scratches-sofa-looking-innocent.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_kWtfw3": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/the-paws-of-a-brown-fluffy-cat.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "block_gqEz63",
+        "block_edg7ic",
+        "block_EQmi8q",
+        "block_79iBRt",
+        "block_kWtfw3"
+      ],
+      "disabled": true,
+      "settings": {
+        "title": "FRIENDS",
+        "text": "Share the love",
+        "button_label": "",
+        "button_link": "shopify://blogs/news",
+        "button_style": "secondary-border",
+        "text_color": "#535353",
+        "background_color": "#cdcdcd",
+        "overlay_color": "rgba(0,0,0,0.2)",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "pricing-table": {
+      "type": "pricing-table",
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "product": "bowl-1-copy",
+            "label": "Most popular",
+            "heading": "Small lamp",
+            "subtitle": "blabla",
+            "unit_price_label": "/ pcs",
+            "text": "<ul><li>Material: Marble</li><li>Color: Multiple - pick your favorite</li><li>Size: 18x6cm</li></ul>",
+            "button_text": "Get Started Now",
+            "label_background_color": "#ffd875",
+            "label_text_color": "#000000"
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "label": "Most popular",
+            "heading": "Medium size lamp",
+            "subtitle": "EL collection of lighting is inspired by the geometric works of the great Suprematist artists.",
+            "unit_price_label": "/ pcs",
+            "text": "<ul><li>Material: Brass</li><li>Color: Gold Brass</li><li>Size: Medium</li></ul>",
+            "button_text": "Get Started Now",
+            "label_background_color": "#ffd875",
+            "label_text_color": "#000000"
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "label": "Most popular",
+            "heading": "Large lamp",
+            "subtitle": "EL collection of lighting is inspired by the geometric works of the great Suprematist artists.",
+            "unit_price_label": "/ pcs",
+            "text": "<ul><li>Material: Brass</li><li>Color: Gold Brass</li><li>Size: Large</li></ul>",
+            "button_text": "Get Started Now",
+            "label_background_color": "#ffd875",
+            "label_text_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2",
+        "product-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "mobile_layout": "carousel",
+        "card_background_color": "#f6f6f6",
+        "title_color": "#000000",
+        "subtitle_color": "#000000",
+        "price_color": "#000000",
+        "price_unit_label_color": "#9d9d9d",
+        "list_color": "#535353",
+        "button_label_color": "#000000",
+        "button_background_color": "rgba(0,0,0,0)",
+        "button_border_color": "#000000",
+        "button_label_hover_color": "#ffffff",
+        "button_background_hover_color": "#000000",
+        "button_border_hover_color": "#000000",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "trends-products": {
+      "type": "trends-products",
+      "blocks": {
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "product_1": "",
+            "horizontal_position_1": 51,
+            "vertical_position_1": 27,
+            "product_2": "",
+            "horizontal_position_2": 87,
+            "vertical_position_2": 71,
+            "product_3": "",
+            "horizontal_position_3": 65,
+            "vertical_position_3": 65,
+            "product_4": "",
+            "horizontal_position_4": 85,
+            "vertical_position_4": 85,
+            "spots_color": "#ffffff",
+            "cross_color": "#000000"
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "product_1": "",
+            "horizontal_position_1": 20,
+            "vertical_position_1": 20,
+            "product_2": "",
+            "horizontal_position_2": 39,
+            "vertical_position_2": 50,
+            "product_3": "",
+            "horizontal_position_3": 61,
+            "vertical_position_3": 78,
+            "product_4": "",
+            "horizontal_position_4": 85,
+            "vertical_position_4": 85,
+            "spots_color": "#ffffff",
+            "cross_color": "#000000"
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "product_1": "",
+            "horizontal_position_1": 10,
+            "vertical_position_1": 78,
+            "product_2": "",
+            "horizontal_position_2": 39,
+            "vertical_position_2": 67,
+            "product_3": "",
+            "horizontal_position_3": 65,
+            "vertical_position_3": 65,
+            "product_4": "",
+            "horizontal_position_4": 85,
+            "vertical_position_4": 85,
+            "spots_color": "#ffffff",
+            "cross_color": "#000000"
+          }
+        }
+      },
+      "block_order": [
+        "product-1",
+        "product-2",
+        "product-3"
+      ],
+      "disabled": true,
+      "settings": {
+        "label": "style",
+        "title": "by noom",
+        "text": "",
+        "button_label": "",
+        "button_aria-label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "layout": "3",
+        "show_one_open": true,
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 80,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 50
+      }
+    },
+    "our-team": {
+      "type": "our-team",
+      "blocks": {
+        "block-1": {
+          "type": "card",
+          "settings": {
+            "name": "COLLECTIBLE Fair 2023",
+            "role": "",
+            "description": "<p>dedicated to 21st-century collectible design. Mar 9 - Mar 12, 2023 Gallery & NOOM Tour & TaxisAvenue du Port/Havenlaan 86c, Brussels</p>",
+            "facebook": "#",
+            "instagram": "#",
+            "twitter": "#",
+            "youtube": "#"
+          }
+        },
+        "block-2": {
+          "type": "card",
+          "settings": {
+            "name": "Milan Design Week 2023",
+            "role": "",
+            "description": "<p>Inspired by Earth' and contribute new products and staple classics, each designed to blend seamlessly with the natural environment.Via Tortona 31, Milan</p>",
+            "facebook": "",
+            "instagram": "#",
+            "twitter": "",
+            "youtube": "#"
+          }
+        },
+        "block-3": {
+          "type": "card",
+          "settings": {
+            "name": "London Design Fair 2023",
+            "role": "",
+            "description": "<p>Noom participated in the joint exhibition of Ukrainian designer brands at the London Design Fair 2023. Sep 21 - Sep 24, 2023Truman Brewery, London</p>",
+            "facebook": "",
+            "instagram": "#",
+            "twitter": "#",
+            "youtube": ""
+          }
+        },
+        "block-4": {
+          "type": "card",
+          "settings": {
+            "name": "'i am u are' NYC",
+            "role": "",
+            "description": "<p>We are excited to invite you at 'i am u are' Ukrainian creators fair in New-York.March 24-26, 2023 'i am u are'NYC, Skylight at Essex Crossing,198 Broome street</p>",
+            "facebook": "#",
+            "instagram": "",
+            "twitter": "#",
+            "youtube": ""
+          }
+        }
+      },
+      "block_order": [
+        "block-1",
+        "block-2",
+        "block-3",
+        "block-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "text": "",
+        "cards_alignment": "center",
+        "read_more_text": "Read More",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 60
+      }
+    },
+    "1771196360f1dfae58": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_cd1edd3_CncB86": {
+          "type": "ai_gen_block_cd1edd3",
+          "settings": {
+            "banner_height": 800,
+            "title": "Collection name",
+            "description": "Discover our latest collection",
+            "title_size": 48,
+            "description_size": 16,
+            "text_color": "#ffffff",
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 30
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_cd1edd3_CncB86"
+      ],
+      "disabled": true,
+      "settings": {}
+    }
+  },
+  "order": [
+    "slideshow-main",
+    "cards-grid",
+    "collection-list",
+    "cards_grid_hDzEAd",
+    "image-with-text-1",
+    "image-with-text-2",
+    "image-with-text-3",
+    "image-with-text-4",
+    "image_with_text_GTkByX",
+    "image_with_text_RK33gq",
+    "shop-the-look",
+    "ticker",
+    "video",
+    "featured-product",
+    "best-sellers",
+    "gallery",
+    "pricing-table",
+    "trends-products",
+    "our-team",
+    "1771196360f1dfae58"
+  ]
+}

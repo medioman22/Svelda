@@ -1,0 +1,341 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Image with product
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/image-with-product.scss' -%}
+
+{%- assign container                     = section.settings.container_width -%}
+{%- assign product                       = section.settings.product -%}
+{%- assign label                         = section.settings.label -%}
+{%- assign image                         = section.settings.image -%}
+{%- assign heading                       = section.settings.heading -%}
+{%- assign text                          = section.settings.text -%}
+{%- assign button_label                  = section.settings.button_label -%}
+{%- assign button_link                   = section.settings.button_link -%}
+{%- assign banner_position               = section.settings.banner_position -%}
+
+{%- assign banner_overlay_color          = section.settings.banner_overlay_color -%}
+{%- assign banner_text_color             = section.settings.banner_text_color -%}
+{%- assign button_color                  = section.settings.button_color -%}
+{%- assign button_background_color       = section.settings.button_background_color -%}
+{%- assign button_border_color           = section.settings.button_border_color -%}
+{%- assign button_color_hover            = section.settings.button_color_hover -%}
+{%- assign button_background_color_hover = section.settings.button_background_color_hover -%}
+{%- assign button_border_color_hover     = section.settings.button_border_color_hover -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_mobile -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 992px) {
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_desktop -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+	}
+	}
+{%- endstyle -%}
+
+{% capture styles %}
+	--banner-overlay: {{ banner_overlay_color }};
+	--banner-text-color: {{ banner_text_color }};
+	--button-color: {{ button_color }};
+	--button-background-color: {{ button_background_color }};
+	--button-border-color: {{ button_border_color }};
+	--button-color-hover: {{ button_color_hover }};
+	--button-background-color-hover: {{ button_background_color_hover }};
+	--button-border-color-hover: {{ button_border_color_hover }}
+{% endcapture %}
+
+<section
+	class="image-with-product js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+		 style="--container-width: {{ container_width }};">
+	<div
+		class="image-with-product__content {% if banner_position == "left" %}image-with-product__content--left{% endif %}"
+		style="{{ styles }}">
+		<div class="image-with-product__card-wrapper">
+			<div class="image-with-product__card need-animate tr-dur-0-8 tr-del-0-75">
+				{%- render 'product-card', product: product, size: 520 -%}
+			</div>
+		</div>
+
+		{% if heading != blank or text != blank %}
+			<div class="image-with-product__banner need-animate tr-dur-1">
+				{% if image != blank %}
+					{%- capture img_focal -%}
+						--img-pos: {{ image.presentation.focal_point }};
+					{%- endcapture -%}
+
+					<picture class="lazy">
+						<source
+							data-srcset="{{ image | img_url: "388x" }} 1x, {{ image | img_url: "776x" }} 2x"
+							srcset="{{ image | img_url: "10x" }} 1x, {{ image | img_url: "10x" }} 2x"
+							width="388"
+							height="388"
+							media="(max-width: 420px)"
+						/>
+
+						<source
+							data-srcset="{{ image | img_url: "735x" }} 1x, {{ image | img_url: "1470x" }} 2x"
+							srcset="{{ image | img_url: "10x" }} 1x, {{ image | img_url: "10x" }} 2x"
+							width="735"
+							height="735"
+							media="(max-width: 767px)"
+						/>
+
+						<source
+							data-srcset="{{ image | img_url: "959x" }} 1x, {{ image | img_url: "1918x" }} 2x"
+							srcset="{{ image | img_url: "10x" }} 1x, {{ image | img_url: "10x" }} 2x"
+							width="959"
+							height="959"
+							media="(max-width: 991px)"
+						/>
+
+						<source
+							data-srcset="{{ image | img_url: "775x" }} 1x, {{ image | img_url: "1550x" }} 2x"
+							srcset="{{ image | img_url: "10x" }} 1x, {{ image | img_url: "10x" }} 2x"
+							width="775"
+							height="646"
+							media="(max-width: 1600px)"
+						/>
+
+						<img
+							class="image-with-product__banner-image need-animate"
+							src="{{- image | img_url: '10x' -}}"
+							srcset="{{- image | img_url: '10x' -}} 1x, {{ image | img_url: '20x' }} 2x"
+							data-src="{{- image | img_url: '935x' -}}"
+							data-srcset="{{ image | img_url: '935x' }} 1x, {{ image | img_url: '1870x' }} 2x"
+							style="{{ img_focal }}"
+							width="935"
+							height="779"
+							alt="{{- image.alt | escape -}}"
+						>
+					</picture>
+				{% else %}
+					{{ 'product-apparel-1' | placeholder_svg_tag: "image-with-product__banner-image need-animate" }}
+				{% endif %}
+
+				<div class="image-with-product__banner-content need-animate tr-dur-0-8 tr-del-0-5">
+					{% if label != blank %}
+						<p class="image-with-product__banner-label">{{ label }}</p>
+					{% endif %}
+
+					{% if heading != blank %}
+						<h2 class="image-with-product__banner-text">{{ heading }}</h2>
+					{% endif %}
+
+					{% if text != blank %}
+						<div class="image-with-product__banner-text rte">{{ text }}</div>
+					{% endif %}
+
+					{% if button_label != blank and button_link != blank %}
+						<a href="{{ button_link }}"
+						   class="button image-with-product__banner-button focus-visible-outline">{{ button_label }}</a>
+					{% endif %}
+				</div>
+			</div>
+		{% endif %}
+	</div>
+</section>
+
+{%- schema -%}
+{
+	"name": "Image with product",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"id": "product",
+			"type": "product",
+			"label": "Product"
+		},
+		{
+			"id": "image",
+			"type": "image_picker",
+			"label": "Image"
+		},
+		{
+			"id": "heading",
+			"type": "text",
+			"label": "Heading"
+		},
+		{
+			"id": "label",
+			"type": "text",
+			"label": "Label"
+		},
+		{
+			"id": "text",
+			"type": "textarea",
+			"label": "Text"
+		},
+		{
+			"id": "button_label",
+			"type": "text",
+			"label": "Button label"
+		},
+		{
+			"id": "button_link",
+			"type": "url",
+			"label": "Button link"
+		},
+		{
+			"id": "banner_position",
+			"type": "select",
+			"options": [
+				{
+					"value": "left",
+					"label": "Left"
+				},
+				{
+					"value": "right",
+					"label": "Right"
+				}
+			],
+			"label": "Banner position",
+			"default": "right"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "banner_text_color",
+			"label": "Banner text",
+			"default": "#fff"
+		},
+		{
+			"type": "color_background",
+			"id": "banner_overlay_color",
+			"label": "Banner overlay",
+			"default": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 100%)"
+		},
+		{
+			"type": "color",
+			"id": "button_color",
+			"label": "Button color",
+			"default": "#000"
+		},
+		{
+			"type": "color",
+			"id": "button_background_color",
+			"label": "Button background",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "button_border_color",
+			"label": "Button border",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "button_color_hover",
+			"label": "Button color (hover)",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "button_background_color_hover",
+			"label": "Button background (hover)",
+			"default": "#000"
+		},
+		{
+			"type": "color",
+			"id": "button_border_color_hover",
+			"label": "Button border (hover)",
+			"default": "#000"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 50
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 50
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"presets": [
+		{
+			"name": "Image with product",
+			"settings": {
+				"heading": "Heading",
+				"text": "Text",
+				"label": "Label"
+			}
+		}
+	]
+}
+{%- endschema -%}

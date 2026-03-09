@@ -1,0 +1,159 @@
+/**
+	Timings
+ */
+:root {
+  --timing-micro: 0.1s;
+  --timing-short: 0.2s;
+  --timing-base: 0.4s;
+  --timing-long: 0.7s;
+  --timing-second: 1s;
+  --animate-time: 0.8s;
+  --animate-delay: 0.3s;
+  --animate-img-scale: 0.6s;
+  /**
+  * Easing.
+  */
+  --easing-linear: cubic-bezier(0, 0, 1, 1);
+  --easing-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  --easing-ease-in: cubic-bezier(0.42, 0, 1, 1);
+  --easing-ease-out: cubic-bezier(0, 0, 0.09, 1);
+  /**
+  * Config: Layers
+  * -----------------------------------------------------------------------------
+  * Visual motif used to create groupings, content associations and focus through depth.
+  */
+  --layer-negative: -1;
+  --layer-base: 0;
+  --layer-flat: 1;
+  --layer-raised: 2;
+  --layer-sticky-btn: 7;
+  --layer-sticky: 11;
+  --layer-overlay: 14;
+  --layer-temporary: 16;
+  --layer-pop-out: 24;
+  --layer-pop-out-overlay: 25;
+  --layer-pop-out-overlay-loader: 26;
+}
+.shop-the-look-modal {
+  top: 50%;
+  left: 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 720px;
+  width: 100%;
+  max-height: 100%;
+  background-color: var(--color-white);
+  transform: translateY(-50%);
+}
+.shop-the-look-modal .shop-the-look-modal__header {
+  position: relative;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--color-border-thirdly);
+}
+.shop-the-look-modal .shop-the-look-modal__heading {
+  font-size: calc(var(--heading-font-size) * 1.375);
+  font-weight: 500;
+  line-height: 1.118;
+  text-align: left;
+  color: var(--color-text-primary);
+}
+.shop-the-look-modal .shop-the-look-modal__close {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  display: inline-flex;
+  opacity: 1;
+  margin-left: auto;
+  padding: 10px;
+  color: black;
+  transform: translateY(-50%);
+  transition-property: opacity;
+  transition-timing-function: ease;
+  transition-duration: 0.3s;
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .shop-the-look-modal .shop-the-look-modal__close:hover {
+    opacity: 0.5;
+  }
+}
+.shop-the-look-modal .shop-the-look-modal__body {
+  padding: 0;
+  width: 100%;
+}
+.shop-the-look-modal .shop-the-look-modal__content {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+}
+.shop-the-look-modal .shop-the-look-modal__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+}
+.shop-the-look-modal .shop-the-look-modal__button-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+.shop-the-look-modal .shop-the-look-modal__button {
+  width: 100%;
+}
+.shop-the-look-modal .shop-the-look-modal__error {
+  display: none;
+  text-align: center;
+  color: var(--color-text-attention, #d33636);
+}
+.shop-the-look-modal .shop-the-look-modal__error:not(:empty) {
+  display: block;
+}
+.shop-the-look-modal .shop-the-look-modal__total {
+  font-weight: 500;
+  line-height: 1.5;
+}
+.shop-the-look-modal .shop-the-look-modal__price {
+  text-align: right;
+  font-size: calc(var(--heading-font-size) * 1.375);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.18;
+}
+.shop-the-look-modal .shop-the-look-modal__total {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.shop-the-look-modal .shop-the-look-modal__total:has(:not(.shop-the-look-modal__price:empty)) {
+  display: flex;
+}
+.shop-the-look-modal .product-card__select {
+  background-color: transparent;
+}
+@media (min-width: 576px) {
+  .shop-the-look-modal {
+    left: 50%;
+    max-width: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+    border-radius: var(--global-border-radius);
+    transform: translate(-50%, -50%);
+  }
+}
+@media (min-width: 768px) {
+  .shop-the-look-modal {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .shop-the-look-modal .shop-the-look-modal__content {
+    padding: 24px;
+    gap: 24px;
+  }
+  .shop-the-look-modal .shop-the-look-modal__footer {
+    padding: 24px;
+  }
+}

@@ -1,0 +1,120 @@
+.list-collections-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+}
+.list-collections-card .list-collections-card__image-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  border-radius: var(--global-border-radius);
+}
+.list-collections-card .list-collections-card__image-wrapper::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-color);
+}
+.list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--small {
+  padding-top: 152.91%;
+}
+.list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--large {
+  padding-top: 72.89%;
+}
+.list-collections-card .list-collections-card__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--img-desktop-pos);
+  transition-timing-function: ease-out;
+  transition-property: transform, opacity;
+  transition-duration: var(--animate-img-scale);
+}
+.list-collections-card .list-collections-card__image.list-collections-card__image--placeholder {
+  background-color: var(--color-img-placeholder-bg);
+}
+.list-collections-card .list-collections-card__header {
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  padding: 16px 20px;
+}
+.list-collections-card .list-collections-card__header .list-collections-card__title,
+.list-collections-card .list-collections-card__header .list-collections-card__count {
+  color: var(--overlay-text-color, #fff);
+}
+.list-collections-card .list-collections-card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-text-primary);
+  word-wrap: break-word;
+}
+.list-collections-card .list-collections-card__count {
+  margin-top: 8px;
+  font-size: calc(var(--body-font-size) * 0.875);
+  line-height: 1.28;
+  color: var(--color-text-secondary);
+}
+.list-collections-card.list-collections-card--center {
+  text-align: center;
+}
+.list-collections-card.list-collections-card--right {
+  text-align: right;
+}
+.list-collections-card:focus-visible {
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 2px;
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .list-collections-card:hover .list-collections-card__image {
+    transform: scale(1.15);
+  }
+}
+@media (min-width: 768px) {
+  .list-collections-card .list-collections-card__header {
+    margin-top: 16px;
+  }
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--small {
+    padding-top: 142.654%;
+  }
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--large {
+    padding-top: 68.46%;
+  }
+  .list-collections-card .list-collections-card__count {
+    margin-top: 12px;
+    font-size: var(--body-font-size);
+    line-height: 1.375;
+  }
+}
+@media (min-width: 992px) {
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--small {
+    padding-top: 142%;
+  }
+}
+@media (min-width: 1200px) {
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--large {
+    padding-top: 69%;
+  }
+}
+@media (min-width: 1200px) {
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--large {
+    padding-top: 68.46%;
+  }
+  .list-collections-card .list-collections-card__image-wrapper.list-collections-card__image-wrapper--small {
+    padding-top: 139.652%;
+  }
+}

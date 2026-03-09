@@ -1,0 +1,357 @@
+{% comment %}
+------------------------------------------------------------------------------
+  Section: Swipe
+------------------------------------------------------------------------------
+{% endcomment %}
+
+{%- assign label_color 			= section.settings.label_color -%}
+{%- assign heading_color 		= section.settings.heading_color -%}
+{%- assign text_color 			= section.settings.text_color -%}
+{%- assign overlay 				= section.settings.overlay -%}
+{%- assign container            = section.settings.container_width -%}
+{%- assign blocks 				= section.blocks -%}
+{%- assign blocks_count 	    = 0 -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- capture section_styles -%}
+	--label-color: {{- label_color -}}; {{-  -}}
+	--heading-color: {{- heading_color -}}; {{-  -}}
+	--text-color: {{- text_color -}}; {{-  -}}
+	--overlay: {{- overlay -}}; {{-  -}}
+	--container-width: {{- container_width -}}; {{- -}}
+	--offset-desktop-top: {{ section.settings.offset_top_desktop }}px; {{-  -}}
+	--offset-desktop-bottom: {{ section.settings.offset_bottom_desktop }}px; {{-  -}}
+	--offset-mobile-top: {{ section.settings.offset_top_mobile }}px; {{-  -}}
+	--offset-mobile-bottom: {{ section.settings.offset_bottom_mobile }}px; {{-  -}}
+{%- endcapture -%}
+
+{%- render 'adastra' with '/src/styles/swipe.scss' -%}
+
+<section
+	class="swipe js-swipe js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+	id="{{- section.id -}}"
+	style="{{- section_styles -}}"
+>
+	<div class="swiper swipe__row {% if section.index == 1 %}swipe__row--first{% endif %} js-swipe-slider">
+		<div class="swiper-wrapper">
+			{%- for block in blocks -%}
+				{%- assign content_image 		= block.settings.content_image -%}
+				{%- assign content_image_mobile = block.settings.content_image_mobile | default: content_image -%}
+				{%- assign content_label 		= block.settings.content_label -%}
+				{%- assign content_heading 		= block.settings.content_heading -%}
+				{%- assign content_text 		= block.settings.content_text -%}
+				{%- assign enable_lazy_load 	= false -%}
+
+				{% if section.index > 1 %}
+					{% assign enable_lazy_load = true %}
+				{% elsif section.index == 1 and forloop.index > 1 %}
+					{% assign enable_lazy_load = true %}
+				{% endif %}
+
+				{%- capture img_focal -%}
+					--img-desktop-pos: {{ content_image.presentation.focal_point }}; {{-  -}}
+					--img-mobile-pos: {{ content_image_mobile.presentation.focal_point }}; {{-  -}}
+				{%- endcapture -%}
+
+				<div class="swiper-slide swipe__col">
+					{%- if content_label != blank or content_heading != blank or content_text != blank -%}
+						<div class="swipe__text-content {% if forloop.index == 1 %}need-animate{% endif %}">
+							{%- if content_label != blank -%}
+								<p class="swipe__label">
+									{{- content_label -}}
+								</p>
+							{%- endif -%}
+
+							{%- if content_heading != blank -%}
+								<h2 class="swipe__heading">
+									{{- content_heading -}}
+								</h2>
+							{%- endif -%}
+
+							{%- if content_text != blank -%}
+								<p class="swipe__text">
+									{{- content_text -}}
+								</p>
+							{%- endif -%}
+						</div>
+					{%- endif -%}
+
+					{%- if content_image != blank -%}
+						{%- if enable_lazy_load -%}
+							<picture class="swipe__image-wrapper tr-dur-1 need-animate lazy">
+								<source data-srcset="{{ content_image_mobile | image_url: height: 813, width: 350 }} 1x, {{ content_image_mobile | image_url: height: 1626, width: 700 }} 2x"
+										srcset="{{ content_image_mobile | image_url: height: 10 }} 1x"
+										media="(max-width: 375px)">
+
+								<source data-srcset="{{ content_image_mobile | image_url: height: 911, width: 420 }} 1x, {{ content_image_mobile | image_url: height: 1822, width: 840 }} 2x"
+										srcset="{{ content_image_mobile | image_url: height: 10 }} 1x"
+										media="(max-width: 420px)">
+
+								<source data-srcset="{{ content_image_mobile | image_url: height: 1247, width: 550 }} 1x, {{ content_image_mobile | image_url: height: 2494, width: 1100 }} 2x"
+										srcset="{{ content_image_mobile | image_url: height: 10 }} 1x"
+										media="(max-width: 575px)">
+
+								<source data-srcset="{{ content_image_mobile | image_url: height: 1663, width: 740 }} 1x, {{ content_image_mobile | image_url: height: 3326, width: 1540 }} 2x"
+										srcset="{{ content_image | image_url: height: 10 }} 1x"
+										media="(max-width: 767px)">
+
+								<source data-srcset="{{ content_image | image_url: width: 959 }} 1x, {{ content_image | image_url: width: 1918 }} 2x"
+										srcset="{{ content_image | image_url: width: 10 }} 1x"
+										media="(max-width: 991px)">
+
+								<source data-srcset="{{ content_image | image_url: width: 1167 }} 1x, {{ content_image | image_url: width: 2334 }} 2x"
+										srcset="{{ content_image | image_url: width: 10 }} 1x"
+										media="(max-width: 1199px)">
+
+								<source data-srcset="{{ content_image | image_url: width: 1468 }} 1x, {{ content_image | image_url: width: 2936 }} 2x"
+										srcset="{{ content_image | image_url: width: 10, height: 10 }} 1x"
+										media="(max-width: 1500px)">
+
+								<img
+									class="swipe__image need-animate"
+									src="{{- content_image | image_url: width: 10 -}}"
+									data-src="{{ content_image | image_url: width: 1920 }}"
+									data-srcset="{{ content_image | image_url: width: 1920 }} 1x, {{ content_image | image_url: width: 3840 }} 2x"
+									alt="{{- content_image.alt | escape -}}"
+									style="{{ img_focal }}"
+								>
+							</picture>
+						{%- else -%}
+							<picture class="swipe__image-wrapper tr-dur-1 need-animate">
+								<source srcset="{{ content_image | image_url: height: 813 }} 1x, {{ content_image | image_url: height: 1626 }} 2x"
+										media="(max-width: 375px)">
+
+								<source srcset="{{ content_image | image_url: height: 911 }} 1x, {{ content_image | image_url: height: 1822 }} 2x"
+										media="(max-width: 420px)">
+
+								<source srcset="{{ content_image | image_url: height: 1247 }} 1x, {{ content_image | image_url: height: 2494 }} 2x"
+										media="(max-width: 575px)">
+
+								<source srcset="{{ content_image | image_url: height: 1663 }} 1x, {{ content_image | image_url: height: 3326 }} 2x"
+										media="(max-width: 767px)">
+
+								<source srcset="{{ content_image | image_url: width: 959 }} 1x, {{ content_image | image_url: width: 1918 }} 2x"
+										media="(max-width: 991px)">
+
+								<source srcset="{{ content_image | image_url: width: 1167 }} 1x, {{ content_image | image_url: width: 2334 }} 2x"
+										media="(max-width: 1199px)">
+
+								<source srcset="{{ content_image | image_url: width: 1468 }} 1x, {{ content_image | image_url: width: 2936 }} 2x"
+										media="(max-width: 1500px)">
+
+								<img
+									class="swipe__image need-animate"
+									src="{{ content_image | image_url: width: 1920 }}"
+									srcset="{{ content_image | image_url: width: 1920 }} 1x, {{ content_image | image_url: width: 3840 }} 2x"
+									alt="{{- content_image.alt | escape -}}"
+									style="{{ img_focal }}"
+								>
+							</picture>
+						{%- endif -%}
+					{%- else -%}
+						{{ 'image' | placeholder_svg_tag: 'swipe__image need-animate swipe__image--placeholder' }}
+					{%- endif -%}
+				</div>
+			{%- endfor -%}
+		</div>
+	</div>
+</section>
+
+{%- render 'adastra' with '/src/scripts/section-swipe.js' -%}
+
+{%- schema -%}
+{
+	"name": "Swipe",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "label_color",
+			"label": "Label",
+			"default": "#FFD875"
+		},
+		{
+			"type": "color",
+			"id": "heading_color",
+			"label": "Heading",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "text_color",
+			"label": "Text",
+			"default": "#fff"
+		},
+		{
+			"type": "color_background",
+			"id": "overlay",
+			"label": "Overlay",
+			"default": "rgba(0, 0, 0, 0.3)"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"type": "content",
+			"name": "Content",
+			"settings": [
+				{
+					"type": "image_picker",
+					"id": "content_image",
+					"label": "Image (desktop)"
+				},
+				{
+					"type": "image_picker",
+					"id": "content_image_mobile",
+					"label": "Image (mobile)"
+				},
+				{
+					"type": "textarea",
+					"id": "content_label",
+					"label": "Label",
+					"default": "Block label"
+				},
+				{
+					"type": "textarea",
+					"id": "content_heading",
+					"label": "Heading",
+					"default": "Block heading"
+				},
+				{
+					"type": "textarea",
+					"id": "content_text",
+					"label": "Text",
+					"default": "Block text"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Swipe",
+			"settings": {
+			},
+			"blocks": [
+				{
+					"type": "content",
+					"settings": {
+						"content_heading": "Heading 1",
+						"content_label": "Label 1",
+						"content_text": "Text that describe content of block 1"
+					}
+				},
+				{
+					"type": "content",
+					"settings": {
+						"content_heading": "Heading 2",
+						"content_label": "Label 2",
+						"content_text": "Text that describe content of block 2"
+					}
+				},
+				{
+					"type": "content",
+					"settings": {
+						"content_heading": "Heading 3",
+						"content_label": "Label 3",
+						"content_text": "Text that describe content of block 3"
+					}
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}
+

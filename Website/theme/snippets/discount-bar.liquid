@@ -1,0 +1,82 @@
+{%- assign discount_bar_main_text				= section.settings.discount_bar_main_text -%}
+{%- assign discount_bar_additional_text			= section.settings.discount_bar_additional_text -%}
+{%- assign discount_bar_code					= section.settings.discount_bar_code -%}
+{%- assign discount_bar_button_label			= section.settings.discount_bar_button_label -%}
+{%- assign discount_bar_button_successful_label = section.settings.discount_bar_button_successful_label -%}
+
+{%- assign background_opacity	= section.settings.background_opacity | divided_by: 100.0 -%}
+
+{%- assign discount_bar_bg_color							= section.settings.discount_bar_bg_color -%}
+{%- assign discount_bar_bg_color_transparent				= section.settings.discount_bar_bg_color_transparent -%}
+{%- assign discount_bar_border_bottom						= section.settings.discount_bar_border_bottom -%}
+{%- assign discount_bar_main_text_color						= section.settings.discount_bar_main_text_color -%}
+{%- assign discount_bar_main_text_color_transparent			= section.settings.discount_bar_main_text_color_transparent -%}
+{%- assign discount_bar_additional_text_color				= section.settings.discount_bar_additional_text_color -%}
+{%- assign discount_bar_additional_text_color_transparent	= section.settings.discount_bar_additional_text_color_transparent -%}
+{%- assign discount_bar_code_color							= section.settings.discount_bar_code_color -%}
+{%- assign discount_bar_code_color_transparent				= section.settings.discount_bar_code_color_transparent -%}
+{%- assign discount_bar_button_label_color					= section.settings.discount_bar_button_label_color -%}
+{%- assign discount_bar_button_label_color_transparent		= section.settings.discount_bar_button_label_color_transparent -%}
+{%- assign discount_bar_button_background_color				= section.settings.discount_bar_button_background_color -%}
+{%- assign discount_bar_button_background_color_transparent	= section.settings.discount_bar_button_background_color_transparent -%}
+{%- assign discount_bar_button_border_color					= section.settings.discount_bar_button_border_color -%}
+{%- assign discount_bar_button_border_color_transparent		= section.settings.discount_bar_button_border_color_transparent -%}
+
+{%- render "adastra" with "/src/styles/discount-bar.scss" -%}
+
+<style>
+	.discount-bar {
+		--discount-bar-bg-color: {{ discount_bar_bg_color -}};
+		--discount-bar-bg-color-transparent: {{ discount_bar_bg_color_transparent | color_modify: 'alpha', background_opacity -}};
+		--discount-bar-border-bottom: {{ discount_bar_border_bottom | color_modify: 'alpha', 0.10 -}};
+		--discount-bar-main-text: {{ discount_bar_main_text_color -}};
+		--discount-bar-main-text-transparent: {{ discount_bar_main_text_color_transparent -}};
+		--discount-bar-additional-text: {{ discount_bar_additional_text_color -}};
+		--discount-bar-additional-text-transparent: {{ discount_bar_additional_text_color_transparent -}};
+		--discount-bar-code: {{ discount_bar_code_color -}};
+		--discount-bar-code-transparent: {{ discount_bar_code_color_transparent -}};
+		--discount-bar-button-label: {{ discount_bar_button_label_color -}};
+		--discount-bar-button-label-transparent: {{ discount_bar_button_label_color_transparent -}};
+		--discount-bar-button-background: {{ discount_bar_button_background_color -}};
+		--discount-bar-button-background-transparent: {{ discount_bar_button_background_color_transparent | color_modify: 'alpha', 0.10 -}};
+		--discount-bar-button-border: {{ discount_bar_button_border_color -}};
+		--discount-bar-button-border-transparent: {{ discount_bar_button_border_color_transparent | color_modify: 'alpha', 0.10 -}};
+	}
+</style>
+
+{%- if discount_bar_main_text != blank and discount_bar_additional_text != blank and discount_bar_code != blank and discount_bar_button_successful_label != blank and discount_bar_button_label != blank -%}
+	<div class="discount-bar">
+		<div class="discount-bar__container">
+			<p class="discount-bar__main-text">
+				{{- discount_bar_main_text -}}
+			</p>
+
+			<p class="discount-bar__additional-text">
+				{{- discount_bar_additional_text -}}
+			</p>
+
+			<div class="discount-bar__button-wrapper js-discount-bar-button-wrapper">
+				<span class="discount-bar__code">
+					{{- discount_bar_code -}}
+				</span>
+
+				<span class="discount-bar__successful">
+					{%- render "icons", icon: "check" -%}
+
+					{{- discount_bar_button_successful_label -}}
+				</span>
+
+				<span class="discount-bar__separator"></span>
+
+				<button class="discount-bar__copy-button js-discount-bar-copy-button" data-discount-code="{{- discount_bar_code -}}">
+					{%- render "icons", icon: "copy-2" -%}
+
+					{{- discount_bar_button_label -}}
+				</button>
+			</div>
+		</div>
+	</div>
+{%- endif -%}
+
+
+{%- render 'adastra' with '/src/scripts/discount-bar.js' -%}

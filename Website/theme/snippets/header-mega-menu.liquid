@@ -1,0 +1,414 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Header mega menu
+	Render header mega menu
+	- menu: Menu object (required)
+	- blocks: blocks object using for output media content.
+
+	Usage:
+	{%- render 'header-mega-menu', menu: first_level_link, megamenu_object: megamenu_object -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign menu_type		= megamenu_object.settings.menu_type -%}
+
+{%- assign image            = megamenu_object.settings.image -%}
+{%- assign subheading		= megamenu_object.settings.subheading -%}
+{%- assign heading          = megamenu_object.settings.heading -%}
+{%- assign link             = megamenu_object.settings.link -%}
+
+{%- assign image2           = megamenu_object.settings.image2 -%}
+{%- assign subheading2		= megamenu_object.settings.subheading2 -%}
+{%- assign heading2         = megamenu_object.settings.heading2 -%}
+{%- assign link2            = megamenu_object.settings.link2 -%}
+
+{%- assign image3           = megamenu_object.settings.image3 -%}
+{%- assign link3            = megamenu_object.settings.link3 -%}
+
+{%- if image != blank and image2 != blank -%}
+	{%- assign image_width = 425 -%}
+	{%- assign image_width_2x = 850 -%}
+	{%- assign image_height = 549 -%}
+
+	{%- assign image_large_width = 326 -%}
+	{%- assign image_large_width_2x = 652 -%}
+	{%- assign image_large_height = 429 -%}
+{%- elsif image != blank or image2 != blank -%}
+	{%- assign image_width = 866 -%}
+	{%- assign image_width_2x = 1732 -%}
+	{%- assign image_height = 549 -%}
+
+	{%- assign image_large_width = 668 -%}
+	{%- assign image_large_width_2x = 1336 -%}
+	{%- assign image_large_height = 429 -%}
+{%- endif -%}
+
+{%- assign image_size = image_width | append: 'x' -%}
+{%- assign image_size_2x = image_width_2x | append: 'x' -%}
+{%- assign image_large_size = image_large_width | append: 'x' -%}
+{%- assign image_large_size_2x = image_large_width_2x | append: 'x' -%}
+
+{%- capture media_additional_class -%}
+	{%- if image != blank and image2 != blank -%}
+		header-mega-menu__block--image header-mega-menu__block--image-multiple
+	{%- elsif image != blank or image2 != blank -%}
+		header-mega-menu__block--image
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture media1 -%}
+	{%- if image != blank -%}
+		<div class="header-mega-menu__block {{ media_additional_class }}">
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ image.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ image | img_url: image_large_size }} 1x, {{ image | img_url: image_large_size_2x }} 2x"
+						srcset="{{ image | img_url: "10x" }} 1x, {{ image | img_url: "20x" }} 2x"
+						media="(max-width: 1500px)"
+						width="{{- image_large_width -}}"
+						height="{{- image_large_height -}}"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- image | img_url: image_size -}}"
+						data-srcset="{{- image | img_url: image_size }} 1x, {{ image | img_url: image_size_2x }} 2x"
+						src="{{- image | img_url: "10x" -}}"
+						srcset="{{- image | img_url: "10x" }} 1x, {{ image | img_url: "20x" }} 2x"
+						alt="{{- image.alt | escape -}}"
+						style="{{ img_focal }}"
+						width="{{- image_width -}}"
+						height="{{- image_height -}}"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+
+				{%- if subheading != blank or heading != blank -%}
+					<div class="header-mega-menu__image-text-content">
+						{%- if heading != blank -%}
+							<div class="header-mega-menu__image-heading">
+								{{- heading -}}
+							</div>
+						{%- endif -%}
+
+						{%- if subheading != blank -%}
+							<p class="header-mega-menu__image-subheading">
+								{{- subheading -}}
+							</p>
+						{%- endif -%}
+					</div>
+				{%- endif -%}
+			{%- endcapture -%}
+
+			{%- if link != blank -%}
+				<a href="{{- link -}}" class="header-mega-menu__image-wrapper header-mega-menu__image-wrapper--hover" style="transition-delay: 0.5s">
+					{{- image_capture -}}
+				</a>
+			{%- else -%}
+				<div class="header-mega-menu__image-wrapper" style="transition-delay: 0.5s">
+					{{- image_capture -}}
+				</div>
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture media2 -%}
+	{%- if image2 != blank -%}
+		<div class="header-mega-menu__block {{ media_additional_class }}">
+			{%- capture img_focal2 -%}
+				--img-desktop-pos: {{ image2.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ image2 | img_url: image_large_size }} 1x, {{ image2 | img_url: image_large_size_2x }} 2x"
+						srcset="{{ image2 | img_url: "10x" }} 1x, {{ image2 | img_url: "20x" }} 2x"
+						media="(max-width: 1500px)"
+						width="{{- image_large_width -}}"
+						height="{{- image_large_height -}}"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- image2 | img_url: image_size -}}"
+						data-srcset="{{- image2 | img_url: image_size }} 1x, {{ image2 | img_url: image_size_2x }} 2x"
+						src="{{- image2 | img_url: "10x" -}}"
+						srcset="{{- image2 | img_url: "10x" }} 1x, {{ image2 | img_url: "20x" }} 2x"
+						alt="{{- image2.alt | escape -}}"
+						style="{{ img_focal }}"
+						width="{{- image_width -}}"
+						height="{{- image_height -}}"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+
+				{%- if subheading2 != blank or heading2 != blank -%}
+					<div class="header-mega-menu__image-text-content">
+						{%- if heading2 != blank -%}
+							<div class="header-mega-menu__image-heading">
+								{{- heading2 -}}
+							</div>
+						{%- endif -%}
+
+						{%- if subheading2 != blank -%}
+							<p class="header-mega-menu__image-subheading">
+								{{- subheading2 -}}
+							</p>
+						{%- endif -%}
+					</div>
+				{%- endif -%}
+			{%- endcapture -%}
+
+			{%- if link2 != blank -%}
+				<a href="{{- link2 -}}" class="header-mega-menu__image-wrapper header-mega-menu__image-wrapper--hover" style="transition-delay: 0.25s">
+					{{- image_capture -}}
+				</a>
+			{%- else -%}
+				<div class="header-mega-menu__image-wrapper" style="transition-delay: 0.25s">
+					{{- image_capture -}}
+				</div>
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture media3 -%}
+	{%- if image3 != blank -%}
+		<div class="header-mega-menu__block header-mega-menu__block--image header-mega-menu__block--image--additional">
+			{%- capture img_focal3 -%}
+				--img-desktop-pos: {{ image3.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ image3 | img_url: "178x" }} 1x, {{ image3 | img_url: "356x" }} 2x"
+						srcset="{{ image3 | img_url: "10x" }} 1x, {{ image3 | img_url: "20x" }} 2x"
+						media="(max-width: 1500px)"
+						width="178"
+						height="178"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- image3 | img_url: "231x" -}}"
+						data-srcset="{{- image3 | img_url: "231x" }} 1x, {{ image3 | img_url: "462x" }} 2x"
+						src="{{- image3 | img_url: "10x" -}}"
+						srcset="{{- image3 | img_url: "10x" }} 1x, {{ image3 | img_url: "20x" }} 2x"
+						alt="{{- image3.alt -}}"
+						style="{{ img_focal3 }}"
+						width="231"
+						height="231"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+			{%- endcapture -%}
+
+			{%- if link3 != blank -%}
+				<a href="{{- link3 -}}" class="header-mega-menu__image-wrapper header-mega-menu__image-wrapper--hover" style="transition-delay: 0.75s">
+					{{- image_capture -}}
+				</a>
+			{%- else -%}
+				<div class="header-mega-menu__image-wrapper" style="transition-delay: 0.75s">
+					{{- image_capture -}}
+				</div>
+			{%- endif -%}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+<div
+	id="headerMegaMenu:{{- menu.title | handleize -}}"
+	class="header-mega-menu is-hidden js-header-mega-menu"
+>
+	<span class="visually-hidden">
+		{{- "layout.navigation.mega_menu" | t -}}
+	</span>
+
+	<div class="header-mega-menu__container js-header-mega-menu-content">
+		<div class="header-mega-menu__block header-mega-menu__block--menu">
+			<ul class="header-mega-menu__menu header-mega-menu__menu--main js-mega-menu-main">
+				{% assign delay_step = 0 %}
+				{%- for main_link in menu.links -%}
+					{% assign delay_step = delay_step | plus: 0.2 %}
+
+					<li class="header-mega-menu__menu-item-wrapper need-animate" style="transition-delay: {{ delay_step }}s;">
+						{%- if main_link.links != blank -%}
+							<button
+								class="header-mega-menu__menu-item js-header-mega-menu-toggler-nested"
+								type="button"
+								data-target="headerMegaMenuNested:{{- main_link.title | handleize -}}-{{ menu.handle }}-{{ forloop.index }}"
+								aria-controls="headerMegaMenuNested:{{- main_link.title | handleize -}}-{{ menu.handle }}-{{ forloop.index }}"
+								aria-expanded="false"
+							>
+								{% assign item_icon = main_link.object.metafields.custom.menu_icon %}
+
+								{%- if item_icon != blank -%}
+									<span class="header-mega-menu__menu-item-icon-wrapper">
+										<picture>
+											<img
+												class="header-mega-menu__menu-item-icon"
+												src="{{ item_icon | image_url: width: 24, height: 24 }}"
+												srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+												alt="{{- item_icon.alt -}}"
+												loading="lazy"
+											>
+										</picture>
+									</span>
+								{%- endif -%}
+
+								<span class="header-mega-menu__menu-item-text">
+									{{- main_link.title | escape -}}
+								</span>
+
+								<span class="header-mega-menu__menu-item-toggle-icon header-mega-menu__menu-item-toggle-icon--minus">
+									{%- render 'icons', icon: 'minus' -%}
+								</span>
+
+								<span class="header-mega-menu__menu-item-toggle-icon header-mega-menu__menu-item-toggle-icon--plus">
+									{%- render 'icons', icon: 'plus' -%}
+								</span>
+							</button>
+						{%- else -%}
+							<a
+								class="header-mega-menu__menu-item"
+								href="{{- main_link.url -}}"
+								{% if main_link.current %}
+									aria-current="page"
+								{% endif %}
+							>
+								{% assign item_icon = main_link.object.metafields.custom.menu_icon %}
+
+								{%- if item_icon != blank -%}
+									<span class="header-mega-menu__menu-item-icon-wrapper">
+										<picture>
+											<img
+												class="header-mega-menu__menu-item-icon"
+												src="{{ item_icon | image_url: width: 24, height: 24 }}"
+												srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+												alt="{{- item_icon.alt -}}"
+												loading="lazy"
+											>
+										</picture>
+									</span>
+								{%- endif -%}
+
+								<span class="header-mega-menu__menu-item-text">
+									{{- main_link.title | escape -}}
+								</span>
+							</a>
+						{%- endif -%}
+					</li>
+				{%- endfor -%}
+			</ul>
+
+			<div class="header-mega-menu__menu-divider"></div>
+
+			{%- for main_link in menu.links %}
+				{%- if main_link.links != blank -%}
+					<ul
+						id="headerMegaMenuNested:{{- main_link.title | handleize -}}-{{ menu.handle }}-{{ forloop.index }}"
+						class="header-mega-menu__menu header-mega-menu__menu--nested is-hidden js-header-mega-menu-nested"
+					>
+						{%- assign limit = main_link.links.size | divided_by: 2.0 | ceil -%}
+
+						<div class="header-mega-menu__menu-row">
+							<div class="header-mega-menu__menu-col">
+								{%- for link in main_link.links limit: limit -%}
+									<li class="header-mega-menu__menu-item-wrapper">
+										<a
+											class="header-mega-menu__menu-item"
+											href="{{- link.url -}}"
+											{% if link.current %}
+												aria-current="page"
+											{% endif %}
+										>
+											{% assign item_icon = link.object.metafields.custom.menu_icon %}
+
+											{%- if item_icon != blank -%}
+												<span class="header-mega-menu__menu-item-icon-wrapper">
+													<picture>
+														<img
+															class="header-mega-menu__menu-item-icon"
+															src="{{ item_icon | image_url: width: 24, height: 24 }}"
+															srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+															alt="{{- item_icon.alt -}}"
+															loading="lazy"
+														>
+													</picture>
+												</span>
+											{%- endif -%}
+
+											<span class="header-mega-menu__menu-item-text">
+												{{- link.title | escape -}}
+											</span>
+										</a>
+									</li>
+								{%- endfor -%}
+							</div>
+
+							<div class="header-mega-menu__menu-col">
+								{%- for link in main_link.links offset:limit -%}
+									<li class="header-mega-menu__menu-item-wrapper">
+										<a
+											class="header-mega-menu__menu-item"
+											href="{{- link.url -}}"
+											{% if link.current %}
+												aria-current="page"
+											{% endif %}
+										>
+											{% assign item_icon = link.object.metafields.custom.menu_icon %}
+
+											{%- if item_icon != blank -%}
+												<span class="header-mega-menu__menu-item-icon-wrapper">
+													<picture>
+														<img
+															class="header-mega-menu__menu-item-icon"
+															src="{{ item_icon | image_url: width: 24, height: 24 }}"
+															srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+															alt="{{- item_icon.alt -}}"
+															loading="lazy"
+														>
+													</picture>
+												</span>
+											{%- endif -%}
+
+											<span class="header-mega-menu__menu-item-text">
+												{{- link.title | escape -}}
+											</span>
+										</a>
+									</li>
+								{%- endfor -%}
+							</div>
+						</div>
+					</ul>
+				{%- endif -%}
+			{%- endfor -%}
+		</div>
+
+		{%- if media1 != blank or media2 != blank -%}
+			<div class="header-mega-menu__block header-mega-menu__block--images">
+				{%- if media1 != blank -%}
+					{{- media1 -}}
+				{%- endif -%}
+
+				{%- if media2 != blank -%}
+					{{- media2 -}}
+				{%- endif -%}
+
+				{%- if media1 != blank and media2 != blank and media3 != blank -%}
+					{{- media3 -}}
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	</div>
+</div>

@@ -1,0 +1,638 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Collection template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/collection.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign show_img 			  		= section.settings.show_img -%}
+{%- assign show_description 	  		= section.settings.show_description -%}
+{%- assign custom_image 				= section.settings.custom_image | default: collection.image -%}
+{%- assign text_position 			  	= section.settings.text_position -%}
+{%- assign show_grid_selector			= section.settings.show_grid_selector -%}
+{%- assign pagination_type 		  		= section.settings.pagination_type -%}
+{%- assign paginate_by 			  		= section.settings.paginate_by -%}
+{%- assign show_color_swatch_in_filters	= section.settings.show_color_swatch_in_filters -%}
+{%- assign filters_type					= section.settings.filters_type -%}
+{%- assign promo_collections            = section.settings.promo_collections -%}
+{%- assign overlay_color 				= section.settings.overlay_color -%}
+{%- assign banner_image_text 			= section.settings.banner_image_text -%}
+{%- assign container 					= section.settings.container_width -%}
+
+{% if container == 'inherit' %}
+	{% assign container_width = settings.container_width %}
+{% else %}
+	{% assign container_width = container %}
+{% endif %}
+
+{%- assign active_filters_size = 0 -%}
+
+{%- for filter in collection.filters -%}
+	{%- case filter.type -%}
+		{%- when 'list' or 'boolean' -%}
+			{%- assign active_filters_size = active_filters_size | plus: filter.active_values.size -%}
+		{%- when 'price_range' -%}
+			{%- if filter.min_value.value > 0 or filter.max_value.value < filter.range_max -%}
+				{%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+					{%- assign active_filters_size = active_filters_size | plus: 1 -%}
+				{%- endif -%}
+			{%- endif -%}
+	{%- endcase -%}
+{%- endfor -%}
+
+{%- if text_position == 'inside_image' -%}
+	{%- if show_img == false or collection.image == blank -%}
+		{% assign text_position = 'under_image' %}
+	{%- endif -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--banner-color: {{ banner_image_text }}; {{-  -}}
+	--overlay-color: {{ overlay_color }}; {{-  -}}
+	--container-width: {{ container_width }}; {{-  -}}
+{%- endcapture -%}
+
+{%- capture collection_image -%}
+	{%- if collection.image != blank or custom_image != blank -%}
+		<div class="collection__image-wrapper">
+			<picture>
+				<source
+					srcset="{{ custom_image | image_url: width: 348 }} 1x, {{ custom_image | image_url: width: 696 }} 2x"
+					media="(max-width: 380px)"
+					width="348"
+					height="360"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 388 }} 1x, {{ custom_image | image_url: width: 776 }} 2x"
+					media="(max-width: 420px)"
+					width="388"
+					height="454"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 448 }} 1x, {{ custom_image | image_url: width: 896 }} 2x"
+					media="(max-width: 480px)"
+					width="448"
+					height="454"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 545 }} 1x, {{ custom_image | image_url: width: 1090 }} 2x"
+					media="(max-width: 575px)"
+					width="545"
+					height="288"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 740 }} 1x, {{ custom_image | image_url: width: 1480 }} 2x"
+					media="(max-width: 767px)"
+					width="740"
+					height="384"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 960 }} 1x, {{ custom_image | image_url: width: 1920 }} 2x"
+					media="(max-width: 991px)"
+					width="960"
+					height="354"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 1169 }} 1x, {{ custom_image | image_url: width: 2336 }} 2x"
+					media="(max-width: 1199px)"
+					width="1169"
+					height="429"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 1468 }} 1x, {{ custom_image | image_url: width: 2936 }} 2x"
+					media="(max-width: 1500px)"
+					width="1468"
+					height="536"
+				/>
+
+				<source
+					srcset="{{ custom_image | image_url: width: 1568 }} 1x, {{ custom_image | image_url: width: 3136 }} 2x"
+					media="(max-width: 1680px)"
+					width="1568"
+					height="600"
+				/>
+
+				<img
+					class="collection__image"
+					src="{{- custom_image | image_url: width: 1888 -}}"
+					srcset="{{ custom_image | image_url: width: 1888 }} 1x, {{ custom_image | image_url: width: 3776 }} 2x"
+					alt="{{- custom_image.alt | escape -}}"
+					width="1888"
+					height="686"
+					{% if section.index == 1 %}
+						fetchpriority="high"
+					{% endif %}
+				/>
+			</picture>
+
+			{% if text_position == 'inside_image' %}
+				<div class="collection__image-wrapper-header">
+					<h1 class="h1 collection__title">
+						{{- collection.title -}}
+					</h1>
+
+					{%- if show_description and collection.description != blank -%}
+						<div class="rte collection__description">
+							{{- collection.description -}}
+						</div>
+					{%- endif -%}
+				</div>
+			{% endif %}
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+<section class="collection {% if filters_type == 'sidebar' %}collection--with-sidebar{% endif %} js-collection"
+		 id="{{- section.id -}}"
+		 style="{{ styles }}"
+>
+	{%- if show_img and collection_image != blank -%}
+		{{- collection_image -}}
+	{%- endif -%}
+
+	{% if promo_collections != blank and promo_collections.count > 0 %}
+		<div class="swiper collection__swiper js-collection-list-swiper">
+			<div class="swiper-wrapper collection__swiper-wrapper">
+				{% for collection in promo_collections %}
+					{% assign image 		  = collection.featured_image %}
+					{% assign size_width_420  = 127 %}
+					{% assign size_height_420 = 127 %}
+					{% assign size_width_575  = 185 %}
+					{% assign size_height_575 = 185 %}
+					{% assign size_width_991  = 188 %}
+					{% assign size_width_991  = 188 %}
+					{% assign size_width 	  = 158 %}
+					{% assign size_height 	  = 163 %}
+
+					<div class="swiper-slide">
+						{%- render 'collection-card-mini',
+							collection: collection,
+							image: image,
+							is_lazy: true,
+							size_width_420: size_width_420,
+							size_height_420: size_height_420,
+							size_width_575: size_width_575,
+							size_height_575: size_height_575,
+							size_width_991: size_width_991,
+							size_height_991: size_height_991,
+							size_width: size_width,
+							size_height: size_height
+						-%}
+					</div>
+				{% endfor %}
+			</div>
+
+			<button
+				class="swiper-button swiper-button-prev collection__swiper-button-prev js-collection-list-button-prev">
+				{%- render 'icons', icon: 'arrow-left' -%}
+			</button>
+
+			<button
+				class="swiper-button swiper-button-next collection__swiper-button-next js-collection-list-button-next">
+				{%- render 'icons', icon: 'arrow-right' -%}
+			</button>
+		</div>
+	{% endif %}
+
+	<div class="collection__header js-collection-header">
+		<div class="collection__header-row">
+			<div class="collection__header-col collection__header-col--text">
+				{%- if text_position == 'under_image' -%}
+					<h1 class="h1 collection__title">
+						{{- collection.title -}}
+					</h1>
+
+					{%- if show_description and collection.description != blank -%}
+						<div class="collection__description rte">
+							{{- collection.description -}}
+						</div>
+					{%- endif -%}
+				{%- endif -%}
+			</div>
+
+			{% if filters_type == 'drawer' %}
+				<div class="collection__header-col collection__header-col--filter">
+					{%- render 'product-filters-and-sort',
+						product_list: collection,
+						show_swatches: show_color_swatch_in_filters
+					-%}
+
+					{% if show_grid_selector %}
+						<div class="collection__grid-buttons {% if text_position == 'inside_image' and collection.image != blank and show_img %}collection__grid-buttons--no-margin{% endif %} js-grid-view-buttons">
+							<button
+								class="collection__grid-button is-active js-grid-view-btn"
+								data-grid-cols="4"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_4' | t }}</span>
+
+									{% render 'icons', icon: 'grid-4' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_2' | t }}</span>
+
+									{% render 'icons', icon: 'grid-2' %}
+								</span>
+							</button>
+
+							<button
+								class="collection__grid-button js-grid-view-btn"
+								data-grid-cols="3"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_3' | t }}</span>
+
+									{% render 'icons', icon: 'grid-3' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_1' | t }}</span>
+
+									{% render 'icons', icon: 'grid-1' %}
+								</span>
+							</button>
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+
+			{% if filters_type == 'sidebar' %}
+				<div class="collection__header-col collection__header-col--filter product-filters">
+					{% render 'product-filter-button',
+						active_filters_size: active_filters_size
+					%}
+
+					{% if show_grid_selector %}
+						<div class="collection__grid-buttons {% if text_position == 'inside_image' and collection.image != blank and show_img %}collection__grid-buttons--no-margin{% endif %} js-grid-view-buttons">
+							<button
+								class="collection__grid-button is-active js-grid-view-btn"
+								data-grid-cols="4"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_4' | t }}</span>
+
+									{% render 'icons', icon: 'grid-4' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_2' | t }}</span>
+
+									{% render 'icons', icon: 'grid-2' %}
+								</span>
+							</button>
+
+							<button
+								class="collection__grid-button js-grid-view-btn"
+								data-grid-cols="3"
+							>
+								<span class="collection__grid-button-icon-desktop">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_3' | t }}</span>
+
+									{% render 'icons', icon: 'grid-3' %}
+								</span>
+
+								<span class="collection__grid-button-icon-mobile">
+									<span class="visually-hidden">{{ 'collections.general.grid_view_1' | t }}</span>
+
+									{% render 'icons', icon: 'grid-1' %}
+								</span>
+							</button>
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="collection__body">
+		{% if filters_type == 'sidebar' %}
+			<div class="collection__sidebar">
+				{%- render 'product-filters-and-sort',
+					product_list: collection,
+					show_swatches: show_color_swatch_in_filters,
+					extra_class: 'product-filters--sidebar',
+					without_filter_button: true
+				-%}
+			</div>
+		{% endif %}
+
+		{%- paginate collection.products by paginate_by, window_size: 1 -%}
+			<div class="collection__grid-wrapper {% if show_grid_selector %}collection__grid-wrapper-hide-on-load{% endif %} {% unless collection.products.size > 0 %}is-hidden{% endunless %} js-grid-wrapper"
+				 aria-busy="true"
+				 data-grid-col="4"
+			>
+				{%- for product in collection.products -%}
+					{% assign is_lazy = true %}
+
+					{%- if show_img == false and forloop.index < 3 and section.index == 1 -%}
+						{% assign is_lazy = false %}
+					{%- endif -%}
+
+					{% if show_img == true and collection.image == blank and forloop.index < 3 and section.index == 1 %}
+						{% assign is_lazy = false %}
+					{% endif %}
+
+					<div class="collection__item">
+						{% assign product_img_size = 465 %}
+						{% assign product_img_size_tablet = 360 %}
+						{% assign product_img_size_mobile = 188 %}
+
+						{% if show_grid_selector %}
+							{% assign product_img_size = 620 %}
+							{% assign product_img_size_tablet = 580 %}
+							{% assign product_img_size_mobile = 188 %}
+						{% endif %}
+
+						{%- render 'product-card',
+							product: product,
+							size: product_img_size,
+							tablet_size: product_img_size_tablet,
+							mobile_size: product_img_size_mobile,
+							is_lazy: is_lazy
+						-%}
+					</div>
+				{%- endfor -%}
+			</div>
+
+			{% if collection.products.size > 0 %}
+				{%- case pagination_type -%}
+					{%- when 'pagination' -%}
+						<div class="collection__pagination-wrapper js-pagination">
+							{%- if paginate.pages > 1 -%}
+								{%- render 'pagination', paginate: paginate -%}
+							{%- endif -%}
+						</div>
+					{%- when 'infinite_scroll' -%}
+						{%- capture collection_infinite_scroll_classes -%}
+							collection__infinite-scroll no-js-hidden js-infinite-scroll {{- -}}
+							{% unless paginate.next.url %} is-hidden {%- endunless -%}
+						{%- endcapture -%}
+
+						<div class="{{- collection_infinite_scroll_classes | strip_newlines -}}"
+							{%- if paginate.next.url -%}
+								data-next-url="{{- paginate.next.url -}}"
+							{%- else -%}
+								data-next-url=""
+							{%- endif -%}
+						></div>
+					{%- else -%}
+						{%- capture collection_lazy_load_button_classes -%}
+							button button--secondary collection__load-more-button js-lazy-load {{- -}}
+							{% unless paginate.next.url %} is-hidden {%- endunless -%}
+						{%- endcapture -%}
+
+						<div class="collection__lazy-load-button-wrapper no-js-hidden">
+							<button
+								class="{{- collection_lazy_load_button_classes | strip_newlines -}}"
+								{% if paginate.next.url %}
+									data-next-url="{{- paginate.next.url -}}"
+								{% else %}
+									data-next-url=""
+								{% endif %}
+								aria-label="{{- 'general.pagination.lazy_load_aria' | t: items: 'products' | escape -}}"
+							>
+								{{- 'general.pagination.lazy_load' | t -}}
+							</button>
+						</div>
+				{%- endcase -%}
+
+				{%- unless pagination_type == 'pagination' -%}
+					<noscript>
+						<div class="collection__pagination-wrapper">
+							{%- if paginate.pages > 1 -%}
+								{%- render 'pagination', paginate: paginate -%}
+							{%- endif -%}
+						</div>
+					</noscript>
+				{%- endunless -%}
+			{% endif %}
+		{%- endpaginate -%}
+
+		{%- capture collection_empty_title_classes -%}
+			h2 collection__title collection__title--empty js-template-empty-title {{-  -}}
+			{% if collection.products.size > 0 %} is-hidden {%- endif -%}
+		{%- endcapture -%}
+
+		<h2 class="{{- collection_empty_title_classes | strip_newlines -}}">
+			{{- 'collections.general.empty_collection' | t -}}
+		</h2>
+	</div>
+
+	{%- render 'adastra' with '/src/scripts/component-product-filters.js' -%}
+	{%- render 'adastra' with '/src/scripts/collection-template.js' -%}
+</section>
+
+{%- schema -%}
+{
+	"name": "Collection",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "show_img",
+			"label": "Show collection image",
+			"default": true
+		},
+		{
+			"type": "checkbox",
+			"id": "show_description",
+			"label": "Show collection description",
+			"default": true
+		},
+		{
+			"type": "image_picker",
+			"id": "custom_image",
+			"label": "Custom image"
+		},
+		{
+			"type": "select",
+			"id": "text_position",
+			"label": "Heading and description position",
+			"options": [
+				{
+					"value": "under_image",
+					"label": "Under the image"
+				},
+				{
+					"value": "inside_image",
+					"label": "Inside the image"
+				}
+			],
+			"default": "inside_image",
+			"info": "if the collection has no image or you hide the collection image, then the 'Under the image' option will be used."
+		},
+		{
+			"type": "checkbox",
+			"id": "show_grid_selector",
+			"label": "Show grid buttons",
+			"default": true,
+			"info": "Show grid buttons that allow change products per row"
+		},
+		{
+			"type": "checkbox",
+			"id": "show_color_swatch_in_filters",
+			"label": "Show color swatch in filters",
+			"default": false
+		},
+		{
+			"type": "select",
+			"id": "filters_type",
+			"label": "Filters type",
+			"options": [
+				{
+					"value": "drawer",
+					"label": "Drawer"
+				},
+				{
+					"value": "sidebar",
+					"label": "Sidebar"
+				}
+			],
+			"default": "drawer",
+			"info": "Used only for desktop"
+		},
+		{
+			"type": "range",
+			"id": "paginate_by",
+			"min": 12,
+			"max": 50,
+			"step": 1,
+			"label": "Paginate by",
+			"default": 16
+		},
+		{
+			"type": "select",
+			"id": "pagination_type",
+			"label": "Pagination type",
+			"options": [
+				{
+					"value": "pagination",
+					"label": "Pagination"
+				},
+				{
+					"value": "lazy_load",
+					"label": "Load more"
+				},
+				{
+					"value": "infinite_scroll",
+					"label": "Infinite scrolling"
+				}
+			],
+			"default": "pagination"
+		},
+		{
+			"type": "collection_list",
+			"id": "promo_collections",
+			"label": "Promo collections"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color_background",
+			"id": "overlay_color",
+			"label": "Banner overlay",
+			"default": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5) 100%)"
+		},
+		{
+			"type": "color",
+			"id": "banner_image_text",
+			"label": "Banner text",
+			"default": "#fff",
+			"info": "The color of the text to be used when heading will be inside the image"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "If you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 60
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 30
+		}
+	]
+}
+{%- endschema -%}

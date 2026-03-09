@@ -1,0 +1,967 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Countdown banner
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- liquid
+	comment
+		Content settings
+	endcomment
+	assign min_height_desktop = section.settings.min_height_desktop
+	assign min_height_mobile  = section.settings.min_height_mobile
+	assign heading 			  = section.settings.heading
+	assign label 			  = section.settings.label
+	assign link_label 		  = section.settings.link_label
+	assign link_url 		  = section.settings.link_url
+	assign image_desktop 	  = section.settings.image_desktop
+	assign image_mobile 	  = section.settings.image_mobile | default: image_desktop
+	comment
+		Timer settings
+	endcomment
+	assign timer_year 	  = section.settings.timer_year
+	assign timer_month 	  = section.settings.timer_month
+	assign timer_day 	  = section.settings.timer_day
+	assign timer_hour 	  = section.settings.timer_hour
+	assign timer_timezone = section.settings.timer_timezone
+	comment
+		Colors
+	endcomment
+	assign section_background = section.settings.section_background
+	assign overlay 			  = section.settings.overlay
+	assign text_color 		  = section.settings.text_color
+	assign link_color 		  = section.settings.link_color
+	assign timer_background   = section.settings.timer_background
+	assign timer_value_color  = section.settings.timer_value_color
+	assign timer_label_color  = section.settings.timer_label_color
+	comment
+		Layout settings
+	endcomment
+	assign container_width 		 = section.settings.container_width
+	assign offset_top_desktop    = section.settings.offset_top_desktop
+	assign offset_bottom_desktop = section.settings.offset_bottom_desktop
+	assign offset_top_mobile 	 = section.settings.offset_top_mobile
+	assign offset_bottom_mobile  = section.settings.offset_bottom_mobile
+
+	if container == 'inherit'
+		assign container_width = settings.container_width
+	else
+		assign container_width = container
+	endif
+
+	assign enable_lazy_load = true
+	if section.index == 1
+		assign enable_lazy_load = false
+	endif
+-%}
+
+{%- capture section_styles -%}
+	{% comment %}Colors{% endcomment %}
+	--section-background-color: {{- section_background -}}; {{-  -}}
+	--overlay: {{- overlay -}}; {{-  -}}
+	--text-color: {{- text_color -}}; {{-  -}}
+	--link-color: {{- link_color -}}; {{-  -}}
+	--timer-background: {{- timer_background -}}; {{-  -}}
+	--timer-value-color: {{- timer_value_color -}}; {{-  -}}
+	--timer-label-color: {{- timer_label_color -}}; {{-  -}}
+	{% comment %}Sizes{% endcomment %}
+	--min-height-desktop: {{- min_height_desktop -}}px; {{-  -}}
+	--min-height-mobile: {{- min_height_mobile -}}px; {{-  -}}
+	{% comment %}Layout{% endcomment %}
+	--container-width: {{ container_width }}; {{-  -}}
+{%- endcapture -%}
+
+{%- capture countdown_banner -%}
+	{%- capture background_picture -%}
+		{%- if image_desktop != blank -%}
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{- image_desktop.presentation.focal_point -}};
+				--img-mob-pos: {{- image_mobile.presentation.focal_point -}};
+			{%- endcapture -%}
+
+			{%- liquid
+				assign x1_1920 = '1888x'
+				assign x2_1920 = '3776x'
+
+				assign x1_1680 = '1648x'
+				assign x2_1680 = '3296x'
+
+				assign x1_1199 = '1167x'
+				assign x2_1199 = '2334x'
+
+				assign x1_991 = '959x'
+				assign x2_991 = '1918x'
+
+				assign x1_767 = '735x'
+				assign x2_767 = '1470x'
+
+				assign x1_480 = '448x'
+				assign x2_480 = '896x'
+
+				assign x1_420 = '388x'
+				assign x2_420 = '776x'
+
+				assign x1_380 = '348x'
+				assign x2_380 = '696x'
+			-%}
+
+			<picture class="countdown-banner__picture need-animate tr-dur-1 {% if enable_lazy_load %} lazy{% endif %}">
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_mobile | img_url: x1_380, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_380, crop: 'center' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_mobile | img_url: x1_380, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_380, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 380px)"
+					width="348"
+					height="254"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_mobile | img_url: x1_420, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_420, crop: 'center' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_mobile | img_url: x1_420, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_420, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 420px)"
+					width="388"
+					height="254"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_mobile | img_url: x1_480, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_480, crop: 'center' }} 2x"
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_mobile | img_url: x1_480, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_480, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 480px)"
+					width="448"
+					height="254"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '20x' }} 2x"
+						data-srcset="{{ image_mobile | img_url: x1_767, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_767, crop: 'center' }} 2x"
+					{% else %}
+						srcset="{{ image_mobile | img_url: x1_767, crop: 'center' }} 1x, {{ image_mobile | img_url: x2_767, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 767px)"
+					width="735"
+					height="254"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_desktop | img_url: x1_991, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_991, crop: 'center' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_desktop | img_url: x1_991, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_991, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 991px)"
+					width="959"
+					height="250"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_desktop | img_url: x1_1199, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1199, crop: 'center' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_desktop | img_url: x1_1199, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1199, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 1199px)"
+					width="1167"
+					height="250"
+				/>
+
+				<source
+					{% if enable_lazy_load %}
+						data-srcset="{{ image_desktop | img_url: x1_1680, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1680, crop: 'center' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+					{% else %}
+						srcset="{{ image_desktop | img_url: x1_1680, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1680, crop: 'center' }} 2x"
+					{% endif %}
+					media="(max-width: 1680px)"
+					width="1648"
+					height="250"
+				/>
+
+				<img
+					class="countdown-banner__image"
+					{% if enable_lazy_load %}
+						src="{{- image_desktop | img_url: '10x' -}}"
+						data-src="{{- image_desktop | img_url: x1_1920, crop: 'center' -}}"
+						data-srcset="{{ image_desktop | img_url: x1_1920, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1920, crop: 'center' }} 2x"
+						srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '20x' }} 2x"
+					{% else %}
+						src="{{- image_desktop | img_url: x1_1920, crop: 'center' -}}"
+						srcset="{{ image_desktop | img_url: x1_1920, crop: 'center' }} 1x, {{ image_desktop | img_url: x2_1920, crop: 'center' }} 2x"
+					{% endif %}
+					alt="{{- image_desktop.alt | escape -}}"
+					width="1888"
+					height="250"
+					style="{{ img_focal }}"
+				/>
+			</picture>
+		{%- endif -%}
+	{%- endcapture -%}
+
+	{%- capture timer -%}
+		{%- if timer_year != blank and timer_month != blank and timer_day != blank and timer_hour != blank -%}
+			<div class="countdown-banner__timer need-animate tr-dur-0-8 tr-del-0-5 js-timer {% unless request.visual_preview_mode or section.index == 1 %}js-animate{% endunless %}" role="timer" aria-live="off">
+				<script class="js-timer-settings" type="application/json">
+					{
+						"year": {{- timer_year | json -}},
+						"month": {{- timer_month | json -}},
+						"day": {{- timer_day | json -}},
+						"hour": {{- timer_hour | json -}},
+						"timezone": {{- timer_timezone | json -}}
+					}
+				</script>
+
+				<div class="countdown-banner__timer-col">
+					<div class="countdown-banner__timer-values">
+						<p class="is-hidden countdown-banner__timer-value h3 js-timer-days-hundreds">
+							0
+						</p>
+
+						<p class="countdown-banner__timer-value h3 js-timer-days-dozens">
+							0
+						</p>
+
+						<p class="countdown-banner__timer-value h3 js-timer-days-units">
+							0
+						</p>
+					</div>
+
+					<p class="countdown-banner__timer-label">
+						{{- 'sections.countdown_banner.timer_days_label' | t -}}
+					</p>
+				</div>
+
+				<div class="countdown-banner__timer-col">
+					<div class="countdown-banner__timer-values">
+						<p class="countdown-banner__timer-value h3 js-timer-hours-dozens">
+							0
+						</p>
+
+						<p class="countdown-banner__timer-value h3 js-timer-hours-units">
+							0
+						</p>
+					</div>
+
+					<p class="countdown-banner__timer-label">
+						{{- 'sections.countdown_banner.timer_hours_label' | t -}}
+					</p>
+				</div>
+
+				<div class="countdown-banner__timer-col">
+					<div class="countdown-banner__timer-values">
+						<p class="countdown-banner__timer-value h3 js-timer-minutes-dozens">
+							0
+						</p>
+
+						<p class="countdown-banner__timer-value h3 js-timer-minutes-units">
+							0
+						</p>
+					</div>
+
+					<p class="countdown-banner__timer-label">
+						{{- 'sections.countdown_banner.timer_minutes_label' | t -}}
+					</p>
+				</div>
+
+				<div class="countdown-banner__timer-col">
+					<div class="countdown-banner__timer-values">
+						<p class="countdown-banner__timer-value h3 js-timer-seconds-dozens">
+							0
+						</p>
+
+						<p class="countdown-banner__timer-value h3 js-timer-seconds-units">
+							0
+						</p>
+					</div>
+
+					<p class="countdown-banner__timer-label">
+						{{- 'sections.countdown_banner.timer_seconds_label' | t -}}
+					</p>
+				</div>
+			</div>
+		{%- endif -%}
+	{%- endcapture -%}
+
+	{%- capture content -%}
+		{%- if label != blank or heading != blank or link_url != blank and link_label != blank -%}
+			<div class="countdown-banner__content need-animate tr-dur-0-8 tr-del-0-5">
+				{%- if label != blank -%}
+					<p class="countdown-banner__label">
+						{{- label -}}
+					</p>
+				{%- endif -%}
+
+				{%- if heading != blank -%}
+					<h2 class="countdown-banner__heading h2">
+						{{- heading -}}
+					</h2>
+				{%- endif -%}
+
+				{%- if link_label != blank and link_url != blank -%}
+					<a
+						class="countdown-banner__link button-link"
+						href="{{- link_url -}}"
+					>
+						{{- link_label -}}
+					</a>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	{%- endcapture -%}
+
+	{%- if background_picture != blank -%}{{- background_picture -}}{%- endif -%}
+	{%- if overlay != blank and background_picture != blank -%}
+		<div class="countdown-banner__overlay"></div>
+	{%- endif -%}
+	{%- if content != blank -%}{{- content -}}{%- endif -%}
+	{%- if timer != blank -%}{{- timer -}}{%- endif -%}
+{%- endcapture -%}
+
+{%- if countdown_banner != blank -%}
+	{%- render 'adastra' with '/src/styles/countdown-banner.scss' -%}
+
+	{%- style -%}
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- offset_top_mobile -}}px;
+			padding-bottom: {{- offset_bottom_mobile -}}px;
+		}
+
+		@media screen and (min-width: 768px) {
+			#shopify-section-{{- section.id -}} {
+				padding-top: {{- offset_top_desktop -}}px;
+				padding-bottom: {{- offset_bottom_desktop -}}px;
+			}
+		}
+	{%- endstyle -%}
+
+	<section
+		class="countdown-banner js-countdown-banner js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+		style="{{- section_styles | strip_newlines -}}"
+	>
+		<div class="countdown-banner__wrapper">
+			{{- countdown_banner -}}
+		</div>
+	</section>
+
+	{%- render 'adastra' with '/src/scripts/section-countdown-banner.js' -%}
+{%- endif -%}
+
+{%- schema -%}
+{
+	"name": "Countdown banner",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "range",
+			"id": "min_height_desktop",
+			"min": 200,
+			"max": 600,
+			"step": 50,
+			"unit": "px",
+			"label": "Desktop banner min height",
+			"default": 250
+		},
+		{
+			"type": "range",
+			"id": "min_height_mobile",
+			"min": 200,
+			"max": 600,
+			"step": 50,
+			"unit": "px",
+			"label": "Mobile banner min height",
+			"default": 250
+		},
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading",
+			"default": "Heading"
+		},
+		{
+			"type": "text",
+			"id": "label",
+			"label": "Label",
+			"default": "Label"
+		},
+		{
+			"type": "text",
+			"id": "link_label",
+			"label": "Link label",
+			"default": "Link label"
+		},
+		{
+			"type": "url",
+			"id": "link_url",
+			"label": "Link url"
+		},
+		{
+			"type": "image_picker",
+			"id": "image_desktop",
+			"label": "Image desktop"
+		},
+		{
+			"type": "image_picker",
+			"id": "image_mobile",
+			"label": "Image mobile"
+		},
+		{
+			"type": "header",
+			"content": "Timer"
+		},
+		{
+			"type": "number",
+			"id": "timer_year",
+			"label": "Year",
+			"info": "Write year in the next format, example: 2024"
+		},
+		{
+			"type": "select",
+			"id": "timer_month",
+			"label": "Month",
+			"options": [
+				{
+					"value": "0",
+					"label": "Jan"
+				},
+				{
+					"value": "1",
+					"label": "Feb"
+				},
+				{
+					"value": "2",
+					"label": "Mar"
+				},
+				{
+					"value": "3",
+					"label": "Apr"
+				},
+				{
+					"value": "4",
+					"label": "May"
+				},
+				{
+					"value": "5",
+					"label": "Jun"
+				},
+				{
+					"value": "6",
+					"label": "Jul"
+				},
+				{
+					"value": "7",
+					"label": "Aug"
+				},
+				{
+					"value": "8",
+					"label": "Sep"
+				},
+				{
+					"value": "9",
+					"label": "Oct"
+				},
+				{
+					"value": "10",
+					"label": "Nov"
+				},
+				{
+					"value": "11",
+					"label": "Dec"
+				}
+			],
+			"default": "0"
+		},
+		{
+			"type": "select",
+			"id": "timer_day",
+			"label": "Day",
+			"options": [
+				{
+					"value": "1",
+					"label": "1"
+				},
+				{
+					"value": "2",
+					"label": "2"
+				},
+				{
+					"value": "3",
+					"label": "3"
+				},
+				{
+					"value": "4",
+					"label": "4"
+				},
+				{
+					"value": "5",
+					"label": "5"
+				},
+				{
+					"value": "6",
+					"label": "6"
+				},
+				{
+					"value": "7",
+					"label": "7"
+				},
+				{
+					"value": "8",
+					"label": "8"
+				},
+				{
+					"value": "9",
+					"label": "9"
+				},
+				{
+					"value": "10",
+					"label": "10"
+				},
+				{
+					"value": "11",
+					"label": "11"
+				},
+				{
+					"value": "12",
+					"label": "12"
+				},
+				{
+					"value": "13",
+					"label": "13"
+				},
+				{
+					"value": "14",
+					"label": "14"
+				},
+				{
+					"value": "15",
+					"label": "15"
+				},
+				{
+					"value": "16",
+					"label": "16"
+				},
+				{
+					"value": "17",
+					"label": "17"
+				},
+				{
+					"value": "18",
+					"label": "18"
+				},
+				{
+					"value": "19",
+					"label": "19"
+				},
+				{
+					"value": "20",
+					"label": "20"
+				},
+				{
+					"value": "21",
+					"label": "21"
+				},
+				{
+					"value": "22",
+					"label": "22"
+				},
+				{
+					"value": "23",
+					"label": "23"
+				},
+				{
+					"value": "24",
+					"label": "24"
+				},
+				{
+					"value": "25",
+					"label": "25"
+				},
+				{
+					"value": "26",
+					"label": "26"
+				},
+				{
+					"value": "27",
+					"label": "27"
+				},
+				{
+					"value": "28",
+					"label": "28"
+				},
+				{
+					"value": "29",
+					"label": "29"
+				},
+				{
+					"value": "30",
+					"label": "30"
+				},
+				{
+					"value": "31",
+					"label": "31"
+				}
+			],
+			"default": "1"
+		},
+		{
+			"type": "select",
+			"id": "timer_hour",
+			"label": "Hour",
+			"options": [
+				{
+					"value": "0",
+					"label": "0"
+				},
+				{
+					"value": "1",
+					"label": "1"
+				},
+				{
+					"value": "2",
+					"label": "2"
+				},
+				{
+					"value": "3",
+					"label": "3"
+				},
+				{
+					"value": "4",
+					"label": "4"
+				},
+				{
+					"value": "5",
+					"label": "5"
+				},
+				{
+					"value": "6",
+					"label": "6"
+				},
+				{
+					"value": "7",
+					"label": "7"
+				},
+				{
+					"value": "8",
+					"label": "8"
+				},
+				{
+					"value": "9",
+					"label": "9"
+				},
+				{
+					"value": "10",
+					"label": "10"
+				},
+				{
+					"value": "11",
+					"label": "11"
+				},
+				{
+					"value": "12",
+					"label": "12"
+				},
+				{
+					"value": "13",
+					"label": "13"
+				},
+				{
+					"value": "14",
+					"label": "14"
+				},
+				{
+					"value": "15",
+					"label": "15"
+				},
+				{
+					"value": "16",
+					"label": "16"
+				},
+				{
+					"value": "17",
+					"label": "17"
+				},
+				{
+					"value": "18",
+					"label": "18"
+				},
+				{
+					"value": "19",
+					"label": "19"
+				},
+				{
+					"value": "20",
+					"label": "20"
+				},
+				{
+					"value": "21",
+					"label": "21"
+				},
+				{
+					"value": "22",
+					"label": "22"
+				},
+				{
+					"value": "23",
+					"label": "23"
+				}
+			],
+			"default": "0"
+		},
+		{
+			"type": "select",
+			"id": "timer_timezone",
+			"label": "Timezone",
+			"options": [
+				{
+					"value": "+0",
+					"label": "GMT"
+				},
+				{
+					"value": "+1",
+					"label": "GMT+1:00"
+				},
+				{
+					"value": "+2",
+					"label": "GMT+2:00"
+				},
+				{
+					"value": "+3",
+					"label": "GMT+3:00"
+				},
+				{
+					"value": "+3.5",
+					"label": "GMT+3:30"
+				},
+				{
+					"value": "+4",
+					"label": "GMT+4:00"
+				},
+				{
+					"value": "+5",
+					"label": "GMT+5:00"
+				},
+				{
+					"value": "+5.5",
+					"label": "GMT+5:30"
+				},
+				{
+					"value": "+6",
+					"label": "GMT+6:00"
+				},
+				{
+					"value": "+7",
+					"label": "GMT+7:00"
+				},
+				{
+					"value": "+8",
+					"label": "GMT+8:00"
+				},
+				{
+					"value": "+9",
+					"label": "GMT+9:00"
+				},
+				{
+					"value": "+9.5",
+					"label": "GMT+9:30"
+				},
+				{
+					"value": "+10",
+					"label": "GMT+10:00"
+				},
+				{
+					"value": "+11",
+					"label": "GMT+11:00"
+				},
+				{
+					"value": "+12",
+					"label": "GMT+12:00"
+				},
+				{
+					"value": "-11",
+					"label": "GMT-11:00"
+				},
+				{
+					"value": "-10",
+					"label": "GMT-10:00"
+				},
+				{
+					"value": "-9",
+					"label": "GMT-9:00"
+				},
+				{
+					"value": "-8",
+					"label": "GMT-8:00"
+				},
+				{
+					"value": "-7",
+					"label": "GMT-7:00"
+				},
+				{
+					"value": "-6",
+					"label": "GMT-6:00"
+				},
+				{
+					"value": "-5",
+					"label": "GMT-5:00"
+				},
+				{
+					"value": "-4",
+					"label": "GMT-4:00"
+				},
+				{
+					"value": "-3.5",
+					"label": "GMT-3:30"
+				},
+				{
+					"value": "-3",
+					"label": "GMT-3:00"
+				},
+				{
+					"value": "-1",
+					"label": "GMT-1:00"
+				}
+			],
+			"default": "+0"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "section_background",
+			"label": "Background",
+			"default": "#FAF3E1"
+		},
+		{
+			"type": "color_background",
+			"id": "overlay",
+			"label": "Overlay"
+		},
+		{
+			"type": "color",
+			"id": "text_color",
+			"label": "Text",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "link_color",
+			"label": "Link",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "timer_background",
+			"label": "Timer background",
+			"default": "#FFD875"
+		},
+		{
+			"type": "color",
+			"id": "timer_value_color",
+			"label": "Timer value",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "timer_label_color",
+			"label": "Timer label",
+			"default": "#535353"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"presets": [
+		{
+			"name": "Countdown banner",
+			"settings": {
+				"timer_year": 2025,
+				"timer_month": "12",
+				"timer_day": "31",
+				"timer_hour": "23",
+				"timer_timezone": "+0"
+			}
+		}
+	]
+}
+{%- endschema -%}

@@ -1,0 +1,358 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Header menu
+	Render header menu
+	- menu: Menu object (required)
+	- is_show_language_selector: condition for render localization snippet.
+
+	Usage:
+	{%- render 'header-mobile-menu', menu: menu, is_show_language_selector: is_show_language_selector -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+<div
+	id="headerDrawerMenu"
+	class="drawer drawer--left header-mobile"
+	data-menu-type="main"
+	role="dialog"
+	aria-labelledby="headerDrawerMenuTitle"
+>
+	<p class="is-hidden" id="headerDrawerMenuTitle">
+		{{- "layout.navigation.drawer_menu" | t | escape -}}
+	</p>
+
+	<nav class="drawer__body header-mobile__menu js-mobile-header-main-menu" aria-label="{{ "layout.navigation.drawer_menu" | t | escape }}">
+		<div class="header-mobile__menu-close-button-wrapper">
+			<button
+				class="header-mobile__menu-close-button js-header-drawer-close-button"
+				type="button"
+				aria-expanded="false"
+				aria-controls="headerDrawerMenu"
+				aria-label="{{- "layout.navigation.close_drawer_menu" | t | escape -}}"
+			>
+				{%- render 'icons', icon: 'menu-close' -%}
+			</button>
+		</div>
+
+		<ul class="header-mobile__menu-list">
+			{%- for first_level_link in menu.links -%}
+				{%- assign has_megamenu = false -%}
+				{%- assign megamenu_object = "" -%}
+
+				{%- for block in blocks -%}
+					{%- assign menu_handle = block.settings.menu_handle | handleize -%}
+
+					{%- if first_level_link.handle == menu_handle -%}
+						{% if block.type == 'megamenu' or block.type == 'megamenu-row-menus' %}
+							{%- if first_level_link.links != blank -%}
+								{%- assign has_megamenu = true -%}
+								{%- assign megamenu_object = block -%}
+
+								{%- break -%}
+							{%- endif -%}
+						{%- else -%}
+							{%- assign has_megamenu = true -%}
+							{%- assign megamenu_object = block -%}
+
+							{%- break -%}
+						{%- endif -%}
+					{%- endif -%}
+				{%- endfor -%}
+
+				{%- assign highlight_icon							= megamenu_object.settings.highlight_icon -%}
+				{%- assign highlight_color							= megamenu_object.settings.highlight_color -%}
+				{%- assign highlight_background_color				= megamenu_object.settings.highlight_background_color -%}
+
+				<li>
+					{%- if first_level_link.links != blank or has_megamenu == true -%}
+						<button
+							class="header-mobile__menu-item js-mobile-header-menu-toggler"
+							type="button"
+							data-target="headerMobileMenu:{{- first_level_link.title | handleize -}}"
+							aria-controls="headerMobileMenu:{{- first_level_link.title | handleize -}}"
+							aria-expanded="false"
+							style="--highlight-color: {{ highlight_color }}; --highlight-background-color: {{ highlight_background_color }};"
+						>
+
+							{% assign item_icon = first_level_link.object.metafields.custom.menu_icon %}
+
+							{%- if item_icon != blank and highlight_background_color == "transparent" -%}
+								<span class="header-mobile__menu-item-icon-wrapper">
+									<picture>
+										<img
+											class="header-mobile__menu-item-icon"
+											src="{{ item_icon | image_url: width: 24, height: 24 }}"
+											srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+											alt="{{- item_icon.alt -}}"
+										>
+									</picture>
+								</span>
+							{%- endif -%}
+
+							<span class="header-mobile__menu-item-text{% if highlight_background_color != blank and highlight_background_color != 'rgba(0,0,0,0)' %} header-mobile__menu-item-text--highlighted{%- endif -%}">
+								{%- if highlight_icon -%}
+									{{- highlight_icon | image_url: width: 16, height: 16 | image_tag: alt: highlight_icon.alt, class: "header-mobile__menu-item-highlighted-icon" -}}
+								{%- endif -%}
+
+								{{- first_level_link.title | escape -}}
+							</span>
+
+							<span class="header-mobile__menu-item-toggle-icon">
+								{%- render 'icons', icon: 'arrow-down' -%}
+							</span>
+						</button>
+
+						<div
+							id="headerMobileMenu:{{- first_level_link.title | handleize -}}"
+							data-menu-type="nested"
+							class="header-mobile__menu-list-wrapper header-mobile__menu-list-wrapper--nested js-mobile-header-menu is-hidden"
+						>
+							<ul class="header-mobile__menu-list header-mobile__menu-list--nested">
+								<li>
+									<button
+										class="header-mobile__menu-item header-mobile__menu-item--back js-mobile-header-menu-toggler"
+										type="button"
+										data-target="headerMobileMenu:{{- first_level_link.title | handleize -}}"
+										aria-controls="headerMobileMenu:{{- first_level_link.title | handleize -}}"
+										aria-expanded="false"
+									>
+										<span class="header-mobile__menu-item-icon-back">
+											{%- render 'icons', icon: 'slider-arrow-up' -%}
+										</span>
+
+										<span class="header-mobile__menu-item-text">
+											{{- first_level_link.title -}}
+										</span>
+									</button>
+								</li>
+
+								{%- capture megamenu -%}
+									{%- if megamenu_object.type == 'megamenu' and has_megamenu == true -%}
+										{%- render 'header-mobile-mega-menu', megamenu_object: megamenu_object -%}
+									{%- endif -%}
+
+									{%- if megamenu_object.type == 'megamenu-grid-images' and has_megamenu == true -%}
+										{%- render 'header-mobile-mega-menu-grid-images', megamenu_object: megamenu_object -%}
+									{%- endif -%}
+
+									{%- if megamenu_object.type == 'megamenu-banner-links' and has_megamenu == true -%}
+										{%- render 'header-mobile-mega-menu-banner-links', megamenu_object: megamenu_object -%}
+									{%- endif -%}
+
+									{%- if megamenu_object.type == 'megamenu-row-menus' and has_megamenu == true -%}
+										{%- render 'header-mobile-mega-menu-row-menus', menu: first_level_link, megamenu_object: megamenu_object -%}
+									{%- endif -%}
+
+									{%- if megamenu_object.type == 'megamenu-half-to-half' and has_megamenu == true -%}
+										{%- if megamenu_object.settings.heading == blank and megamenu_object.settings.subheading == blank and megamenu_object.settings.image == blank -%}
+											{%- assign has_megamenu = false -%}
+										{%- else -%}
+											{%- render 'header-mobile-mega-menu-half-to-half', megamenu_object: megamenu_object -%}
+										{%- endif -%}
+									{%- endif -%}
+								{%- endcapture -%}
+
+								{%- if megamenu != blank and has_megamenu == true and megamenu_object.type != 'megamenu' -%}
+									<li>
+										{{- megamenu -}}
+									</li>
+								{%- else -%}
+									{%- for second_level_link in first_level_link.links -%}
+										<li {% if forloop.index == 1 %}style="margin-top: 16px;"{%- endif -%}>
+											{%- if second_level_link.links != blank -%}
+												<button
+													class="header-mobile__menu-item js-mobile-header-menu-toggler"
+													type="button"
+													data-target="headerMobileMenu:{{- second_level_link.title | handleize -}}-{{ first_level_link.handle }}-{{ forloop.index }}"
+													aria-controls="headerMobileMenu:{{- second_level_link.title | handleize -}}-{{ first_level_link.handle }}-{{ forloop.index }}"
+													aria-expanded="false"
+												>
+													{% assign item_icon = second_level_link.object.metafields.custom.menu_icon %}
+
+													{%- if item_icon != blank -%}
+														<span class="header-mobile__menu-item-icon-wrapper">
+															<picture>
+																<img
+																	class="header-mobile__menu-item-icon"
+																	src="{{ item_icon | image_url: width: 24, height: 24 }}"
+																	srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+																	alt="{{- item_icon.alt -}}"
+																>
+															</picture>
+														</span>
+													{%- endif -%}
+
+													<span class="header-mobile__menu-item-text">
+														{{ second_level_link.title | escape }}
+													</span>
+
+													<span class="header-mobile__menu-item-toggle-icon">
+														{%- render 'icons', icon: 'arrow-down' -%}
+													</span>
+												</button>
+
+												<div
+													id="headerMobileMenu:{{- second_level_link.title | handleize -}}-{{ first_level_link.handle }}-{{ forloop.index }}"
+													data-menu-type="deep-nested"
+													class="header-mobile__menu-list-wrapper header-mobile__menu-list-wrapper--deep-nested js-mobile-header-menu is-hidden"
+												>
+													<ul class="header-mobile__menu-list header-mobile__menu-list--nested">
+														<li>
+															<button
+																class="header-mobile__menu-item header-mobile__menu-item--back js-mobile-header-menu-toggler"
+																type="button"
+																data-target="headerMobileMenu:{{- second_level_link.title | handleize -}}-{{ first_level_link.handle }}-{{ forloop.index }}"
+																aria-controls="headerMobileMenu:{{- second_level_link.title | handleize -}}-{{ first_level_link.handle }}-{{ forloop.index }}"
+																aria-expanded="false"
+															>
+																<span class="header-mobile__menu-item-icon-back">
+																	{%- render 'icons', icon: 'slider-arrow-up' -%}
+																</span>
+
+																<span class="header-mobile__menu-item-text">
+																	{{- second_level_link.title -}}
+																</span>
+															</button>
+														</li>
+
+														{%- for third_level_link in second_level_link.links -%}
+															<li>
+																<a
+																	class="header-mobile__menu-item header-mobile__menu-item-link"
+																	href="{{- third_level_link.url -}}"
+																>
+																	{% assign item_icon = third_level_link.object.metafields.custom.menu_icon %}
+
+																	{%- if item_icon != blank -%}
+																		<span class="header-mobile__menu-item-icon-wrapper">
+																			<picture>
+																				<img
+																					class="header-mobile__menu-item-icon"
+																					src="{{ item_icon | image_url: width: 24, height: 24 }}"
+																					srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+																					alt="{{- item_icon.alt -}}"
+																				>
+																			</picture>
+																		</span>
+																	{%- endif -%}
+
+																	<span class="header-mobile__menu-item-text">
+																		{{- third_level_link.title -}}
+																	</span>
+																</a>
+															</li>
+														{%- endfor -%}
+													</ul>
+												</div>
+											{%- else -%}
+												<a
+													class="header-mobile__menu-item header-mobile__menu-item-link"
+													href="{{- second_level_link.url -}}"
+												>
+													{% assign item_icon = second_level_link.object.metafields.custom.menu_icon %}
+
+													{%- if item_icon != blank -%}
+														<span class="header-mobile__menu-item-icon-wrapper">
+															<picture>
+																<img
+																	class="header-mobile__menu-item-icon"
+																	src="{{ item_icon | image_url: width: 24, height: 24 }}"
+																	srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+																	alt="{{- item_icon.alt -}}"
+																>
+															</picture>
+														</span>
+													{%- endif -%}
+
+													<span class="header-mobile__menu-item-text">
+														{{- second_level_link.title -}}
+													</span>
+												</a>
+											{%- endif -%}
+										</li>
+									{%- endfor -%}
+
+									{%- if megamenu != blank and has_megamenu == true and megamenu_object.type == 'megamenu' -%}
+										<li>
+											{{- megamenu -}}
+										</li>
+									{%- endif -%}
+								{%- endif -%}
+							</ul>
+						</div>
+					{%- else -%}
+						<a
+							class="header-mobile__menu-item header-mobile__menu-item-link"
+							href="{{- first_level_link.url -}}"
+						>
+							{% assign item_icon = first_level_link.object.metafields.custom.menu_icon %}
+
+							{%- if item_icon != blank -%}
+								<span class="header-mobile__menu-item-icon-wrapper">
+									<picture>
+										<img
+											class="header-mobile__menu-item-icon"
+											src="{{ item_icon | image_url: width: 24, height: 24 }}"
+											srcset="{{ item_icon | image_url: width: 24, height: 24 }} 1x, {{ item_icon | image_url: width: 48, height: 48 }} 2x"
+											alt="{{- item_icon.alt -}}"
+										>
+									</picture>
+								</span>
+							{%- endif -%}
+
+							<span class="header-mobile__menu-item-text">
+								{{- first_level_link.title | escape -}}
+							</span>
+						</a>
+					{%- endif -%}
+				</li>
+			{%- endfor -%}
+		</ul>
+
+		<ul class="header-mobile__additional-menu">
+			{%- if shop.customer_accounts_enabled -%}
+				<li>
+					<a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}" class="header-mobile__menu-item header-mobile__menu-item-link">
+						{%- render 'icons', icon: 'account' -%}
+
+						<span class="header-mobile__menu-item-text">
+							{%- if customer -%}
+								{{ 'customer.account.title' | t }}
+							{% else %}
+								{{ 'customer.login.title' | t }}
+							{%- endif -%}
+						</span>
+					</a>
+				</li>
+			{%- endif -%}
+
+			{%- if is_show_language_selector == true and localization.available_languages.size > 1 -%}
+				{% assign language_selector = true %}
+			{%- endif -%}
+
+			{%- if is_show_country_selector == true and localization.available_countries.size > 1 -%}
+				{% assign country_selector = true %}
+			{%- endif -%}
+
+			{%- if language_selector == true or country_selector -%}
+				<div class="header-mobile__localization">
+					{%- if language_selector == true -%}
+						<li>
+							<div class="header-mobile__localization">
+								{%- render 'language-localization-form', class: 'header-mobile', id_prefix: 'header-mobile', form_id: 'header-mobile-localization-form' -%}
+							</div>
+						</li>
+					{%- endif -%}
+
+					{%- if country_selector == true -%}
+						<li>
+							<div class="header-mobile__localization">
+								{%- render 'country-localization-form', class: 'header-mobile', id_prefix: 'header-mobile', form_id: 'header-mobile-county-form' -%}
+							</div>
+						</li>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+		</ul>
+	</nav>
+</div>

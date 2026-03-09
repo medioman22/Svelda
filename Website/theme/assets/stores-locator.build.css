@@ -1,0 +1,245 @@
+.stores-locator {
+  max-width: var(--container-width);
+  padding: 0 16px;
+  margin: 0 auto;
+}
+.stores-locator .stores-locator__heading {
+  margin-bottom: 32px;
+}
+.stores-locator .stores-locator__wrapper {
+  display: none;
+}
+.stores-locator .stores-locator__wrapper.stores-locator__wrapper--mobile {
+  display: block;
+}
+.stores-locator .stores-locator__item {
+  padding: 16px;
+  background-color: var(--color-background-secondary);
+  border-radius: var(--global-border-radius);
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: var(--animate-img-scale);
+}
+.stores-locator .stores-locator__item.is-active {
+  background-color: var(--background-color);
+  color: var(--color-background);
+}
+.stores-locator .stores-locator__item.is-active .stores-locator__item-title {
+  color: var(--color-accent);
+}
+.stores-locator .stores-locator__item.is-active .stores-locator__item-text {
+  color: var(--color-background);
+}
+.stores-locator .stores-locator__item.is-active .stores-locator__item-image.stores-locator__item-image--placeholder {
+  background-color: var(--color-img-placeholder-bg);
+}
+.stores-locator .stores-locator__item + .stores-locator__item {
+  margin-top: 8px;
+}
+.stores-locator .stores-locator__item-wrapper {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+.stores-locator .stores-locator__item-wrapper:focus-visible {
+  outline: 2px solid var(--color-text-primary, #000);
+  outline-offset: 8px;
+  border-radius: var(--global-border-radius);
+}
+.stores-locator .stores-locator__item-box-image {
+  min-width: 64px;
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 12px;
+  margin-right: 12px;
+  overflow: hidden;
+}
+.stores-locator .stores-locator__item-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stores-locator .stores-locator__item-box-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.stores-locator .stores-locator__item-text {
+  margin-top: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+  transition: 0.5s ease opacity;
+}
+.stores-locator .stores-locator__item-box-info {
+  margin-left: 76px;
+  margin-top: 16px;
+}
+.stores-locator .stores-locator__item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.stores-locator .stores-locator__item-info + .stores-locator__item-info {
+  padding-top: 12px;
+}
+.stores-locator .stores-locator__info-box-icon {
+  flex-shrink: 0;
+}
+.stores-locator .stores-locator__info-icon {
+  width: 24px;
+  height: 24px;
+}
+.stores-locator .stores-locator__info-text {
+  word-break: break-word;
+}
+.stores-locator .stores-locator__info-text a {
+  color: currentColor;
+  transition-duration: var(--timing-short);
+  transition-property: text-decoration-color;
+}
+.stores-locator .stores-locator__info-text a:focus-visible {
+  outline: 2px solid currentColor;
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .stores-locator .stores-locator__info-text a:hover {
+    text-decoration-color: transparent;
+  }
+}
+.stores-locator .stores-locator__box-map {
+  margin-top: 24px;
+  border-radius: calc(var(--global-border-radius) / 2);
+  overflow: hidden;
+}
+.stores-locator .stores-locator__map-wrapper {
+  display: block;
+  padding-top: 58.87%;
+  position: relative;
+  height: 100%;
+}
+.stores-locator .stores-locator__map,
+.stores-locator .stores-locator__map-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.stores-locator .stores-locator__map.stores-locator__map-image--placeholder,
+.stores-locator .stores-locator__map-image.stores-locator__map-image--placeholder {
+  background-color: var(--color-img-placeholder-bg);
+}
+.stores-locator .stores-locator__heading.need-animate,
+.stores-locator .stores-locator__map-wrapper.need-animate {
+  opacity: 0;
+  transition-property: opacity;
+}
+.stores-locator .stores-locator__item.need-animate {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition-property: background-color, color, transform, opacity;
+  transition-delay: 0s, 0s, var(--delay-step), var(--delay-step);
+}
+.stores-locator .stores-locator__map-image.need-animate {
+  transform: scale(1.25);
+  transition-duration: 1.25s;
+  transition-property: opacity, transform;
+}
+.stores-locator.animated .stores-locator__heading.need-animate,
+.stores-locator.animated .stores-locator__map-wrapper.need-animate {
+  opacity: 1;
+}
+.stores-locator.animated .stores-locator__item.need-animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+.stores-locator.animated .stores-locator__map-image.need-animate {
+  transform: scale(1);
+}
+html.no-js .stores-locator {
+  opacity: 1;
+}
+@media (min-width: 992px) {
+  .stores-locator .stores-locator__wrapper {
+    min-height: 600px;
+    justify-content: flex-end;
+    gap: 16px;
+    position: relative;
+    overflow-y: hidden;
+  }
+  .stores-locator .stores-locator__wrapper.stores-locator__wrapper--mobile {
+    display: none;
+  }
+  .stores-locator .stores-locator__wrapper.stores-locator__wrapper--desktop {
+    display: flex;
+  }
+  .stores-locator .stores-locator__list {
+    width: 36.451%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  .stores-locator .stores-locator__item + .stores-locator__item {
+    margin-top: 16px;
+  }
+  .stores-locator .stores-locator__item-box-image {
+    min-width: 100px;
+    width: 100px;
+    height: 100px;
+    margin-right: 16px;
+  }
+  .stores-locator .stores-locator__item-title {
+    word-break: break-word;
+  }
+  .stores-locator .stores-locator__item-text {
+    display: block;
+    margin-top: 16px;
+    word-break: break-word;
+  }
+  .stores-locator .stores-locator__item-body {
+    overflow: hidden;
+    transition: 0.5s ease height;
+  }
+  .stores-locator .stores-locator__item-box-info {
+    margin-left: 116px;
+  }
+  .stores-locator .stores-locator__item-info + .stores-locator__item-info {
+    padding-top: 16px;
+  }
+  .stores-locator .stores-locator__box-map {
+    margin-top: 0;
+    width: calc(63.549% - 16px);
+    border-radius: var(--global-border-radius);
+  }
+  .stores-locator .stores-locator__map-wrapper {
+    padding-top: 58.87%;
+  }
+}
+@media (max-width: 991.98px) {
+  .stores-locator .stores-locator__item {
+    overflow: hidden;
+  }
+  .stores-locator .stores-locator__item:not(.is-active) .stores-locator__item-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 20px;
+    transition-property: margin-top;
+    transition-duration: 0.5s;
+  }
+  .stores-locator .stores-locator__item:not(.is-active) .stores-locator__item-text {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .stores-locator .stores-locator__item.need-animate {
+    transition: height 0.5s ease, background-color 0.5s ease;
+  }
+}

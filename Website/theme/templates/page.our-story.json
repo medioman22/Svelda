@@ -1,0 +1,146 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "page-template": {
+      "type": "page-template",
+      "settings": {}
+    },
+    "banner-with-text": {
+      "type": "banner",
+      "settings": {}
+    },
+    "richtext": {
+      "type": "richtext",
+      "settings": {}
+    },
+    "image-with-text-first": {
+      "type": "image-with-text",
+      "settings": {
+        "heading": "Text heading",
+        "text_content": "<p>Combine an image with text to highlight a specific product, collection, or blog post of your choice. Enhance the content by including information on its availability, style, or possibly a review.</p>",
+        "button_label": "Button label",
+        "button_aria_label": "Button label",
+        "button_url": "/"
+      }
+    },
+    "image-with-text-second": {
+      "type": "image-with-text",
+      "settings": {
+        "image_position": "right",
+        "heading": "Text heading",
+        "text_content": "<p>Combine an image with text to highlight a specific product, collection, or blog post of your choice. Enhance the content by including information on its availability, style, or possibly a review.</p>",
+        "button_label": "Button label",
+        "button_aria_label": "Button label",
+        "button_url": "/"
+      }
+    },
+    "image-with-text-third": {
+      "type": "image-with-text",
+      "settings": {
+        "text_alignment": "center",
+        "heading": "Text heading",
+        "text_content": "<p>Combine an image with text to highlight a specific product, collection, or blog post of your choice. Enhance the content by including information on its availability, style, or possibly a review.</p>",
+        "button_label": "Button label",
+        "button_aria_label": "Button label",
+        "button_url": "/"
+      }
+    },
+    "our-team": {
+      "type": "our-team",
+      "settings": {}
+    },
+    "video": {
+      "type": "video",
+      "settings": {}
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {}
+    },
+    "banner": {
+      "type": "banner",
+      "settings": {}
+    },
+    "gallery": {
+      "type": "gallery",
+      "settings": {
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "benefits": {
+      "type": "benefits",
+      "blocks": {
+        "benefits_item-0": {
+          "type": "benefits_item",
+          "settings": {}
+        },
+        "benefits_item-1": {
+          "type": "benefits_item",
+          "settings": {}
+        },
+        "benefits_item-2": {
+          "type": "benefits_item",
+          "settings": {}
+        },
+        "benefits_item-3": {
+          "type": "benefits_item",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "benefits_item-0",
+        "benefits_item-1",
+        "benefits_item-2",
+        "benefits_item-3"
+      ],
+      "settings": {
+        "section_background": "#ffffff",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 0,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 0
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "layout": "one_column",
+        "heading": "Newsletter",
+        "subheading": "Subheading",
+        "text": "<p>Be the first to know about new collections and exclusive offers</p>",
+        "success_message": "Thanks for subscribing",
+        "image_position": "left",
+        "email_placeholder": "Your email"
+      }
+    },
+    "ticker": {
+      "type": "ticker",
+      "settings": {}
+    }
+  },
+  "order": [
+    "page-template",
+    "banner-with-text",
+    "richtext",
+    "image-with-text-first",
+    "image-with-text-second",
+    "image-with-text-third",
+    "our-team",
+    "video",
+    "featured-collection",
+    "banner",
+    "gallery",
+    "benefits",
+    "newsletter",
+    "ticker"
+  ]
+}

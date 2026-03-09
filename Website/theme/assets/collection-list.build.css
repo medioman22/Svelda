@@ -1,0 +1,106 @@
+.collection-list {
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+.collection-list .collection-list__title {
+  margin-bottom: 24px;
+  padding: 0 16px;
+  text-align: center;
+  word-break: break-word;
+}
+.collection-list .collection-list__title.need-animate {
+  opacity: 0;
+  transition-property: opacity;
+}
+.collection-list .collection-list__slider {
+  padding-top: 4px;
+}
+.collection-list .collection-list__row.swiper-wrapper {
+  display: flex;
+  align-items: unset;
+}
+.collection-list .collection-list__col {
+  width: 100%;
+  padding-bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.collection-list .collection-list__col.need-animate {
+  opacity: 0;
+  transform: translateY(25px);
+  transition-property: opacity, transform;
+}
+.collection-list .collection-list__pagination {
+  margin-top: 20px;
+  padding-bottom: 2px;
+  text-align: center;
+}
+.collection-list .collection-list__button-wrapper {
+  opacity: 0;
+  margin-top: 32px;
+  padding: 0 20px;
+  text-align: center;
+  transform: translateY(15px);
+}
+.collection-list .collection-list__button-wrapper.animated {
+  opacity: 1;
+  transform: translateY(0);
+  transition-property: opacity, transform;
+  transition-duration: var(--animate-time);
+}
+html.no-js .collection-list .collection-list__button-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+}
+.collection-list .collection-list__button {
+  word-wrap: break-word;
+  hyphens: auto;
+}
+.collection-list.animated .collection-list__title.need-animate {
+  opacity: 1;
+}
+.collection-list.animated .collection-list__col.need-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 767.98px) {
+  .collection-list .collection-list__slider {
+    padding: 0 8px;
+  }
+}
+@media (min-width: 768px) {
+  .collection-list {
+    padding: 0 16px;
+  }
+  .collection-list .collection-list__title {
+    margin-bottom: 32px;
+    padding: 0;
+  }
+  .collection-list .collection-list__slider {
+    overflow: visible;
+  }
+  .collection-list .collection-list__row--center-desktop {
+    justify-content: center;
+  }
+  .collection-list .collection-list__row.collection-list__row--center {
+    justify-content: center;
+  }
+  .collection-list .collection-list__row.swiper-wrapper {
+    flex-wrap: wrap;
+    width: auto;
+    margin: 0 -8px;
+    row-gap: 32px;
+  }
+  .collection-list .collection-list__col.collection-list__col--2 {
+    width: 50%;
+  }
+  .collection-list .collection-list__col.collection-list__col--3 {
+    width: 33.33333%;
+  }
+  .collection-list .collection-list__col.collection-list__col--4 {
+    width: 25%;
+  }
+  .collection-list .collection-list__pagination {
+    display: none;
+  }
+}

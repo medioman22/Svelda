@@ -1,0 +1,159 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Product card
+	- product: product object (required, object)
+	- is_lazy: is lazy load enable (optional, default: true, boolean)
+	- hide_button: is hide button (optional, default: false, boolean)
+	- center_content: center content relative to the image (optional, default: false, boolean)
+{%- endcomment -%}
+
+{%- assign currency_code_enabled	= settings.is_currency_code_enabled -%}
+{%- assign show_unit_price			= settings.is_show_unit_price -%}
+
+{%- render 'adastra' with '/src/styles/product-card-mini.scss' -%}
+
+<article class="product-card-mini">
+	<div class="product-card-mini__container">
+		<a href="{{- product.url -}}"
+		   class="product-card-mini__image-wrapper"
+		   aria-label="{{- product.title | default: 'products.product_card.product_title' | t | escape -}}"
+		>
+			{%- if product != blank -%}
+				{%- assign image = product.featured_image | default: settings.product_default_image -%}
+
+				{%- capture image_eager -%}
+					<picture>
+						<source
+							srcset="{{ image | image_url: width: 70 }} 1x, {{ image | image_url: width: 140 }} 2x"
+							media="(max-width: 373px)"
+							width="70"
+							height="70"
+						>
+
+						<source
+							srcset="{{ image | image_url: width: 90 }} 1x, {{ image | image_url: width: 180 }} 2x"
+							media="(max-width: 1199px)"
+							width="90"
+							height="90"
+						>
+
+						<img
+							class="product-card-mini__image"
+							src="{{ image | image_url: width: 80 }}"
+							srcset="{{ image | image_url: width: 80  }} 1x, {{ image | image_url: width: 160 }} 2x"
+							width="80"
+							height="80"
+							alt="{{- image.alt | escape -}}"
+						/>
+					</picture>
+				{%- endcapture -%}
+
+				{%- if enable_lazy_load -%}
+					<picture class="lazy">
+						<source
+							data-srcset="{{ image | image_url: width: 70 }} 1x, {{ image | image_url: width: 140 }} 2x"
+							srcset="{{ image | image_url: width: 10 }} 1x, {{ image | image_url: width: 10 }} 2x"
+							media="(max-width: 373px)"
+							width="70"
+							height="70"
+						>
+
+						<source
+							data-srcset="{{ image | image_url: width: 90 }} 1x, {{ image | image_url: width: 180 }} 2x"
+							srcset="{{ image | image_url: width: 10 }} 1x, {{ image | image_url: width: 10 }} 2x"
+							media="(max-width: 1199px)"
+							width="90"
+							height="90"
+						>
+
+						<img
+							class="product-card-mini__image"
+							src="{{ image | image_url: width: 10 }}"
+							data-src="{{ image | image_url: width: 80 }}"
+							srcset="{{ image | image_url: width: 10  }} 1x, {{ image | image_url: width: 10 }} 2x"
+							data-srcset="{{ image | image_url: width: 80  }} 1x, {{ image | image_url: width: 160 }} 2x"
+							width="80"
+							height="80"
+							alt="{{- image.alt | escape -}}"
+						/>
+					</picture>
+
+					<noscript>
+						{{- image_eager -}}
+					</noscript>
+				{%- else -%}
+					{{- image_eager -}}
+				{%- endif -%}
+			{%- else -%}
+				{%- assign min	     = 1 -%}
+				{%- assign max       = 6 -%}
+				{%- assign diff	     = max | minus: min -%}
+				{%- assign random_number		= "now" | date: "%N" | modulo: diff | plus: min -%}
+				{%- assign placeholer_svg_name	= 'product-' | append: random_number -%}
+				{{- placeholer_svg_name | placeholder_svg_tag: 'product-card-mini__image product-card-mini__image--placeholder' -}}
+			{%- endif -%}
+		</a>
+
+		<div class="product-card-mini__content {% if center_content == true %}product-card-mini__content--centered{% endif -%}">
+			<a class="product-card-mini__title focus-visible-outline" href="{{ product.url }}">
+				{%- if product != blank -%}
+					{{- product.title -}}
+				{%- else -%}
+					{{- 'products.product_card.product_title' | t -}}
+				{%- endif -%}
+			</a>
+
+			<div class="product-card-mini__content-inner">
+				<div class="product-card-mini__price">
+					{%- render 'price', product: product, show_unit_price: show_unit_price, currency_code_enabled: currency_code_enabled, simplified_view: simplified_view -%}
+				</div>
+
+				{%- if hide_button != true -%}
+					<button
+						class="button button--secondary-border button--small focus-visible-outline product-card-mini__button product-card-mini__button--js js-add-to-cart"
+						type="button"
+						{% if product != blank %}
+							data-product-handle="{{- product.handle -}}"
+							data-min-quantity="{{- product.selected_or_first_available_variant.quantity_rule.min -}}"
+							{% if product.has_only_default_variant or product.variants.size == 1 %}
+								data-variant-id="{{- product.variants[0].id -}}"
+							{% endif %}
+						{% endif %}
+						{% unless product.available %}
+							disabled
+						{% endunless %}
+					>
+						{% if product.available %}
+							{%- if product.has_only_default_variant or product.variants.size == 1 -%}
+								{{- 'products.product_card.add_to_cart' | t -}}
+							{%- else -%}
+								{{- 'products.product_card.open_quick_view' | t -}}
+							{%- endif -%}
+						{% else %}
+							{{- 'products.product.sold_out' | t -}}
+						{% endif %}
+					</button>
+
+					<noscript>
+						<a
+							class="button button--secondary-border button--small focus-visible-outline product-card-mini__button"
+							href="{{- product.url | default: '/' -}}"
+						>
+							<span class="slideshow__product-button-text">
+								{% if product.available %}
+									{%- if product.has_only_default_variant or product.variants.size == 1 -%}
+										{{- 'products.product_card.add_to_cart' | t -}}
+									{%- else -%}
+										{{- 'products.product_card.open_quick_view' | t -}}
+									{%- endif -%}
+								{% else %}
+									{{- 'products.product.sold_out' | t -}}
+								{% endif %}
+							</span>
+						</a>
+					</noscript>
+				{%- endif -%}
+			</div>
+		</div>
+	</div>
+</article>

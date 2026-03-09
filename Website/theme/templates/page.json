@@ -1,0 +1,444 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "default-page": {
+      "type": "page-template",
+      "settings": {
+        "offset_top_desktop": 60,
+        "offset_bottom_desktop": 0,
+        "offset_top_mobile": 30,
+        "offset_bottom_mobile": 30
+      }
+    },
+    "richtext_GyAU6y": {
+      "type": "richtext",
+      "disabled": true,
+      "name": "Rich text",
+      "settings": {
+        "heading": "",
+        "subheading": "",
+        "text_content": "<p>At <strong>SVELDA</strong>, we believe the ritual of rest deserves the same architectural rigor as the ritual of dining. While our bowls provide the structure for sustenance, our textiles provide the climate for recovery. The fabric choice isn't merely an aesthetic layer; it is a critical environmental factor for a creature that experiences the world through tactile proximity and thermal regulation.</p><p>In an interior landscape often dominated by cold stone and synthetic fibers, the right textile acts as a biological bridge. Cats spend the majority of their lives in direct contact with their resting surface, absorbing its temperature and texture into their very being. Our selection—ranging from the resilient, structural snap of <strong>Tempo</strong> cotton to the ethereal, cloud-like loft of our <strong>Inverno</strong> cashmere blend—is curated to respect this feline sensitivity. Every fiber is chosen for its bioactive warmth, breathability, and sensory depth, ensuring that the \"soft\" elements of your home are as high-performing and sophisticated as the hard ones. We don’t just provide a place to sleep; we plate a sanctuary.</p>",
+        "text_alignment": "left",
+        "enable_read_more": false,
+        "read_more_text": "Show more",
+        "show_less_text": "Show less",
+        "background_color": "",
+        "text_color": "",
+        "link_color": "",
+        "container_width": "inherit",
+        "offset_top_desktop": 0,
+        "offset_bottom_desktop": 20,
+        "offset_top_mobile": 0,
+        "offset_bottom_mobile": 0
+      }
+    },
+    "blocks_gXQHb4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_dLHDYD": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_dLHDYD"
+      ],
+      "settings": {}
+    },
+    "image_with_text_QKdtfP": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "start",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_50PM.jpg",
+        "heading": "TEMPO",
+        "subheading": "Heavy-duty architectural cotton.",
+        "text_content": "<p>Luxury that isn't afraid of a little work. TEMPO is our most structural textile, designed for the \"lived-in\" life without losing its gallery-grade finish. It provides a crisp, firm resistance for those serious feline kneading sessions—ensuring the mat keeps its shape, even if your cat loses theirs in a deep nap.</p><p><br/><strong>Tactile Profile:</strong> Matte, cool-to-the-touch, and impeccably sturdy. Sophistication that stands its ground.</p><p><br/><strong>Care Protocol:</strong> Machine wash up to 40°</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "cards_grid_hEY8GG": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_9Ngiqk": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_50PM.jpg",
+            "title": "TEMPO • Sand",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_XtKqaz": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_58PM.jpg",
+            "title": "TEMPO • Earth",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_eyhbYm": {
+          "type": "card",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+            "title": "Short heading",
+            "text": "Some short text about some feature on your site",
+            "link_url": ""
+          }
+        },
+        "card_LVVWXG": {
+          "type": "card",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "title": "Short heading",
+            "text": "Some short text about some feature on your site",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_9Ngiqk",
+        "card_XtKqaz",
+        "card_eyhbYm",
+        "card_LVVWXG"
+      ],
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "4",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "1769969780ec9d1ac8": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_PT7VFT": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_PT7VFT"
+      ],
+      "settings": {}
+    },
+    "gallery_JYKyn3": {
+      "type": "gallery",
+      "blocks": {
+        "block_Ur7X6T": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_30PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_K3DNBU": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_20PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_n4ie7Y": {
+          "type": "block",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        },
+        "block_iQtLjM": {
+          "type": "block",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "url": "",
+            "open_in_new_tab": false
+          }
+        }
+      },
+      "block_order": [
+        "block_Ur7X6T",
+        "block_K3DNBU",
+        "block_n4ie7Y",
+        "block_iQtLjM"
+      ],
+      "disabled": true,
+      "name": "Image gallery",
+      "settings": {
+        "title": "",
+        "text": "",
+        "button_label": "View More",
+        "button_link": "",
+        "button_style": "secondary-border",
+        "text_color": "#333333",
+        "background_color": "#fafaf4",
+        "overlay_color": "rgba(0,0,0,.5)",
+        "container_width": "inherit",
+        "offset_top_desktop": 32,
+        "offset_bottom_desktop": 32,
+        "offset_top_mobile": 32,
+        "offset_bottom_mobile": 32
+      }
+    },
+    "image_with_text_BYBULf": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "start",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+        "heading": "AUTUNNO",
+        "subheading": "100% Pure Virgin Wool",
+        "text_content": "<p>A visceral return to nature’s most elite fiber. AUTUNNO is an organic masterpiece of thermal regulation, wicking moisture and radiating a dry, superior warmth. It mimics the heat of a littermate—providing a grounded, bioactive sanctuary for the cat that believes every sunbeam in the house belongs exclusively to them.</p><p><br/><strong>Tactile Profile:</strong> Rich, springy, and authentically fibrous. A harvest of pure, breathable comfort.</p><p><br/><strong>Care Protocol:</strong> Hand wash cold or use a dedicated wool cycle.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "cards_grid_k4nEKr": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_VhfemR": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_30PM.jpg",
+            "title": "TEMPO • Ash",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_ifWNTN": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_20PM.jpg",
+            "title": "TEMPO • Leaf",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_n8YnKX": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_5_25PM.jpg",
+            "title": "AUTUNNO • Slate",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_KBPD6B": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_4_53PM.jpg",
+            "title": "AUTUNNO • Bark",
+            "text": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_VhfemR",
+        "card_ifWNTN",
+        "card_n8YnKX",
+        "card_KBPD6B"
+      ],
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "4",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "blocks_qaGjGL": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_ae889b7_MEiWy6": {
+          "type": "ai_gen_block_ae889b7",
+          "settings": {
+            "line_color": "#000000",
+            "line_thickness": 3,
+            "desktop_width_percent": 75
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_ae889b7_MEiWy6"
+      ],
+      "settings": {}
+    },
+    "image_with_text_xPNNNG": {
+      "type": "image-with-text",
+      "name": "Image with text",
+      "settings": {
+        "image_position": "left",
+        "text_alignment": "left",
+        "content_vertical_alignment": "start",
+        "two_images_layout": "double_vertical",
+        "first_desktop_image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM.jpg",
+        "heading": "INVERNO",
+        "subheading": "90% Virgin Wool | 10% Cashmere",
+        "text_content": "<p>The absolute summit of the SVELDA range. INVERNO is a voluptuous blend of warmth and weightless loft, designed for the feline that demands the extraordinary (which is to say, all of them). The Grade-A Cashmere cushions aging joints and delicate paws in a whisper-soft embrace. It’s the ultimate plating for a nap—luxury, finally off the leash.</p><p><br/><strong>Tactile Profile:</strong> Ethereal, velvet-soft, and decadently plush. Luxury, finally off the leash.</p><p><br/><strong>Care Protocol:</strong> Dry clean recommended.</p>",
+        "button_label": "",
+        "button_aria_label": "",
+        "button_url": "/",
+        "button_style": "secondary-border",
+        "container_width": "inherit",
+        "offset_top_desktop": 50,
+        "offset_bottom_desktop": 50,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    },
+    "cards_grid_pMWFcn": {
+      "type": "cards-grid",
+      "blocks": {
+        "card_PU4UAc": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_20PM.jpg",
+            "title": "INVERNO • Coal",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_jqGccD": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_56PM_2.jpg",
+            "title": "INVERNO • Mist",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_yyXhEy": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM.jpg",
+            "title": "INVERNO • Cream",
+            "text": "",
+            "link_url": ""
+          }
+        },
+        "card_xARV8j": {
+          "type": "card",
+          "settings": {
+            "image": "shopify://shop_images/Generated_Image_February_01_2026_-_6_42PM_2.jpg",
+            "title": "INVERNO • Petal",
+            "text": "",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "card_PU4UAc",
+        "card_jqGccD",
+        "card_yyXhEy",
+        "card_xARV8j"
+      ],
+      "name": "Cards grid",
+      "settings": {
+        "label": "",
+        "title": "",
+        "text": "",
+        "button_label": "",
+        "button_link": "/",
+        "button_style": "secondary-border",
+        "text_content_position": "top",
+        "mobile_layout": "carousel",
+        "cards_per_row": "4",
+        "aspect_ratio": "square",
+        "center_cards_on_desktop": false,
+        "container_width": "1952px",
+        "offset_top_desktop": 40,
+        "offset_bottom_desktop": 40,
+        "offset_top_mobile": 25,
+        "offset_bottom_mobile": 25
+      }
+    }
+  },
+  "order": [
+    "default-page",
+    "richtext_GyAU6y",
+    "blocks_gXQHb4",
+    "image_with_text_QKdtfP",
+    "cards_grid_hEY8GG",
+    "1769969780ec9d1ac8",
+    "gallery_JYKyn3",
+    "image_with_text_BYBULf",
+    "cards_grid_k4nEKr",
+    "blocks_qaGjGL",
+    "image_with_text_xPNNNG",
+    "cards_grid_pMWFcn"
+  ]
+}

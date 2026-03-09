@@ -1,0 +1,20 @@
+.tabs-ui__tab {
+  padding: 8px 16px;
+  border-radius: 12px;
+  color: var(--color-text-thirdly);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.tabs-ui__tab.is-active {
+  color: var(--color-text-primary);
+  background-color: var(--color-accent);
+}
+@media (-moz-touch-enabled: 0), (hover: hover), (pointer: fine) {
+  .tabs-ui__tab:hover {
+    transition-property: color;
+    transition-duration: var(--timing-base);
+  }
+  .tabs-ui__tab:hover:not(.is-active) {
+    color: var(--color-text-primary);
+  }
+}

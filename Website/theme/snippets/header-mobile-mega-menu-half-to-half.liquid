@@ -1,0 +1,350 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Header mobile mega menu half to half
+	Render header mobile mega menu half to half
+	- megamenu_object: blocks object using for output media content.
+
+	Usage:
+	{%- render 'header-mobile-mega-menu-half-to-half', megamenu_object: megamenu_object -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign heading          = megamenu_object.settings.heading -%}
+{%- assign subheading       = megamenu_object.settings.subheading -%}
+{%- assign button_label1	= megamenu_object.settings.button_label1 -%}
+{%- assign button_label2	= megamenu_object.settings.button_label2 -%}
+{%- assign button_link1		= megamenu_object.settings.button_link1 -%}
+{%- assign button_link2		= megamenu_object.settings.button_link2 -%}
+{%- assign button1_style	= megamenu_object.settings.button1_style -%}
+{%- assign button2_style	= megamenu_object.settings.button2_style -%}
+
+{%- assign left_image_1  = megamenu_object.settings.left_image_1 -%}
+{%- assign left_image_2  = megamenu_object.settings.left_image_2 -%}
+{%- assign right_image_1 = megamenu_object.settings.right_image_1 -%}
+{%- assign right_image_2 = megamenu_object.settings.right_image_2 -%}
+
+{%- assign show_socials							= megamenu_object.settings.show_socials -%}
+{%- assign button_icon_color_social 			= megamenu_object.settings.button_icon_color_social -%}
+{%- assign button_background_color_social     	= megamenu_object.settings.button_background_color_social -%}
+{%- assign button_border_color_social     		= megamenu_object.settings.button_border_color_social -%}
+{%- assign button_icon_color_social_hover     	= megamenu_object.settings.button_icon_color_social_hover -%}
+{%- assign button_background_color_social_hover = megamenu_object.settings.button_background_color_social_hover -%}
+{%- assign button_border_color_social_hover     = megamenu_object.settings.button_border_color_social_hover -%}
+
+{%- if left_image_1 != blank and right_image_1 != blank -%}
+	{%- assign image_width = 216 -%}
+	{%- assign image_width_2x = 432 -%}
+	{%- assign image_height = 330 -%}
+
+	{%- assign image_small_width = 186 -%}
+	{%- assign image_small_width_2x = 372 -%}
+	{%- assign image_small_height = 285 -%}
+
+	{%- assign image_small_mobile_width = 164 -%}
+	{%- assign image_small_mobile_width_2x = 328 -%}
+	{%- assign image_small_mobile_height = 250 -%}
+{%- elsif left_image_1 != blank or right_image_1 != blank -%}
+	{%- assign image_width = 448 -%}
+	{%- assign image_width_2x = 896 -%}
+	{%- assign image_height = 327 -%}
+
+	{%- assign image_small_width = 388 -%}
+	{%- assign image_small_width_2x = 776 -%}
+	{%- assign image_small_height = 283 -%}
+
+	{%- assign image_small_mobile_width = 343 -%}
+	{%- assign image_small_mobile_width_2x = 686 -%}
+	{%- assign image_small_mobile_height = 250 -%}
+{%- endif -%}
+
+{%- assign image_size = image_width | append: 'x' -%}
+{%- assign image_size_2x = image_width_2x | append: 'x' -%}
+{%- assign image_small_size = image_small_width | append: 'x' -%}
+{%- assign image_small_size_2x = image_small_width_2x | append: 'x' -%}
+{%- assign image_extra_small_size = image_extra_small_width | append: 'x' -%}
+{%- assign image_extra_small_size_2x = image_extra_small_width_2x | append: 'x' -%}
+{%- assign image_small_tablet_portrait_size = image_small_tablet_portrait_width | append: 'x' -%}
+{%- assign image_small_tablet_portrait_size_2x = image_small_tablet_portrait_width_2x | append: 'x' -%}
+{%- assign image_mobile_size = image_mobile_width | append: 'x' -%}
+{%- assign image_mobile_size_2x = image_mobile_width_2x | append: 'x' -%}
+{%- assign image_small_mobile_size = image_small_mobile_width | append: 'x' -%}
+{%- assign image_small_mobile_size_2x = image_small_mobile_width_2x | append: 'x' -%}
+
+{%- capture media_wrapper_additional_class -%}
+	{%- if left_image_1 != blank and right_image_1 != blank -%}
+		header-mega-menu__block--images header-mega-menu__block--images-multiple
+	{%- elsif left_image_1 != blank or right_image_1 != blank -%}
+		header-mega-menu__block--images
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture media_additional_class -%}
+	{%- if left_image_1 != blank and right_image_1 != blank -%}
+		header-mega-menu__block--image header-mega-menu__block--image-multiple
+	{%- elsif left_image_1 != blank or right_image_1 != blank -%}
+		header-mega-menu__block--image
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture left_media1 -%}
+	{%- if left_image_1 != blank -%}
+		<div class="header-mega-menu__block {{ media_additional_class }}">
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ left_image_1.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ left_image_1 | img_url: image_small_mobile_size }} 1x, {{ left_image_1 | img_url: image_small_mobile_size_2x }} 2x"
+						srcset="{{ left_image_1 | img_url: "10x" }} 1x, {{ left_image_1 | img_url: "20x" }} 2x"
+						media="(max-width: 375px)"
+						width="{{- image_small_mobile_width -}}"
+						height="{{- image_small_mobile_height -}}"
+					/>
+
+					<source
+						data-srcset="{{ left_image_1 | img_url: image_small_size }} 1x, {{ left_image_1 | img_url: image_small_size_2x }} 2x"
+						srcset="{{ left_image_1 | img_url: "10x" }} 1x, {{ left_image_1 | img_url: "20x" }} 2x"
+						media="(max-width: 991px)"
+						width="{{- image_small_width -}}"
+						height="{{- image_small_height -}}"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- left_image_1 | img_url: image_size -}}"
+						data-srcset="{{- left_image_1 | img_url: image_size }} 1x, {{ left_image_1 | img_url: image_size_2x }} 2x"
+						src="{{- left_image_1 | img_url: "10x" -}}"
+						srcset="{{- left_image_1 | img_url: "10x" }} 1x, {{ left_image_1 | img_url: "20x" }} 2x"
+						alt="{{- left_image_1.alt | escape -}}"
+						style="{{ img_focal }}"
+						width="{{- image_width -}}"
+						height="{{- image_height -}}"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+			{%- endcapture -%}
+
+			<div class="header-mega-menu__image-wrapper">
+				{{- image_capture -}}
+			</div>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture left_media2 -%}
+	{%- if left_image_2 != blank -%}
+		<div class="header-mega-menu__block header-mega-menu__block--image header-mega-menu__block--image--additional">
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ left_image_2.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ left_image_2 | img_url: "100x" }} 1x, {{ left_image_2 | img_url: "200x" }} 2x"
+						srcset="{{ left_image_2 | img_url: "10x" }} 1x, {{ left_image_2 | img_url: "20x" }} 2x"
+						media="(max-width: 375px)"
+						width="100"
+						height="100"
+					/>
+
+					<source
+						data-srcset="{{ left_image_2 | img_url: "114x" }} 1x, {{ left_image_2 | img_url: "228x" }} 2x"
+						srcset="{{ left_image_2 | img_url: "10x" }} 1x, {{ left_image_2 | img_url: "20x" }} 2x"
+						media="(max-width: 991px)"
+						width="114"
+						height="114"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- left_image_2 | img_url: "131x" -}}"
+						data-srcset="{{- left_image_2 | img_url: "131x" }} 1x, {{ left_image_2 | img_url: "262x" }} 2x"
+						src="{{- left_image_2 | img_url: "10x" -}}"
+						srcset="{{- left_image_2 | img_url: "10x" }} 1x, {{ left_image_2 | img_url: "20x" }} 2x"
+						alt="{{- left_image_2.alt -}}"
+						style="{{ img_focal3 }}"
+						width="131"
+						height="131"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+			{%- endcapture -%}
+
+			<div class="header-mega-menu__image-wrapper">
+				{{- image_capture -}}
+			</div>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture right_media1 -%}
+	{%- if right_image_1 != blank -%}
+		<div class="header-mega-menu__block {{ media_additional_class }}">
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ right_image_1.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ right_image_1 | img_url: image_small_mobile_size }} 1x, {{ right_image_1 | img_url: image_small_mobile_size_2x }} 2x"
+						srcset="{{ right_image_1 | img_url: "10x" }} 1x, {{ right_image_1 | img_url: "20x" }} 2x"
+						media="(max-width: 375px)"
+						width="{{- image_small_mobile_width -}}"
+						height="{{- image_small_mobile_height -}}"
+					/>
+
+					<source
+						data-srcset="{{ right_image_1 | img_url: image_small_size }} 1x, {{ right_image_1 | img_url: image_small_size_2x }} 2x"
+						srcset="{{ right_image_1 | img_url: "10x" }} 1x, {{ right_image_1 | img_url: "20x" }} 2x"
+						media="(max-width: 991px)"
+						width="{{- image_small_width -}}"
+						height="{{- image_small_height -}}"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- right_image_1 | img_url: image_size -}}"
+						data-srcset="{{- right_image_1 | img_url: image_size }} 1x, {{ right_image_1 | img_url: image_size_2x }} 2x"
+						src="{{- right_image_1 | img_url: "10x" -}}"
+						srcset="{{- right_image_1 | img_url: "10x" }} 1x, {{ right_image_1 | img_url: "20x" }} 2x"
+						alt="{{- right_image_1.alt | escape -}}"
+						style="{{ img_focal }}"
+						width="{{- image_width -}}"
+						height="{{- image_height -}}"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+			{%- endcapture -%}
+
+			<div class="header-mega-menu__image-wrapper">
+				{{- image_capture -}}
+			</div>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- capture right_media2 -%}
+	{%- if right_image_2 != blank -%}
+		<div class="header-mega-menu__block header-mega-menu__block--image header-mega-menu__block--image--additional">
+			{%- capture img_focal -%}
+				--img-desktop-pos: {{ right_image_2.presentation.focal_point }};
+			{%- endcapture -%}
+
+			{%- capture image_capture -%}
+				<picture class="lazy">
+					<source
+						data-srcset="{{ right_image_2 | img_url: "100x" }} 1x, {{ right_image_2 | img_url: "200x" }} 2x"
+						srcset="{{ right_image_2 | img_url: "10x" }} 1x, {{ right_image_2 | img_url: "20x" }} 2x"
+						media="(max-width: 375px)"
+						width="100"
+						height="100"
+					/>
+
+					<source
+						data-srcset="{{ right_image_2 | img_url: "114x" }} 1x, {{ right_image_2 | img_url: "228x" }} 2x"
+						srcset="{{ right_image_2 | img_url: "10x" }} 1x, {{ right_image_2 | img_url: "20x" }} 2x"
+						media="(max-width: 991px)"
+						width="114"
+						height="114"
+					/>
+
+					<img
+						class="header-mega-menu__image"
+						data-src="{{- right_image_2 | img_url: "131x" -}}"
+						data-srcset="{{- right_image_2 | img_url: "131x" }} 1x, {{ right_image_2 | img_url: "262x" }} 2x"
+						src="{{- right_image_2 | img_url: "10x" -}}"
+						srcset="{{- right_image_2 | img_url: "10x" }} 1x, {{ right_image_2 | img_url: "20x" }} 2x"
+						alt="{{- right_image_2.alt -}}"
+						style="{{ img_focal3 }}"
+						width="131"
+						height="131"
+					>
+				</picture>
+
+				<div class="header-mega-menu__image-overlay"></div>
+			{%- endcapture -%}
+
+			<div class="header-mega-menu__image-wrapper">
+				{{- image_capture -}}
+			</div>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+<style>
+	.header-mega-menu--half-to-half {
+		--button-icon-color-social: {{ button_icon_color_social }};
+		--button-background-color-social: {{ button_background_color_social }};
+		--button-border-color-social: {{ button_border_color_social }};
+		--button-icon-color-social-hover: {{ button_icon_color_social_hover }};
+		--button-background-color-social-hover: {{ button_background_color_social_hover }};
+		--button-border-color-social-hover: {{ button_border_color_social_hover }};
+	}
+</style>
+
+<div class="header-mega-menu header-mega-menu--half-to-half">
+	<div class="header-mega-menu__container">
+		<div class="header-mega-menu__block header-mega-menu__block--images-wrapper">
+			{%- if left_media1 != blank -%}
+				<div class="header-mega-menu__block {{ media_wrapper_additional_class }} header-mega-menu__block--images-left ">
+					{{- left_media1 -}}
+
+					{%- if left_media2 != blank -%}
+						{{- left_media2 -}}
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+
+			{%- if right_media1 != blank -%}
+				<div class="header-mega-menu__block {{ media_wrapper_additional_class }}">
+					{{- right_media1 -}}
+
+					{%- if right_media2 != blank -%}
+						{{- right_media2 -}}
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+		</div>
+
+		<div class="header-mega-menu__block header-mega-menu__block--text">
+			{%- if heading != blank -%}
+				<h2 class="header-mega-menu__heading">
+					{{- heading -}}
+				</h2>
+			{%- endif %}
+
+			{%- if subheading != blank -%}
+				<p class="header-mega-menu__subheading">
+					{{- subheading -}}
+				</p>
+			{%- endif -%}
+
+			{%- if button_link1 != blank and button_label1 != blank or button_link2 != blank and button_label2 != blank -%}
+				<div class="header-mega-menu__buttons">
+					{%- if button_link1 != blank and button_label1 != blank -%}
+						<a class="button button--{{- button1_style -}}" href="{{- button_link1 -}}">
+							{{- button_label1 -}}
+						</a>
+					{%- endif -%}
+
+					{%- if button_link2 != blank and button_label2 != blank -%}
+						<a class="button button--{{- button2_style -}}" href="{{- button_link2 -}}">
+							{{- button_label2 -}}
+						</a>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+
+			{%- if show_socials -%}
+				{%- render "social-links" -%}
+			{%- endif -%}
+		</div>
+	</div>
+</div>

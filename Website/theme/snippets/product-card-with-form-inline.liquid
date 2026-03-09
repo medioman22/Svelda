@@ -1,0 +1,223 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Product card
+	- product: Product object (required, object)
+	- size: desktop image size (optional, default: 300, number)
+	- tablet_size: tablet image size (optional, default: size, number)
+	- mobile_size: mobile image size (optional, default: tablet_size, number)
+	- is_lazy: is lazy load enable (optional, default: true, boolean)
+	- hide_buttons: (optional, default: false, boolean)
+	- section_id: (optional, sring)
+
+	{%- render 'product-card', product: product, size: 705, tablet_size: 387, mobile_size: 165, is_lazy: false -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign aspect_ratio				= settings.product_card_img_aspect_ratio -%}
+{%- assign currency_code_enabled	= settings.is_currency_code_enabled -%}
+{%- assign show_unit_price			= settings.is_show_unit_price -%}
+{%- assign quick_view_enabled		= settings.is_quick_view_enabled -%}
+{%- assign image_on_hover_enabled	= settings.is_image_on_hover_enabled -%}
+
+{%- if is_lazy == nil -%}
+	{%- assign is_lazy = true -%}
+{%- endif -%}
+
+{%- assign size				= size | default: 300 -%}
+{%- assign tablet_size		= tablet_size | default: size -%}
+{%- assign mobile_size		= mobile_size | default: tablet_size -%}
+
+{%- assign min	= 1 -%}
+{%- assign max	= 6 -%}
+{%- assign diff	= max | minus: min -%}
+
+{%- capture labels -%}
+	{%- unless product.available -%}
+		<li	class="product-card__label product-card__label--sold-out">
+			<span class="visually-hidden">
+				{{- 'products.product_card.product_label' | t -}}:
+			</span>
+
+			{{- "products.product.sold_out" | t -}}
+		</li>
+	{%- endunless -%}
+
+	{%- assign tag_index = 1 -%}
+
+	{%- for tag in product.tags -%}
+		{%- if tag contains 'label__' -%}
+			{%- assign class = 'product-card__label' -%}
+
+			{%- if tag contains ':primary' -%}
+				{%- assign class = class | append: " product-card__label--primary" | strip -%}
+			{%- elsif tag contains ':secondary' -%}
+				{%- assign class = class | append: " product-card__label--secondary" | strip -%}
+			{%- endif -%}
+
+			{%- assign clipped_tag = tag | remove: 'label__' | remove: ':primary' | remove: ':secondary' -%}
+
+			<li	class="{{- class -}}">
+				<span class="visually-hidden">
+					{{- 'products.product_card.product_label' | t -}}:
+				</span>
+
+				{{- clipped_tag -}}
+			</li>
+
+			{%- assign tag_index = tag_index | plus: 1 -%}
+
+			{%- if tag_index > 3 -%}
+				{%- break -%}
+			{%- endif -%}
+		{%- endif -%}
+	{%- endfor -%}
+{%- endcapture -%}
+
+{%- capture images -%}
+	<a
+		href="{{- product.url -}}"
+		class="product-card__image-wrapper-link"
+		aria-label="{{- product.title | default: "Product preset title" | escape -}}"
+	>
+		{%- for variant in product.variants -%}
+			{%- assign image        = variant.featured_image | default: product.featured_image | default: settings.product_default_image -%}
+			{%- assign hover_image	= variant.metafields.product_card.hover_image | default: product.metafields.product_card.hover_image -%}
+
+				{%- capture wrapper_classes -%}
+					product-card__image-wrapper product-card__image-wrapper--{{ aspect_ratio }} {% unless product.has_only_default_variant -%}js-product-card-images-wrapper{% endunless %}{% if variant == product.selected_or_first_available_variant %} is-active{%- endif -%}
+				{%- endcapture -%}
+
+				<div
+					class="{{- wrapper_classes | strip_newlines -}}"
+					data-variant="{{- variant.id -}}"
+				>
+					{%- if product == blank -%}
+						{%- assign random_number       = "now" | date: "%N" | modulo: diff | plus: min -%}
+						{%- assign placeholer_svg_name = 'product-' | append: random_number -%}
+
+						<div class="product-card__image-picture">
+							{{- placeholer_svg_name | placeholder_svg_tag: 'product-card__image' -}}
+						</div>
+					{%- else -%}
+						{%- render 'product-card-image',
+							product: product,
+							is_lazy: is_lazy,
+							image: image,
+							is_hover_image: false,
+							size: size,
+							tablet_size: tablet_size,
+							mobile_size: mobile_size -%}
+					{%- endif -%}
+				</div>
+
+			{%- assign colors   = colors | append: ',' | append: variant.options[swatch_pos] -%}
+		{%- endfor -%}
+
+		{%- if product == blank -%}
+			{%- assign random_number       = "now" | date: "%N" | modulo: diff | plus: min -%}
+			{%- assign placeholer_svg_name = 'product-' | append: random_number -%}
+			{%- capture wrapper_classes -%}
+				product-card__image-wrapper{% if image_on_hover_enabled == true %} product-card__image-wrapper--with-hover{% endif %} is-active
+			{%- endcapture -%}
+
+			<div class="{{- wrapper_classes | strip_newlines -}}">
+				<div class="product-card__image-picture">
+					{{- placeholer_svg_name | placeholder_svg_tag: 'product-card__image' -}}
+				</div>
+
+				{%- if image_on_hover_enabled == true -%}
+					{%- if random_number != 6 -%}
+						{%- assign random_number2 = random_number | plus: 1 -%}
+					{%- else -%}
+						{%- assign random_number2 = 1 -%}
+					{%- endif -%}
+
+					{%- assign placeholer_svg_name = 'product-' | append: random_number2 -%}
+
+					<div class="product-card__image-picture product-card__image-picture--hover">
+						{{- placeholer_svg_name | placeholder_svg_tag: 'product-card__image product-card__image--hover' -}}
+					</div>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	</a>
+{%- endcapture -%}
+
+{%- capture classes -%}
+	product-card product-card--with-form product-card--with-form-inline js-product-card
+{%- endcapture -%}
+
+<div class="{{- classes -}}" {% if section_id != blank %}data-section="{{ section_id }}"{%- endif -%}>
+	<div class="product-card__main">
+		{{- images -}}
+	</div>
+
+	<div class="product-card__footer">
+		<div class="product-card__meta-info">
+			<div class="product-card__header">
+				<div class="product-card__header-content">
+					<a class="focus-visible-outline product-card__title" href="{{ product.url }}">
+						{%- if product != blank -%}
+							{{- product.title -}}
+						{%- else -%}
+							{{- 'products.product_card.product_title' | t -}}
+						{%- endif -%}
+					</a>
+				</div>
+			</div>
+
+			{% if product != blank %}
+				{%- form 'product', product, class: 'product-card__form no-js-hidden js-product-card-form', novalidate: 'novalidate' -%}
+
+					{%- unless product.has_only_default_variant -%}
+						{%- for option in product.options_with_values -%}
+
+							{%- assign option_position  		= option.position -%}
+							{%- assign option_name_downcased	= option.name | downcase -%}
+							{%- assign option_name_handle		= option.name | handle -%}
+
+							<div class="product-card__select-wrapper">
+								<label class="product-card__select-label" for="product-card__select--{{- option.name -}}">
+									{{- option.name -}}:
+								</label>
+
+								<select class="product-card__select" id="product-card__select--{{- option.name -}}" data-option="option{{- option_position -}}" required>
+									<option value="{{- value | escape -}}" disabled selected hidden>
+										{{- 'products.product.option_select_small' | t: name: option.name -}}
+									</option>
+
+									{%- for value in option.values -%}
+										<option value="{{- value | escape -}}">
+											{{- value -}}
+										</option>
+									{%- endfor %}
+								</select>
+							</div>
+						{%- endfor -%}
+					{%- endunless -%}
+
+					<small class="product-card__error-message js-product-card-error">
+						{%- if hide_buttons and product.selected_or_first_available_variant.available == false -%}
+							{{- "products.product.sold_out" | t -}}
+						{%- endif -%}
+					</small>
+
+					<input
+						type="hidden"
+						name="id"
+						class="is-hidden js-product-card-variant-input"
+						value="{% if product.has_only_default_variant %}{{- product.selected_or_first_available_variant.id -}}{%- endif -%}"
+					>
+
+					<script class="js-product-card-product" type="application/json">
+						{{- product | json -}}
+					</script>
+				{%- endform -%}
+			{%- endif -%}
+		</div>
+
+		<div class="product-card__price">
+			{%- render 'price', product: product, show_unit_price: show_unit_price, currency_code_enabled: currency_code_enabled -%}
+		</div>
+	</div>
+</div>

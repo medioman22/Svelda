@@ -1,0 +1,467 @@
+{%- render 'adastra' with '/src/styles/banner-with-scroll-images.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign desktop_height 		= section.settings.desktop_height -%}
+{%- assign title 				= section.settings.title -%}
+{%- assign label 				= section.settings.label -%}
+{%- assign text 				= section.settings.text -%}
+{%- assign button_label 		= section.settings.button_label -%}
+{%- assign button_aria_label 	= section.settings.button_aria_label -%}
+{%- assign button_link 			= section.settings.button_link -%}
+{%- assign button_style 		= section.settings.button_style -%}
+{%- assign container 			= section.settings.container_width -%}
+{%- assign section_background 	= section.settings.section_background -%}
+{%- assign overlay_color 		= section.settings.overlay_color -%}
+{%- assign text_color 			= section.settings.text_color -%}
+{%- assign is_lazy 				= true -%}
+
+{%- if section.index == 1 -%}
+	{%- assign is_lazy = false -%}
+{%- endif -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--desktop-height: {{ desktop_height }};
+	--container-width: {{ container_width }};
+	--section-background: {{ section_background }};
+	--overlay-color: {{ overlay_color }};
+	--text-color: {{ text_color }};
+{%- endcapture -%}
+
+<section class="banner-with-scroll-images js-banner-with-scroll-images js-animate{% if request.visual_preview_mode or section.index == 1 %} animated{% endif %}" style="{{- styles -}}">
+	<div class="banner-with-scroll-images__container">
+		{%- if section.blocks.size > 0 -%}
+			{%- assign repeat_count 	= 10 -%}
+			{%- assign size_image 		= 393 -%}
+			{%- assign size_image_2x 	= size_image | times: 2 -%}
+
+			{%- assign size_image_991 		= 314 -%}
+			{%- assign size_image_991_2x 	= size_image_991 | times: 2 -%}
+
+			{%- assign size_image_420 		= 124 -%}
+			{%- assign size_image_420_2x 	= size_image_420 | times: 2 -%}
+
+			{%- assign size_image_375 		= 109 -%}
+			{%- assign size_image_375_2x 	= size_image_375 | times: 2 -%}
+
+			<div class="banner-with-scroll-images__content">
+				<div class="banner-with-scroll-images__wrapper need-animate tr-dur-0-8 tr-del-0-5">
+					{%- for item in (1..3) -%}
+						{%- capture column_type -%}
+							{%- if item == 1 -%}
+								first_column
+							{%- elsif item == 2 -%}
+								second_column
+							{%- elsif item == 3 -%}
+								third_column
+							{%- endif -%}
+						{%- endcapture -%}
+
+						{%- capture items -%}
+							{%- for item in (1..repeat_count) -%}
+								{%- for block in section.blocks -%}
+									{%- if block.type == column_type -%}
+										{%- assign image = block.settings.block_image -%}
+
+										<div class="banner-with-scroll-images__item">
+											{%- if image != blank -%}
+												<picture class="{% if is_lazy %}lazy{% endif %}">
+													<source
+														{% if is_lazy %}
+															srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+																	{{ image | image_url: width: 20, height: 20 }} 2x"
+															data-srcset="{{ image | image_url: width: size_image_375, height: size_image_375 }} 1x,
+													 	 		 	 	 {{ image | image_url: width: size_image_375_2x, height: size_image_375_2x }} 2x"
+														{% else %}
+															srcset="{{ image | image_url: width: size_image_375, height: size_image_375 }} 1x,
+																	{{ image | image_url: width: size_image_375_2x, height: size_image_375_2x }} 2x"
+														{% endif %}
+														media="(max-width: 375px)"
+														width="{{ size_image_375 }}"
+														height="{{ size_image_375 }}"
+													>
+
+													<source
+														{% if is_lazy %}
+															srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+																	{{ image | image_url: width: 20, height: 20 }} 2x"
+															data-srcset="{{ image | image_url: width: size_image_420, height: size_image_420 }} 1x,
+													 	 		 	 	 {{ image | image_url: width: size_image_420_2x, height: size_image_420_2x }} 2x"
+														{% else %}
+															srcset="{{ image | image_url: width: size_image_420, height: size_image_420 }} 1x,
+																	{{ image | image_url: width: size_image_420_2x, height: size_image_420_2x }} 2x"
+														{% endif %}
+														media="(max-width: 420px)"
+														width="{{ size_image_420 }}"
+														height="{{ size_image_420 }}"
+													>
+
+													<source
+														{% if is_lazy %}
+															srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+																	{{ image | image_url: width: 20, height: 20 }} 2x"
+															data-srcset="{{ image | image_url: width: size_image_991, height: size_image_991 }} 1x,
+													 	 		 	 	 {{ image | image_url: width: size_image_991_2x, height: size_image_991_2x }} 2x"
+														{% else %}
+															srcset="{{ image | image_url: width: size_image_991, height: size_image_991 }} 1x,
+																	{{ image | image_url: width: size_image_991_2x, height: size_image_991_2x }} 2x"
+														{% endif %}
+														media="(max-width: 991px)"
+														width="{{ size_image_991 }}"
+														height="{{ size_image_991 }}"
+													>
+
+													<img
+														class="banner-with-scroll-images__item-image"
+														{% if is_lazy %}
+															src="{{ image | image_url: width: 10, height: 10 }}"
+															srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+																 	{{ image | image_url: width: 20, height: 20 }} 2x"
+															data-src="{{ image | image_url: width: size_image, height: size_image }}"
+															data-srcset="{{ image | image_url: width: size_image, height: size_image }} 1x,
+													 			 	 	 {{ image | image_url: width: size_image_2x, height: size_image_2x }} 2x"
+														{% else %}
+															src="{{ image | image_url: width: size_image, height: size_image }}"
+															srcset="{{ image | image_url: width: size_image, height: size_image }} 1x,
+																	{{ image | image_url: width: size_image_2x, height: size_image_2x }} 2x"
+														{% endif %}
+														alt="{{ image.alt | escape }}"
+														width="{{ size_image }}"
+														height="{{ size_image }}"
+													>
+												</picture>
+											{%- else -%}
+												{{ 'image' | placeholder_svg_tag: 'banner-with-scroll-images__item-image banner-with-scroll-images__item-image--placeholder' }}
+											{%- endif -%}
+										</div>
+									{%- endif -%}
+								{%- endfor -%}
+							{%- endfor -%}
+						{%- endcapture -%}
+
+						{%- if items != blank -%}
+							<div class="banner-with-scroll-images__column js-banner-with-scroll-images-column">
+								{{- items -}}
+							</div>
+						{%- endif -%}
+					{%- endfor -%}
+				</div>
+			</div>
+		{%- endif -%}
+
+		{%- if label != blank or title != blank or text != blank or button_label != blank -%}
+			<div class="banner-with-scroll-images__header need-animate tr-dur-0-8 tr-del-1">
+				{%- if label != blank -%}
+					<div class="banner-with-scroll-images__label">
+						{{- label -}}
+					</div>
+				{%- endif -%}
+
+				{%- if title != blank -%}
+					<h2 class="banner-with-scroll-images__title h1">
+						{{- title -}}
+					</h2>
+				{%- endif -%}
+
+				{%- if text != blank -%}
+					<div class="banner-with-scroll-images__text rte">
+						{{- text -}}
+					</div>
+				{%- endif -%}
+
+				{%- if button_label != blank -%}
+					<div class="banner-with-scroll-images__btn-wrapper">
+						<a
+							href="{{- button_link -}}"
+							class="banner-with-scroll-images__btn button button--{{ button_style }}"
+							{% if button_aria_label != blank %}
+								aria-label="{{- button_aria_label | escape -}}"
+							{% endif %}
+						>
+							{{- button_label -}}
+						</a>
+					</div>
+				{%- endif -%}
+			</div>
+		{%- endif -%}
+	</div>
+</section>
+
+{% render 'adastra' with '/src/scripts/banner-with-scroll-images.js' %}
+
+{% schema %}
+	{
+		"name": "Banner with scroll images",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "select",
+				"id": "desktop_height",
+				"label": "Desktop height",
+				"options": [
+					{
+						"value": "400px",
+						"label": "400"
+					},
+					{
+						"value": "450px",
+						"label": "450"
+					},
+					{
+						"value": "500px",
+						"label": "500"
+					},
+					{
+						"value": "550px",
+						"label": "550"
+					},
+					{
+						"value": "600px",
+						"label": "600"
+					},
+					{
+						"value": "650px",
+						"label": "650"
+					},
+					{
+						"value": "700px",
+						"label": "700"
+					},
+					{
+						"value": "750px",
+						"label": "750"
+					},
+					{
+						"value": "800px",
+						"label": "800"
+					}
+				],
+				"default": "650px"
+			},
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Heading",
+				"default": "Banner with scroll images"
+			},
+			{
+				"type": "text",
+				"id": "label",
+				"label": "Label",
+				"default": "Label"
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text"
+			},
+			{
+				"type": "text",
+				"id": "button_label",
+				"label": "Button label",
+				"default": "Shop All"
+			},
+			{
+				"type": "text",
+				"id": "button_aria_label",
+				"label": "Button aria-label",
+				"default": "Button aria-label"
+			},
+			{
+				"type": "url",
+				"id": "button_link",
+				"label": "Button link",
+				"default": "/"
+			},
+			{
+				"id": "button_style",
+				"type": "select",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "primary"
+			},
+			{
+				"type": "header",
+				"content": "Color"
+			},
+			{
+				"type": "color_background",
+				"id": "section_background",
+				"label": "Section background",
+				"default": "#000000"
+			},
+			{
+				"type": "color_background",
+				"id": "overlay_color",
+				"label": "Overlay color",
+				"default": "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.40) 100%)"
+			},
+			{
+				"type": "color",
+				"id": "text_color",
+				"label": "Text color",
+				"default": "#ffffff"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"name": "First column",
+				"type": "first_column",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "block_image",
+						"label": "Image",
+						"info": "To add more images to the First Column, add more “First Column” blocks."
+					}
+				]
+			},
+			{
+				"name": "Second column",
+				"type": "second_column",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "block_image",
+						"label": "Image",
+						"info": "To add more images to the Second Column, add more “Second Column” blocks."
+					}
+				]
+			},
+			{
+				"name": "Third column",
+				"type": "third_column",
+				"settings": [
+					{
+						"type": "image_picker",
+						"id": "block_image",
+						"label": "Image",
+						"info": "To add more images to the Third Column, add more “Third Column” blocks."
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Banner with scroll images",
+				"blocks": [
+					{
+						"type": "first_column"
+					},
+					{
+						"type": "second_column"
+					},
+					{
+						"type": "third_column"
+					}
+				]
+			}
+		]
+	}
+{% endschema %}

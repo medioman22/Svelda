@@ -1,0 +1,401 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: FAQ page template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/faq-page-template.scss' -%}
+{%- render 'adastra' with '/src/styles/faq-simple.scss' -%}
+{%- render 'adastra' with '/src/styles/tabs-ui.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign title  			  = section.settings.heading -%}
+{%- assign background_color   = section.settings.background_color -%}
+{%- assign text_color  		  = section.settings.text_color -%}
+{%- assign arrow_color  	  = section.settings.arrow_color -%}
+{%- assign arrow_background_color  		 = section.settings.arrow_background_color -%}
+{%- assign arrow_border_color 			 = section.settings.arrow_border_color -%}
+{%- assign background_active_color 	 	 = section.settings.background_active_color -%}
+{%- assign text_active_color  			 = section.settings.text_active_color -%}
+{%- assign arrow_active_color 			 = section.settings.arrow_active_color -%}
+{%- assign arrow_background_active_color = section.settings.arrow_background_active_color -%}
+{%- assign arrow_border_active_color 	 = section.settings.arrow_border_active_color -%}
+{%- assign blocks 			  = section.blocks -%}
+
+{%- assign sidenav_items = '' -%}
+{%- assign content       = '' -%}
+{%- assign delay_step = 0 -%}
+
+{%- capture styles -%}
+	--background-color: {{- background_color -}}; {{  -}}
+	--text-color: {{- text_color -}}; {{  -}}
+	--arrow-color: {{- arrow_color -}}; {{  -}}
+	--arrow-background-color: {{- arrow_background_color -}}; {{  -}}
+	--arrow-border-color: {{- arrow_border_color -}}; {{  -}}
+	--background-active-color: {{- background_active_color -}}; {{  -}}
+	--text-active-color: {{- text_active_color -}}; {{  -}}
+	--arrow-active-color: {{- arrow_active_color -}}; {{  -}}
+	--arrow-background-active-color: {{- arrow_background_active_color -}}; {{  -}}
+	--arrow-border-active-color: {{- arrow_border_active_color -}}; {{  -}}
+{%- endcapture -%}
+
+{%- for block in blocks -%}
+	{%- case block.type -%}
+		{%- when "category" -%}
+			{% assign delay_step = delay_step | plus: 0.3 %}
+			{%- assign category_heading = block.settings.heading -%}
+
+			{%- if category_heading != blank -%}
+				{%- assign handle = category_heading | handleize -%}
+
+				{%- capture sidenav_items -%}
+					{{- sidenav_items -}}
+
+					<li class="faq-page__sidenav-item js-faq-anchor-wrapper">
+						<a
+							href="{{- handle | prepend: '#' -}}"
+							class="faq-page__sidenav-item-link tabs-ui__tab js-faq-anchor-link{% if sidenav_items == '' %} is-active{%- endif -%}"
+							aria-current="page"
+						>
+							{{- category_heading -}}
+						</a>
+					</li>
+				{%- endcapture -%}
+
+				{%- capture content -%}
+					{{- content -}}
+
+					{%- if content != '' -%}
+						</div>
+					{%- endif -%}
+
+					<div id="{{- handle -}}" class="faq-simple__category need-animate tr-dur-0-5 js-faq-block" style="transition-delay: {{ delay_step }}s;">
+
+					<h2  class="faq-simple__category-heading h3">
+						{{- category_heading -}}
+					</h2>
+				{%- endcapture -%}
+			{%- endif -%}
+
+		{%- when "faq_item" -%}
+						{%- assign item_heading        = block.settings.heading -%}
+						{%- assign text                = block.settings.text -%}
+						{%- assign heading_icon        = block.settings.heading_icon -%}
+						{%- assign heading_icon_active = block.settings.heading_icon_active -%}
+						{%- capture img_focal -%}{%- endcapture -%}
+
+			{%- if item_heading == blank or text == blank -%}
+				{%- continue -%}
+			{%- endif -%}
+
+						{%- capture icon -%}
+							{%- if heading_icon != blank -%}
+								{%- capture img_focal -%}
+									--img-desktop-pos: {{ heading_icon.presentation.focal_point }};
+								{%- endcapture -%}
+
+								<img
+									class="faq-simple__item-image"
+									srcset="{{ heading_icon | img_url: "20x" }} 1x, {{ heading_icon | img_url: "40x" }} 2x"
+									src="{{- heading_icon | img_url: "40x" -}}"
+									alt="{{- heading_icon.alt -}}"
+									style="{{ img_focal }}"
+								/>
+							{%- endif -%}
+						{%- endcapture -%}
+
+						{%- capture active_icon -%}
+							{%- if heading_icon_active != blank -%}
+								{%- capture img_focal -%}
+									--img-desktop-pos: {{ heading_icon_active.presentation.focal_point }};
+								{%- endcapture -%}
+
+								<img
+									class="faq-simple__item-image"
+									srcset="{{ heading_icon_active | img_url: "20x" }} 1x, {{ heading_icon_active | img_url: "40x" }} 2x"
+									src="{{- heading_icon_active | img_url: "40x" -}}"
+									alt="{{- heading_icon_active.alt -}}"
+									style="{{ img_focal }}"
+								/>
+							{%- endif -%}
+						{%- endcapture -%}
+
+			{%- capture content -%}
+				{{- content -}}
+
+				{%- if content == '' -%}
+					<div class="faq-simple__category js-faq-block">
+				{%- endif -%}
+
+				<div class="accordion__item faq-simple__item js-accordion-item">
+					<h4 class="accordion__title faq-simple__item-title">
+						<button
+							id="control-{{- block.id -}}"
+							class="accordion__control faq-simple__item-control js-accordion-control"
+							aria-controls="content-{{- block.id -}}"
+							aria-expanded="false"
+						>
+							<div class="faq-simple__item-title-text">
+								{%- if icon != blank -%}
+									<div class="faq-simple__item-icon">
+										{{ icon }}
+									</div>
+
+									<div class="faq-simple__item-icon faq-simple__item-icon--active">
+										{{ active_icon }}
+									</div>
+								{%- endif -%}
+
+								{{- item_heading -}}
+							</div>
+
+							<span class="faq-simple__item-control-icon">
+								{% render 'icons', icon: 'arrow-down' %}
+							</span>
+						</button>
+					</h4>
+
+					<div
+						id="content-{{- block.id -}}"
+						class="accordion__content accordion__content--animate faq-simple__item-content js-accordion-content"
+						style="height: 0;"
+						role="region"
+						aria-labelledby="control-{{- block.id -}}"
+					>
+						<div class="faq-simple__item-inner js-accordion-inner rte">
+							{{- text -}}
+						</div>
+					</div>
+				</div>
+			{%- endcapture -%}
+	{%- endcase -%}
+{%- endfor -%}
+
+{%- capture sidenav -%}
+	{%- if sidenav_items != '' -%}
+		<ul class="faq-page__sidenav need-animate tr-dur-0-8">
+			{{- sidenav_items -}}
+		</ul>
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- if content != '' and sidenav == '' -%}
+	{%- capture content -%}
+		{{- content -}}
+
+		</div>
+	{%- endcapture -%}
+{%- endif -%}
+
+<section
+	class="faq-page js-animate"
+	data-section-id="{{- section.id -}}"
+	data-section-type="faq-template"
+	style="{{- styles -}}"
+>
+	<div class="faq-page__container">
+		{% if title != blank %}
+			<h1 class="h1 faq-page__heading">
+				{{- title -}}
+			</h1>
+		{% endif %}
+
+		{% if page.content != blank %}
+			<div class="faq-page__rte rte">{{ page.content }}</div>
+		{% endif %}
+
+		{%- if sidenav != '' -%}
+			<div class="faq-page__navigation-wrapper js-side-navigation-container">
+				<div class="faq-page__navigation js-side-navigation">
+					{{- sidenav -}}
+				</div>
+			</div>
+		{%- endif -%}
+
+		{%- if content != '' -%}
+			<div
+				class="accordion faq-simple faq-page__content js-accordion-container js-animate {% if request.visual_preview_mode %}animated{% endif %}">
+				{{- content -}}
+			</div>
+		{%- endif -%}
+	</div>
+</section>
+
+{%- render 'adastra' with '/src/scripts/section-faq.js' -%}
+
+{%- schema -%}
+{
+	"name": "FAQ",
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading",
+			"default": "FAQ"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "background_color",
+			"label": "Background",
+			"default": "#F6F6F6"
+		},
+		{
+			"type": "color",
+			"id": "text_color",
+			"label": "Text",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "arrow_color",
+			"label": "Arrow",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "arrow_background_color",
+			"label": "Arrow background",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "arrow_border_color",
+			"label": "Arrow border",
+			"default": "#dcdcdc"
+		},
+
+		{
+			"type": "color",
+			"id": "background_active_color",
+			"label": "Background (active)",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "text_active_color",
+			"label": "Text (active)",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "arrow_active_color",
+			"label": "Arrow (active)",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "arrow_background_active_color",
+			"label": "Arrow background (active)",
+			"default": "#FFD875"
+		},
+		{
+			"type": "color",
+			"id": "arrow_border_active_color",
+			"label": "Arrow border (active)",
+			"default": "#FFD875"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 60
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 60
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 30
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 30
+		}
+	],
+	"blocks": [
+		{
+			"name": "Category",
+			"type": "category",
+			"settings": [
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Heading"
+				}
+			]
+		},
+		{
+			"name": "Question and answer",
+			"type": "faq_item",
+			"settings": [
+				{
+					"type": "textarea",
+					"id": "heading",
+					"label": "Heading"
+				},
+				{
+					"type": "richtext",
+					"id": "text",
+					"label": "Text"
+				},
+				{
+					"type": "image_picker",
+					"id": "heading_icon",
+					"label": "Icon",
+					"info": "48 x 48px recommended"
+				},
+				{
+					"type": "image_picker",
+					"id": "heading_icon_active",
+					"label": "Icon on active",
+					"info": "48 x 48px recommended. Icon for the state when the item is expanded"
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}

@@ -1,0 +1,502 @@
+{% assign default_label_text = 'newsletter_popup.label' | t %}
+{% assign default_btn_text = 'newsletter_popup.button_label' | t %}
+{% assign default_success_text = 'newsletter_popup.success' | t %}
+{% assign close_modal = 'general.accessibility.close_modal' | t %}
+
+{% assign is_newsletter_popup_enabled = section.settings.is_newsletter_popup_enabled %}
+{% assign is_newsletter_popup_show_socials = section.settings.is_newsletter_popup_show_socials %}
+{% assign newsletter_popup_cookie_time = section.settings.newsletter_popup_cookie_time %}
+{% assign newsletter_popup_heading = section.settings.newsletter_popup_heading %}
+{% assign newsletter_popup_text = section.settings.newsletter_popup_text %}
+
+{% assign newsletter_popup_input_placeholder = section.settings.newsletter_popup_input_placeholder | default: default_label_text %}
+{% assign newsletter_popup_input_button_submit_text = section.settings.newsletter_popup_input_button_submit_text | default: default_btn_text %}
+
+{% assign newsletter_popup_desktop_image = section.settings.newsletter_popup_desktop_image %}
+{% assign newsletter_popup_mobile_image = section.settings.newsletter_popup_mobile_image | default: newsletter_popup_desktop_image %}
+
+{% assign newsletter_popup_container_modifier_desktop = '' %}
+{% assign newsletter_popup_column_content_modifier_desktop = '' %}
+
+{% if newsletter_popup_desktop_image == blank %}
+	{% assign newsletter_popup_container_modifier_desktop = 'newsletter-popup__container--no-image-desktop' %}
+	{% assign newsletter_popup_column_content_modifier_desktop = 'newsletter-popup__box-image--full-width' %}
+{% endif %}
+
+{% assign newsletter_popup_color_background 					= section.settings.newsletter_popup_color_background %}
+{% assign newsletter_popup_color_heading 						= section.settings.newsletter_popup_color_heading %}
+{% assign newsletter_popup_color_text 							= section.settings.newsletter_popup_color_text %}
+{% assign newsletter_popup_color_input_text 					= section.settings.newsletter_popup_color_input_text %}
+{% assign newsletter_popup_color_input_placeholder 				= section.settings.newsletter_popup_color_input_placeholder %}
+{% assign newsletter_popup_color_input_border 					= section.settings.newsletter_popup_color_input_border %}
+{% assign newsletter_popup_color_input_border_focus 			= section.settings.newsletter_popup_color_input_border_focus %}
+{% assign newsletter_popup_color_support_attention 				= section.settings.newsletter_popup_color_support_attention %}
+{% assign newsletter_popup_color_support_success 				= section.settings.newsletter_popup_color_support_success %}
+{% assign newsletter_popup_color_button_close_icon 				= section.settings.newsletter_popup_color_button_close_icon %}
+{% assign newsletter_popup_color_button_close_icon_border 		= section.settings.newsletter_popup_color_button_close_icon_border %}
+{% assign newsletter_popup_color_button_close_icon_background 	= section.settings.newsletter_popup_color_button_close_icon_background %}
+{% assign newsletter_popup_color_button_text					= section.settings.newsletter_popup_color_button_text %}
+{% assign newsletter_popup_color_button_background 				= section.settings.newsletter_popup_color_button_background %}
+{% assign newsletter_popup_color_button_text_hover 				= section.settings.newsletter_popup_color_button_text_hover %}
+{% assign newsletter_popup_color_button_background_hover 		= section.settings.newsletter_popup_color_button_background_hover %}
+{% assign newsletter_popup_color_button_social_icon 			= section.settings.newsletter_popup_color_button_social_icon %}
+{% assign newsletter_popup_color_button_social_background		= section.settings.newsletter_popup_color_button_social_background %}
+{% assign newsletter_popup_color_button_social_border 			= section.settings.newsletter_popup_color_button_social_border %}
+{% assign newsletter_popup_color_button_social_icon_hover 		= section.settings.newsletter_popup_color_button_social_icon_hover %}
+{% assign newsletter_popup_color_button_social_background_hover	= section.settings.newsletter_popup_color_button_social_background_hover %}
+{% assign newsletter_popup_color_button_social_border_hover 	= section.settings.newsletter_popup_color_button_social_border_hover %}
+
+{%- capture section_styles -%}
+	--color-background: {{- newsletter_popup_color_background -}}; {{-  -}}
+
+	--color-heading: {{- newsletter_popup_color_heading -}}; {{-  -}}
+	--color-text: {{- newsletter_popup_color_text -}}; {{-  -}}
+
+	--color-input-text: {{- newsletter_popup_color_input_text -}}; {{-  -}}
+	--color-input-placeholder: {{- newsletter_popup_color_input_placeholder -}}; {{-  -}}
+	--color-input-border: {{- newsletter_popup_color_input_border -}}; {{-  -}}
+	--color-input-border-focus: {{- newsletter_popup_color_input_border_focus -}}; {{-  -}}
+
+	--color-attention: {{- newsletter_popup_color_support_attention -}}; {{-  -}}
+	--color-success: {{- newsletter_popup_color_support_success -}}; {{-  -}}
+
+	--color-button-close-icon: {{- newsletter_popup_color_button_close_icon -}}; {{-  -}}
+	--color-button-close-icon-border: {{- newsletter_popup_color_button_close_icon_border -}}; {{-  -}}
+	--color-button-close-icon-background: {{- newsletter_popup_color_button_close_icon_background -}}; {{-  -}}
+
+	--color-button-text: {{- newsletter_popup_color_button_text -}}; {{-  -}}
+	--color-button-background: {{- newsletter_popup_color_button_background -}}; {{-  -}}
+	--color-button-text-hover: {{- newsletter_popup_color_button_text_hover -}}; {{-  -}}
+	--color-button-background-hover: {{- newsletter_popup_color_button_background_hover -}}; {{-  -}}
+
+	--color-button-social-icon: {{- newsletter_popup_color_button_social_icon -}}; {{-  -}}
+	--color-button-social-background: {{- newsletter_popup_color_button_social_background -}}; {{-  -}}
+	--color-button-social-border: {{- newsletter_popup_color_button_social_border -}}; {{-  -}}
+	--color-button-social-icon-hover: {{- newsletter_popup_color_button_social_icon_hover -}}; {{-  -}}
+	--color-button-social-background-hover: {{- newsletter_popup_color_button_social_background_hover -}}; {{-  -}}
+	--color-button-social-border-color: {{- newsletter_popup_color_button_social_border_hover -}}; {{-  -}}
+{%- endcapture -%}
+
+
+{% if is_newsletter_popup_enabled and newsletter_popup_input_button_submit_text != blank and default_success_text != blank %}
+	{%- render 'adastra' with '/src/styles/newsletter-popup.scss' -%}
+	{%- render 'adastra' with '/src/scripts/section-newsletter-popup.js' -%}
+
+	<div class="popup newsletter-popup need-animate js-newsletter-popup"
+		 id="NewsletterPopup"
+		 data-cookie-time="{{ newsletter_popup_cookie_time }}"
+		 role="dialog"
+		 aria-labelledby="NewsletterPopupTitle"
+		 style="{{ section_styles }}"
+	>
+		<div class="popup__container newsletter-popup__container {{ newsletter_popup_container_modifier_desktop }}">
+			{% if newsletter_popup_desktop_image != blank %}
+				<div class="newsletter-popup__box-image">
+					<div class="newsletter-popup__image-wrapper">
+						{% if newsletter_popup_desktop_image != blank %}
+							{%- capture img_focal -%}
+								--img-desktop-pos: {{ newsletter_popup_desktop_image.presentation.focal_point }}; --img-mob-pos: {{ newsletter_popup_mobile_image.presentation.focal_point }};
+							{%- endcapture -%}
+						{% endif %}
+
+						<picture class="lazy">
+							<source
+								srcset="{{ newsletter_popup_mobile_image | image_url: width: 10, height: 10 }} 1x,
+										{{ newsletter_popup_mobile_image | image_url: width: 20, height: 20 }} 2x"
+								data-srcset="{{ newsletter_popup_mobile_image | image_url: width: 328, height: 175 }} 1x,
+											 {{ newsletter_popup_mobile_image | image_url: width: 656, height: 350 }} 2x"
+								media="(max-width: 360px)"
+								width="328"
+								height="175"
+							/>
+
+							<source
+								srcset="{{ newsletter_popup_mobile_image | image_url: width: 10, height: 10 }} 1x,
+										{{ newsletter_popup_mobile_image | image_url: width: 20, height: 20 }} 2x"
+								data-srcset="{{ newsletter_popup_mobile_image | image_url: width: 388, height: 207 }} 1x,
+											 {{ newsletter_popup_mobile_image | image_url: width: 776, height: 414 }} 2x"
+								media="(max-width: 420px)"
+								width="388"
+								height="207"
+							/>
+
+							<source
+								srcset="{{ newsletter_popup_mobile_image | image_url: width: 10, height: 10 }} 1x,
+										{{ newsletter_popup_mobile_image | image_url: width: 20, height: 20 }} 2x"
+								data-srcset="{{ newsletter_popup_mobile_image | image_url: width: 448, height: 239 }} 1x,
+											 {{ newsletter_popup_mobile_image | image_url: width: 896, height: 478 }} 2x"
+								media="(max-width: 480px)"
+								width="448"
+								height="239"
+							/>
+
+							<source
+								srcset="{{ newsletter_popup_mobile_image | image_url: width: 10, height: 10 }} 1x,
+										{{ newsletter_popup_mobile_image | image_url: width: 20, height: 20 }} 2x"
+								data-srcset="{{ newsletter_popup_mobile_image | image_url: width: 480, height: 256 }} 1x,
+											 {{ newsletter_popup_mobile_image | image_url: width: 960, height: 512 }} 2x"
+								media="(max-width: 767px)"
+								width="480"
+								height="256"
+							/>
+
+							<img
+								class="newsletter-popup__image"
+								src="{{- newsletter_popup_desktop_image | image_url: width: 10, height: 10 -}}"
+								srcset="{{- newsletter_popup_desktop_image | image_url: width: 10, height: 10 -}}"
+								data-srcset="{{ newsletter_popup_desktop_image | image_url: width: 300, height: 320 }} 1x,
+											 {{ newsletter_popup_desktop_image | image_url: width: 600, height: 640 }} 2x"
+								data-src="{{- newsletter_popup_desktop_image | image_url: width: 300, height: 320 -}}"
+								alt="{{- newsletter_popup_desktop_image.alt | escape -}}"
+								width="300"
+								height="320"
+								style="{{ img_focal }}"
+							/>
+						</picture>
+					</div>
+				</div>
+			{% endif %}
+
+			<div
+				class="newsletter-popup__box-text {{ newsletter_popup_column_content_modifier_desktop }}">
+				<div class="newsletter-popup__content">
+					{% if newsletter_popup_heading != blank %}
+						<h2 class="newsletter-popup__heading" id="NewsletterPopupTitle">
+							{{- newsletter_popup_heading -}}
+						</h2>
+					{% endif %}
+
+					{% if newsletter_popup_text != blank %}
+						<p class="newsletter-popup__text">
+							{{- newsletter_popup_text -}}
+						</p>
+					{% endif %}
+
+					{% form 'customer', class: 'newsletter-popup-form', id: 'newsletter-popup-contact-form' %}
+						{% assign form_success_status_class = "" %}
+
+						{% if form.posted_successfully? %}
+							{% assign form_success_status_class = "posted" %}
+						{% endif %}
+
+						<input type="hidden" name="contact[tags]" value="newsletter"/>
+
+						<div class="newsletter-popup-form__field">
+							<input
+								id="newsletter-popup-contact-form-input"
+								type="email"
+								name="contact[email]"
+								class="input newsletter-popup-form__input {{ form_success_status_class }} js-newsletter-popup-input"
+								value="{{- form.email -}}"
+								aria-required="true"
+								autocapitalize="off"
+								autocomplete="email"
+								{% if form.errors %}
+									aria-invalid="true"
+									aria-describedby="newsletter-popup-contact-form-error"
+								{% elsif form.posted_successfully? %}
+									aria-describedby="newsletter-popup-contact-form-success"
+								{% endif %}
+								placeholder="{{- newsletter_popup_input_placeholder -}}"
+								required
+							/>
+
+							{% if form.errors %}
+								<small class="newsletter-popup-form__message newsletter-popup-form__message--error"
+									   id="newsletter-popup-contact-form-error">
+									{% render 'icons', icon: 'menu-close' %}
+
+									{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+								</small>
+							{% endif %}
+
+							{% if form.posted_successfully? %}
+								<h3
+									class="newsletter-popup-form__message newsletter-popup-form__message--success text"
+									id="newsletter-popup-contact-form-success"
+									tabindex="-1"
+								>
+									{% render 'icons', icon: 'check' %}
+
+									{{- success_message | default: default_success_text -}}
+								</h3>
+							{% endif %}
+
+							<button
+								type="submit"
+								class="button button--secondary newsletter-popup-form__button"
+								name="commit"
+							>
+								{{- newsletter_popup_input_button_submit_text -}}
+							</button>
+						</div>
+					{% endform %}
+
+					{% if is_newsletter_popup_show_socials %}
+						{%- render 'social-links' -%}
+					{% endif %}
+				</div>
+			</div>
+
+			<button type="button"
+					class="newsletter-popup__close-icon-button focus-visible-outline popup-close-icon-button"
+					aria-label="{{- close_modal | escape -}}"
+					data-target="NewsletterPopup"
+					data-js-toggle="NewsletterPopupToggle"
+			>
+				{% render 'icons', icon: 'menu-close' %}
+			</button>
+		</div>
+	</div>
+{% endif %}
+
+{% schema %}
+{
+	"name": "Newsletter popup",
+	"limit": 1,
+	"enabled_on": {
+		"groups": ["custom.popup"]
+	},
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "is_newsletter_popup_enabled",
+			"label": "Enable",
+			"default": false
+		},
+		{
+			"type": "select",
+			"id": "newsletter_popup_cookie_time",
+			"label": "Cookie time",
+			"options": [
+				{
+					"value": "1",
+					"label": "1 day"
+				},
+				{
+					"value": "7",
+					"label": "1 week"
+				},
+				{
+					"value": "30",
+					"label": "1 month"
+				},
+				{
+					"value": "90",
+					"label": "3 months"
+				},
+				{
+					"value": "360",
+					"label": "1 year"
+				}
+			],
+			"default": "1"
+		},
+		{
+			"type": "text",
+			"id": "newsletter_popup_heading",
+			"label": "Heading",
+			"default": "Subscribe to our newsletter"
+		},
+		{
+			"type": "textarea",
+			"id": "newsletter_popup_text",
+			"label": "Text",
+			"default": "Be the first to know about sales, exclusive offers and promotions."
+		},
+		{
+			"type": "text",
+			"id": "newsletter_popup_input_placeholder",
+			"label": "Input placeholder",
+			"default": "Enter email address..."
+		},
+		{
+			"type": "text",
+			"id": "newsletter_popup_input_button_submit_text",
+			"label": "Button submit label",
+			"default": "Sign Up"
+		},
+		{
+			"type": "image_picker",
+			"id": "newsletter_popup_desktop_image",
+			"label": "Image desktop"
+		},
+		{
+			"type": "image_picker",
+			"id": "newsletter_popup_mobile_image",
+			"label": "Image mobile"
+		},
+		{
+			"type": "checkbox",
+			"id": "is_newsletter_popup_show_socials",
+			"label": "Show socials",
+			"default": true
+		},
+		{
+			"type": "header",
+			"content": "Background color"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_background",
+			"label": "Background",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "header",
+			"content": "Text colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_heading",
+			"label": "Heading",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_text",
+			"label": "Text",
+			"default": "#535353"
+		},
+		{
+			"type": "header",
+			"content": "Input colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_input_text",
+			"label": "Text",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_input_placeholder",
+			"label": "Placeholder",
+			"default": "#757575"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_input_border",
+			"label": "Border",
+			"default": "#DCDCDC"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_input_border_focus",
+			"label": "Border (focus)",
+			"default": "#000000"
+		},
+		{
+			"type": "header",
+			"content": "Support colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_support_attention",
+			"label": "Attention",
+			"default": "#E41616"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_support_success",
+			"label": "Success",
+			"default": "#36BA20"
+		},
+		{
+			"type": "header",
+			"content": "Close button icon colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_close_icon",
+			"label": "Icon",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_close_icon_border",
+			"label": "Border",
+			"default": "#E9E9E9"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_close_icon_background",
+			"label": "Background",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "header",
+			"content": "Submit button colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_text",
+			"label": "Text",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_background",
+			"label": "Background",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_text_hover",
+			"label": "Text (hover)",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_background_hover",
+			"label": "Background (hover)",
+			"default": "#292929"
+		},
+		{
+			"type": "header",
+			"content": "Social button colors"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_icon",
+			"label": "Icon",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_background",
+			"label": "Background",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_border",
+			"label": "Border",
+			"default": "#DCDCDC"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_icon_hover",
+			"label": "Icon (hover)",
+			"default": "#FFFFFF"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_background_hover",
+			"label": "Background (hover)",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "newsletter_popup_color_button_social_border_hover",
+			"label": "Border (hover)",
+			"default": "#000000"
+		}
+	],
+	"presets": [
+		{
+			"name": "Newsletter popup"
+		}
+	]
+}
+{% endschema %}

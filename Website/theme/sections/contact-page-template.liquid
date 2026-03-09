@@ -1,0 +1,536 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Contact page template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render 'adastra' with '/src/styles/contact.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign map_api_key = section.settings.map_api_key -%}
+{%- assign map_query = section.settings.map_query -%}
+{%- assign map_url = section.settings.map_url -%}
+{%- assign image_desktop = section.settings.image_desktop -%}
+{%- assign image_mobile = section.settings.image_mobile | default: image_desktop -%}
+
+{%- assign form_heading = section.settings.form_heading | default: page.title -%}
+{%- assign name_label = section.settings.name_label -%}
+{%- assign name_placeholder = section.settings.name_placeholder -%}
+{%- assign email_label = section.settings.email_label -%}
+{%- assign email_placeholder = section.settings.email_placeholder -%}
+{%- assign phone_label = section.settings.phone_label -%}
+{%- assign phone_placeholder = section.settings.phone_placeholder -%}
+{%- assign message_label = section.settings.message_label -%}
+{%- assign message_placeholder = section.settings.message_placeholder -%}
+{%- assign submit_label = section.settings.submit_label -%}
+{%- assign is_name_required = section.settings.is_name_required -%}
+{%- assign is_phone_required = section.settings.is_phone_required -%}
+{%- assign is_message_required = section.settings.is_message_required -%}
+
+{%- if image_desktop != blank -%}
+	{%- assign section_has_images = true -%}
+{%- else -%}
+	{%- assign section_has_images = false -%}
+{%- endif -%}
+
+{%- capture map_image -%}
+	{%- capture img_focal -%}
+		--img-desktop-pos: {{ image_desktop.presentation.focal_point }}; --img-mob-pos: {{ image_mobile.presentation.focal_point }};
+	{%- endcapture -%}
+
+	<picture class="lazy">
+		<source
+			data-srcset="{{ image_mobile | img_url: '380x' }} 1x, {{ image_mobile | img_url: '760x' }} 2x"
+			srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+			media="(max-width: 380px)"
+			width="380"
+			height="360"
+		/>
+
+		<source
+			data-srcset="{{ image_mobile | img_url: '480x' }} 1x, {{ image_mobile | img_url: '960x' }} 2x"
+			srcset="{{ image_mobile | img_url: '10x' }} 1x, {{ image_mobile | img_url: '10x' }} 2x"
+			media="(max-width: 480px)"
+			width="480"
+			height="454"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '575x' }} 1x, {{ image_desktop | img_url: '1150x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 575px)"
+			width="575"
+			height="288"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '767x' }} 1x, {{ image_desktop | img_url: '1534x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 767px)"
+			width="767"
+			height="384"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '991x' }} 1x, {{ image_desktop | img_url: '1982x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 991px)"
+			width="991"
+			height="354"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '1199x' }} 1x, {{ image_desktop | img_url: '2398x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 1199px)"
+			width="1199"
+			height="429"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '1500x' }} 1x, {{ image_desktop | img_url: '3000x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 1500px)"
+			width="1500"
+			height="536"
+		/>
+
+		<source
+			data-srcset="{{ image_desktop | img_url: '1680x' }} 1x, {{ image_desktop | img_url: '3360x' }} 2x"
+			srcset="{{ image_desktop | img_url: '10x' }} 1x, {{ image_desktop | img_url: '10x' }} 2x"
+			media="(max-width: 1680px)"
+			width="1680"
+			height="600"
+		/>
+
+		<img
+			class="contact__map-image js-animate"
+			srcset="{{ image_desktop | img_url: "10x" }}"
+			data-srcset="{{ image_desktop | img_url: "1920x" }} 1x, {{ image_desktop | img_url: "3840x" }} 2x"
+			src="{{- image_desktop | img_url: "10x" -}}"
+			data-src="{{- image_desktop | img_url: "1920x" -}}"
+			alt="{{- image_desktop.alt -}}"
+			width="1920"
+			height="686"
+			style="{{ img_focal }}"
+		/>
+	</picture>
+{%- endcapture -%}
+
+{%- capture contact_form -%}
+	{%- form "contact", class: "contact__form", id: "ContactForm" -%}
+		{% if form_heading != blank or form.posted_successfully? or form.errors %}
+			<div class="contact__form-header">
+				{%- if form_heading != blank -%}
+					<h2>
+						{{- form_heading -}}
+					</h2>
+				{%- endif -%}
+
+				{% if page.content != blank %}
+					<div class="contact__form-rte rte">
+						{{ page.content }}
+					</div>
+				{% endif %}
+
+				{%- if form.posted_successfully? -%}
+					<p class="contact__form-submitted-title success" tabindex="-1" autofocus>
+						{{- "contact.form.success_heading" | t -}}
+					</p>
+				{%- elsif form.errors -%}
+					<p
+						class="contact__form-submitted-title error"
+						autofocus
+						tabindex="-1"
+						role="alert"
+					>
+						{{- "contact.form.error_heading" | t -}}
+					</p>
+				{%- endif -%}
+			</div>
+		{% endif %}
+
+		<div class="contact__form-fields">
+			<div class="contact__form-fields-row">
+				<div class="input-wrapper contact__field contact__fields-col">
+					{% if name_label != blank %}
+						<label class="label-input {% if is_name_required %}label-input--required{% endif %}"
+							   for="ContactForm-name--{{- section.id -}}"
+						>
+							{{ name_label }}
+						</label>
+					{% endif %}
+
+					<input
+						id="ContactForm-name--{{- section.id -}}"
+						class="{% if form.errors contains "name" %} error{% endif %}"
+						type="text"
+						name="contact[name]"
+						placeholder="{{- name_placeholder -}}"
+						autocomplete="name"
+						autocapitalize="off"
+						{% if is_name_required %}
+							required
+							aria-required="true"
+						{% endif %}
+						{% if form.errors contains "name" %}
+							aria-invalid="true"
+							aria-describedby="ContactForm-name-error--{{- section.id -}}"
+						{% endif %}
+						{% if customer %}
+							value="{{- customer.name -}}"
+						{% endif %}
+					/>
+
+					{%- if form.errors contains "name" -%}
+						<small class="contact__input-error error" id="ContactForm-name-error--{{- section.id -}}">
+						<span class="visually-hidden">
+							{{- "contact.form.error" | t -}}
+						</span>
+
+							<span class="contact__input-error-message">
+							{{ form.errors.translated_fields['name'] | capitalize }} {{ form.errors.messages['name'] }}
+						</span>
+						</small>
+					{%- endif -%}
+				</div>
+
+				<div class="input-wrapper contact__field contact__fields-col">
+					{% if email_label != blank %}
+						<label class="label-input label-input--required" for="ContactForm-email--{{- section.id -}}">
+							{{ email_label }}
+						</label>
+					{% endif %}
+
+					<input
+						id="ContactForm-email--{{- section.id -}}"
+						class="{% if form.errors contains "email" %} error{% endif %}"
+						type="email"
+						name="contact[email]"
+						placeholder="{{- email_placeholder -}}"
+						autocomplete="email"
+						autocapitalize="off"
+						{% if form.errors contains "email" %}
+							aria-invalid="true"
+							aria-describedby="ContactForm-email-error--{{- section.id -}}"
+						{% endif %}
+						{% if customer %}
+							value="{{- customer.email -}}"
+						{% endif %}
+						aria-required="true"
+						required
+					/>
+
+					{%- if form.errors contains "email" -%}
+						<small class="contact__input-error error" id="ContactForm-email-error--{{- section.id -}}">
+						<span class="visually-hidden">
+							{{- "contact.form.error" | t -}}
+						</span>
+
+							<span class="contact__input-error-message">
+							{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}
+						</span>
+						</small>
+					{%- endif -%}
+				</div>
+			</div>
+
+			<div class="input-wrapper contact__field">
+				{% if phone_label != blank %}
+					<label class="label-input {% if is_phone_required %}label-input--required{% endif %}"
+						   for="ContactForm-phone--{{- section.id -}}"
+					>
+						{{ phone_label }}
+					</label>
+				{% endif %}
+
+				<input
+					id="ContactForm-phone--{{- section.id -}}"
+					type="tel"
+					name="contact[phone]"
+					placeholder="{{- phone_placeholder -}}"
+					pattern="[0-9\-]*"
+					autocomplete="name"
+					autocapitalize="off"
+					{% if is_phone_required %}
+						required
+						aria-required="true"
+					{% endif %}
+					value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+				/>
+			</div>
+
+			<div class="input-wrapper contact__field">
+				{% if message_label != blank %}
+					<label class="label-input {% if is_message_required %}label-input--required{% endif %}"
+						   for="ContactForm-message--{{- section.id -}}"
+					>
+						{{ message_label }}
+					</label>
+				{% endif %}
+
+				<textarea
+					id="ContactForm-message--{{- section.id -}}"
+					class="{% if form.errors contains "body" %} error{% endif %}"
+					name="contact[body]"
+					placeholder="{{- message_placeholder -}}"
+				{% if form.errors contains "body" %}
+					aria-invalid="true"
+					aria-describedby="ContactForm-message-error--{{- section.id -}}"
+				{% endif %}
+					{% if is_message_required %}
+						aria-required="true"
+						required
+					{% endif %}
+				></textarea>
+
+				{%- if form.errors contains "body" -%}
+					<small class="contact__input-error error" id="ContactForm-message-error--{{- section.id -}}">
+					<span class="visually-hidden">
+						{{- "contact.form.error" | t -}}
+					</span>
+
+						<span class="contact__input-error-message">
+						{{ form.errors.translated_fields['body'] | capitalize }} {{ form.errors.messages['body'] }}
+					</span>
+					</small>
+				{%- endif -%}
+			</div>
+
+			<button class="button button--secondary contact__button" type="submit">
+				{{- submit_label -}}
+			</button>
+		</div>
+	{%- endform -%}
+{%- endcapture -%}
+
+<section class="contact js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}">
+	{%- if map_api_key != blank and map_query != blank -%}
+		<div class="contact__map-container">
+			<div class="contact__map-wrapper js-animate {% if request.visual_preview_mode %}animated{% endif %}">
+				<iframe
+					class="contact__map"
+					width="100%"
+					height="100%"
+					frameborder="0" style="border:0"
+					referrerpolicy="no-referrer-when-downgrade"
+					src="https://www.google.com/maps/embed/v1/place?key={{- map_api_key -}}&q={{- map_query -}}"
+					allowfullscreen>
+				</iframe>
+			</div>
+		</div>
+	{%- elsif map_url != blank and section_has_images == true -%}
+		<div class="contact__map-container">
+			<a
+				href="{{- map_url -}}"
+				class="contact__map-link-image-wrapper contact__map-link-image-wrapper-hover js-animate {% if request.visual_preview_mode %}animated{% endif %}"
+				target="_blank"
+				rel="nofollow"
+				aria-label="{{- 'contact.form.map_link_aria_label' | t | escape -}}"
+			>
+				{{- map_image -}}
+			</a>
+		</div>
+	{% elsif section_has_images == true and map_url == nil %}
+		<div class="contact__map-container">
+			<div class="contact__map-link-image-wrapper js-animate {% if request.visual_preview_mode %}animated{% endif %}">
+				{{- map_image -}}
+			</div>
+		</div>
+	{% endif %}
+
+
+	{{ contact_form }}
+</section>
+
+{%- schema -%}
+{
+	"name": "Contact",
+	"disabled_on": {
+		"groups": [
+			"header",
+			"footer",
+			"custom.popup"
+		]
+	},
+	"settings": [
+		{
+			"type": "header",
+			"content": "Map"
+		},
+		{
+			"type": "text",
+			"id": "map_api_key",
+			"label": "Google maps API key",
+			"info": "You’ll need to [register a Google Maps API Key](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template) to display the map."
+		},
+		{
+			"type": "text",
+			"id": "map_query",
+			"label": "Map query",
+			"info": "Specify the query parameter [learn more](https://utdweb.team/shopify-themes/boutique/manual#section-contact-template)",
+			"default": "Eiffel+Tower,Paris+France"
+		},
+		{
+			"type": "url",
+			"id": "map_url",
+			"label": "Map link",
+			"info": "The link will be opened in the new window."
+		},
+		{
+			"type": "image_picker",
+			"id": "image_desktop",
+			"label": "Map image desktop"
+		},
+		{
+			"type": "image_picker",
+			"id": "image_mobile",
+			"label": "Map image mobile"
+		},
+		{
+			"type": "header",
+			"content": "Contact form"
+		},
+		{
+			"type": "text",
+			"id": "form_heading",
+			"label": "Heading",
+			"info": "Heading will replace the page title"
+		},
+		{
+			"type": "text",
+			"id": "name_label",
+			"label": "Name label",
+			"default": "Name"
+		},
+		{
+			"type": "text",
+			"id": "name_placeholder",
+			"label": "Name placeholder",
+			"default": "Your name..."
+		},
+		{
+			"type": "checkbox",
+			"id": "is_name_required",
+			"label": "Name required",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "email_label",
+			"label": "Email label",
+			"default": "Email"
+		},
+		{
+			"type": "text",
+			"id": "email_placeholder",
+			"label": "Email placeholder",
+			"default": "Your email..."
+		},
+		{
+			"type": "text",
+			"id": "phone_label",
+			"label": "Phone label",
+			"default": "Phone"
+		},
+		{
+			"type": "text",
+			"id": "phone_placeholder",
+			"label": "Phone placeholder",
+			"default": "Enter your phone number"
+		},
+		{
+			"type": "checkbox",
+			"id": "is_phone_required",
+			"label": "Phone required",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "message_label",
+			"label": "Message label",
+			"default": "Message"
+		},
+		{
+			"type": "text",
+			"id": "message_placeholder",
+			"label": "Message placeholder",
+			"default": "Your message..."
+		},
+		{
+			"type": "checkbox",
+			"id": "is_message_required",
+			"label": "Message required",
+			"default": false
+		},
+		{
+			"type": "text",
+			"id": "submit_label",
+			"label": "Button label",
+			"default": "Send"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 60
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 60
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 30
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 30
+		}
+	],
+	"presets": [
+		{
+			"name": "Contact"
+		}
+	]
+}
+{%- endschema -%}

@@ -1,0 +1,524 @@
+{%- if section.blocks.size > 0 -%}
+	{%- render 'adastra' with '/src/styles/pricing-table.scss' -%}
+
+	{%- style -%}
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_mobile -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+		}
+
+		@media screen and (min-width: 768px) {
+			#shopify-section-{{- section.id -}} {
+				padding-top: {{- section.settings.offset_top_desktop -}}px;
+				padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+			}
+		}
+	{%- endstyle -%}
+
+	{%- assign heading 			= section.settings.heading -%}
+	{%- assign list_icon 		= section.settings.list_icon -%}
+	{%- assign mobile_layout 	= section.settings.mobile_layout -%}
+	{%- assign container 		= section.settings.container_width -%}
+
+	{%- assign card_background_color   	= section.settings.card_background_color -%}
+	{%- assign title_color          	= section.settings.title_color -%}
+	{%- assign subtitle_color          	= section.settings.subtitle_color -%}
+	{%- assign price_color          	= section.settings.price_color -%}
+	{%- assign price_unit_label_color   = section.settings.price_unit_label_color -%}
+	{%- assign list_color          		= section.settings.list_color -%}
+
+	{%- assign button_label_color      	= section.settings.button_label_color -%}
+	{%- assign button_background_color 	= section.settings.button_background_color -%}
+	{%- assign button_border_color     	= section.settings.button_border_color -%}
+
+	{%- assign button_label_hover_color      = section.settings.button_label_hover_color -%}
+	{%- assign button_background_hover_color = section.settings.button_background_hover_color -%}
+	{%- assign button_border_hover_color     = section.settings.button_border_hover_color -%}
+
+	{% if container == 'inherit' %}
+		{% assign container_width = settings.container_width %}
+	{% else %}
+		{% assign container_width = container %}
+	{% endif %}
+
+	{% capture section_styles %}
+		--container-width: {{ container_width }};
+		--list-icon: url({{ list_icon | img_url: '48x' }});
+		--card-background-color: {{ card_background_color }};
+		--title-color: {{ title_color }};
+		--subtitle-color: {{ subtitle_color }};
+		--price-color: {{ price_color }};
+		--price-unit-color: {{ price_unit_label_color }};
+		--list-color: {{ list_color }};
+		--button-label-color: {{ button_label_color }};
+		--button-background-color: {{ button_background_color }};
+		--button-border-color: {{ button_border_color }};
+		--button-label-hover-color: {{ button_label_hover_color }};
+		--button-background-hover-color: {{ button_background_hover_color }};
+		--button-border-hover-color: {{ button_border_hover_color }};
+	{% endcapture %}
+
+	<section
+		class="pricing-table js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}"
+		style="{{ section_styles }}"
+	>
+		<div class="pricing-table__container">
+			{%- if heading != blank -%}
+				<h2 class="pricing-table__heading h2 need-animate tr-dur-0-8">
+					{{- heading -}}
+				</h2>
+			{%- endif -%}
+
+			{% assign delay_step = 0.25 %}
+
+			<div class="pricing-table__items-container{% if mobile_layout == 'carousel' %} pricing-table__items-container--carousel{% endif %} pricing-table__items-container--{{ section.blocks.size }}">
+				{%- for block in section.blocks -%}
+					{%- assign product     			= block.settings.product -%}
+					{%- assign label       			= block.settings.label -%}
+					{%- assign heading     			= block.settings.heading | default: product.title -%}
+					{%- assign subtitle    			= block.settings.subtitle -%}
+					{%- assign unit_price_label    	= block.settings.unit_price_label -%}
+					{%- assign text        			= block.settings.text -%}
+					{%- assign image       			= block.settings.image | default: product.featured_image -%}
+					{%- assign button_text 			= block.settings.button_text -%}
+					{%- assign delay_step 			= delay_step | plus: 0.4 -%}
+
+					{%- assign label_background_color = block.settings.label_background_color -%}
+					{%- assign label_text_color       = block.settings.label_text_color -%}
+
+					{%- capture block_styles -%}
+						--label-background-color: {{ label_background_color }}; {{-  -}}
+						--label-text-color: {{ label_text_color }}; {{-  -}}
+					{%- endcapture -%}
+
+					{%- assign size_width 			= 240 -%}
+					{%- assign size_height 			= 280 -%}
+					{%- assign size_width_2x 		= size_width | times: 2 -%}
+					{%- assign size_height_2x 		= size_height | times: 2 -%}
+
+					{%- assign size_width_991 		= 927 -%}
+					{%- assign size_height_991 		= 620 -%}
+					{%- assign size_width_991_2x 	= size_width_991 | times: 2 -%}
+					{%- assign size_height_991_2x 	= size_height_991 | times: 2 -%}
+
+					{%- assign size_width_767 		= 703 -%}
+					{%- assign size_height_767 		= 470 -%}
+					{%- assign size_width_767_2x 	= size_width_767 | times: 2 -%}
+					{%- assign size_height_767_2x 	= size_height_767 | times: 2 -%}
+
+					{%- assign size_width_420 		= 356 -%}
+					{%- assign size_height_420 		= 238 -%}
+					{%- assign size_width_420_2x 	= size_width_420 | times: 2 -%}
+					{%- assign size_height_420_2x 	= size_height_420 | times: 2 -%}
+
+					{%- assign size_width_375 		= 311 -%}
+					{%- assign size_height_375 		= 208 -%}
+					{%- assign size_width_375_2x 	= size_width_375 | times: 2 -%}
+					{%- assign size_height_375_2x 	= size_height_375 | times: 2 -%}
+
+					{%- if mobile_layout == 'carousel' -%}
+						{%- assign size_width_991 		= 553 -%}
+						{%- assign size_height_991 		= 370 -%}
+						{%- assign size_width_991_2x 	= size_width_991 | times: 2 -%}
+						{%- assign size_height_991_2x 	= size_height_991 | times: 2 -%}
+
+						{%- assign size_width_767 		= 416 -%}
+						{%- assign size_height_767 		= 279 -%}
+						{%- assign size_width_767_2x 	= size_width_767 | times: 2 -%}
+						{%- assign size_height_767_2x 	= size_height_767 | times: 2 -%}
+
+						{%- assign size_width_420 		= 321 -%}
+						{%- assign size_height_420 		= 215 -%}
+						{%- assign size_width_420_2x 	= size_width_420 | times: 2 -%}
+						{%- assign size_height_420_2x 	= size_height_420 | times: 2 -%}
+
+						{%- assign size_width_375 		= 280 -%}
+						{%- assign size_height_375 		= 188 -%}
+						{%- assign size_width_375_2x 	= size_width_375 | times: 2 -%}
+						{%- assign size_height_375_2x 	= size_height_375 | times: 2 -%}
+					{%- endif -%}
+
+					<div class="pricing-table__item-wrapper need-animate tr-dur-0-8" style="transition-delay: {{ delay_step }}s;">
+						<div
+							class="pricing-table__item"
+							style="{{ block_styles }}"
+						>
+							<div class="pricing-table__item-box-left">
+								{%- if image != blank -%}
+									{%- capture img_focal -%}
+										--img-desktop-pos: {{ image.presentation.focal_point }};
+									{%- endcapture -%}
+
+									<div class="pricing-table__item-image-container">
+										{%- if label != blank -%}
+											<span class="pricing-table__item-label">
+												{{- label -}}
+											</span>
+										{%- endif -%}
+
+										<picture class="pricing-table__item-image-wrapper lazy need-animate tr-dur-0-8" style="transition-delay: {{ delay_step | plus: 0.25 }}s;">
+											<source
+												data-srcset="{{ image | image_url: width: size_width_375, height: size_height_375, crop: 'center' }} 1x,
+															 {{ image | image_url: width: size_width_375_2x, height: size_height_375_2x, crop: 'center' }} 2x"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												media="(max-width: 375px)"
+												width="{{- size_width_375 -}}"
+												height="{{- size_height_375 -}}"
+											/>
+
+											<source
+												data-srcset="{{ image | image_url: width: size_width_420, height: size_height_420, crop: 'center' }} 1x,
+															 {{ image | image_url: width: size_width_420_2x, height: size_height_420_2x, crop: 'center' }} 2x"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												media="(max-width: 420px)"
+												width="{{- size_width_420 -}}"
+												height="{{- size_height_420 -}}"
+											/>
+
+											<source
+												data-srcset="{{ image | image_url: width: size_width_767, height: size_height_767, crop: 'center' }} 1x,
+															 {{ image | image_url: width: size_width_767_2x, height: size_height_767_2x, crop: 'center' }} 2x"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												media="(max-width: 767px)"
+												width="{{- size_width_767 -}}"
+												height="{{- size_height_767 -}}"
+											/>
+
+											<source
+												data-srcset="{{ image | image_url: width: size_width_991, height: size_height_991, crop: 'center' }} 1x,
+															 {{ image | image_url: width: size_width_991_2x, height: size_height_991_2x, crop: 'center' }} 2x"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												media="(max-width: 991px)"
+												width="{{- size_width_991 -}}"
+												height="{{- size_height_991 -}}"
+											/>
+
+											<img
+												class="pricing-table__item-image"
+												data-srcset="{{ image | image_url: width: size_width, height: size_height, crop: 'center' }} 1x,
+															 {{ image | image_url: width: size_width_2x, height: size_height_2x, crop: 'center' }} 2x"
+												srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+														{{ image | image_url: width: 20, height: 20 }} 2x"
+												data-src="{{ image | image_url: width: size_width, height: size_height, crop: 'center'  }}"
+												src="{{ image | image_url: width: 10, height: 10 }}"
+												alt="{{ image.alt | escape }}"
+												width="{{- size_width -}}"
+												height="{{- size_height -}}"
+												style="{{ img_focal }}"
+											/>
+										</picture>
+									</div>
+								{%- endif -%}
+
+								<div class="pricing-table__item-text-container need-animate tr-dur-0-8" style="transition-delay: {{ delay_step | plus: 0.4 }}s;">
+									<h3 class="pricing-table__item-heading h3">
+										{{- heading -}}
+									</h3>
+
+									{%- if text != blank -%}
+										<div class="pricing-table__item-list-wrapper {% if list_icon == blank %}pricing-table__item-list-wrapper--without-icon{% endif %}">
+											{{ text }}
+										</div>
+									{%- endif -%}
+								</div>
+							</div>
+
+							<div class="pricing-table__item-box-right need-animate tr-dur-0-8" style="transition-delay: {{ delay_step | plus: 0.5 }}s;">
+								<div class="pricing-table__item-price-container">
+									{% render 'price', product: product %}
+
+									{% if unit_price_label != blank %}
+										<span class="pricing-table__item-price-unit">{{ unit_price_label }}</span>
+									{% endif %}
+								</div>
+
+								{% if subtitle != blank %}
+									<p class="pricing-table__item-subtitle">{{ subtitle }}</p>
+								{% endif %}
+
+								{%- if button_text != blank -%}
+									<a href="{{ product.url }}" class="pricing-table__button button focus-visible-outline">
+										{{- button_text -}}
+									</a>
+								{%- endif -%}
+							</div>
+
+						</div>
+					</div>
+				{%- endfor -%}
+			</div>
+		</div>
+	</section>
+{%- endif -%}
+
+{%- schema -%}
+{
+	"name": "Pricing table",
+	"disabled_on": {
+		"groups": ["header", "footer", "custom.popup"]
+	},
+	"max_blocks": 3,
+	"settings": [
+		{
+			"type": "text",
+			"id": "heading",
+			"label": "Heading",
+			"default": "Pricing table"
+		},
+		{
+			"type": "image_picker",
+			"id": "list_icon",
+			"label": "List icon"
+		},
+		{
+			"type": "select",
+			"id": "mobile_layout",
+			"label": "Mobile layout",
+			"options": [
+				{
+					"value": "carousel",
+					"label": "Carousel"
+				},
+				{
+					"value": "grid",
+					"label": "Grid"
+				}
+			],
+			"default": "carousel"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "card_background_color",
+			"label": "Card background",
+			"default": "#F6F6F6"
+		},
+		{
+			"type": "color",
+			"id": "title_color",
+			"label": "Heading",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "subtitle_color",
+			"label": "Subheading",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "price_color",
+			"label": "Price",
+			"default": "#000"
+		},
+		{
+			"type": "color",
+			"id": "price_unit_label_color",
+			"label": "Price unit label",
+			"default": "#9D9D9D"
+		},
+		{
+			"type": "color",
+			"id": "list_color",
+			"label": "List",
+			"default": "#535353"
+		},
+		{
+			"type": "color",
+			"id": "button_label_color",
+			"label": "Button label",
+			"default": "#000"
+		},
+		{
+			"type": "color",
+			"id": "button_background_color",
+			"label": "Button background",
+			"default": "transparent"
+		},
+		{
+			"type": "color",
+			"id": "button_border_color",
+			"label": "Button border",
+			"default": "#000000"
+		},
+		{
+			"type": "color",
+			"id": "button_label_hover_color",
+			"label": "Button label (hover)",
+			"default": "#fff"
+		},
+		{
+			"type": "color",
+			"id": "button_background_hover_color",
+			"label": "Button background (hover)",
+			"default": "#000"
+		},
+		{
+			"type": "color",
+			"id": "button_border_hover_color",
+			"label": "Button border (hover)",
+			"default": "#000"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "select",
+			"id": "container_width",
+			"label": "Container width",
+			"options": [
+				{
+					"value": "1432px",
+					"label": "Default - 1400px"
+				},
+				{
+					"value": "1952px",
+					"label": "Large - 1920px"
+				},
+				{
+					"value": "100%",
+					"label": "Full width"
+				},
+				{
+					"value": "inherit",
+					"label": "Inherit of general setting"
+				}
+			],
+			"default": "inherit",
+			"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	],
+	"blocks": [
+		{
+			"name": "Product",
+			"type": "product",
+			"settings": [
+				{
+					"type": "product",
+					"id": "product",
+					"label": "Product"
+				},
+				{
+					"type": "text",
+					"id": "label",
+					"label": "Label",
+					"default": "Most popular"
+				},
+				{
+					"type": "text",
+					"id": "heading",
+					"label": "Heading",
+					"default": "Heading"
+				},
+				{
+					"type": "textarea",
+					"id": "subtitle",
+					"label": "Subheading",
+					"default": "Add a short description about the product"
+				},
+				{
+					"type": "text",
+					"id": "unit_price_label",
+					"label": "Unit price label",
+					"default": "/mo"
+				},
+				{
+					"type": "richtext",
+					"id": "text",
+					"label": "Text",
+					"default": "<ul><li>Option 1</li><li>Option 2</li><li>Option 3</li></ul>",
+					"info": "Use bullet or numbered list."
+				},
+				{
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				},
+				{
+					"type": "text",
+					"id": "button_text",
+					"label": "Button label",
+					"default": "Get Started Now"
+				},
+				{
+					"type": "color",
+					"id": "label_background_color",
+					"label": "Label background",
+					"default": "#FFD875"
+				},
+				{
+					"type": "color",
+					"id": "label_text_color",
+					"label": "Label color",
+					"default": "#000"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Pricing table",
+			"settings": {},
+			"blocks": [
+				{
+					"type": "product"
+				},
+				{
+					"type": "product"
+				},
+				{
+					"type": "product"
+				}
+			]
+		}
+	]
+}
+{%- endschema -%}

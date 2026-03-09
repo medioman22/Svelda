@@ -1,0 +1,83 @@
+{% comment %}
+	------------------------------------------------------------------------------
+	Snippet: Cart empty
+	Render empty cart state
+	- empty_products_heading: (optional / string)
+	- empty_products: Product list (optional / object)
+	Usage:
+	{%- render 'cart-empty', empty_products_heading: empty_products_heading, empty_products: empty_products -%}
+	------------------------------------------------------------------------------
+{% endcomment %}
+
+<div class="cart-empty">
+	<form id="cart-{{- section.id -}}" class="is-hidden"></form>
+
+	{%- capture default_heading -%}
+		{{- 'cart.general.empty' | t -}}
+	{%- endcapture -%}
+
+	{%- assign cart_type 			= settings.cart_type -%}
+	{%- assign icon 				= settings.empty_cart_icon -%}
+	{%- assign heading 				= settings.empty_cart_heading | default: default_heading -%}
+	{%- assign text 				= settings.empty_cart_text -%}
+
+	{% if icon != blank %}
+		<div class="cart-empty__icon-wrap">
+			<img
+				src="{{ icon | image_url: width: 32, height: 32 }}"
+				srcset="{{ icon | image_url: width: 32, height: 32 }} 1x,
+						{{ icon | image_url: width: 64, height: 64 }} 2x"
+				alt="{{ icon.alt }}"
+				width="32"
+				height="32"
+			>
+		</div>
+	{% endif %}
+
+	<h3 class="cart-empty__heading">
+		{{- heading -}}
+	</h3>
+
+	{% if text != blank %}
+		<div class="cart-empty__text rte">
+			{{- text -}}
+		</div>
+	{% endif %}
+
+	{%- if empty_products != blank and template.name != 'cart' and cart_type == 'drawer' -%}
+		<div class="cart-empty__products swiper js-cart-empty-slider">
+			<div class="cart-empty__products-header">
+				{%- if empty_products_heading != blank -%}
+					<div class="cart-empty__products-title">
+						{{- empty_products_heading -}}
+					</div>
+				{%- endif -%}
+
+				{%- if empty_products.count > 1 -%}
+					<div class="cart-empty__products-box-btn">
+						<button class="swiper-button swiper-button--prev js-cart-empty-button-prev">
+							{%- render 'icons', icon: 'arrow-left' -%}
+						</button>
+
+						<button class="swiper-button swiper-button--next js-cart-empty-button-next">
+							{%- render 'icons', icon: 'arrow-right' -%}
+						</button>
+					</div>
+				{%- endif -%}
+			</div>
+			<div class="swiper-wrapper">
+				{%- for product in empty_products -%}
+					<div class="cart-empty__product swiper-slide">
+						{%- render "product-card",
+							product: product,
+							size: 226,
+							tablet_size: 300,
+							mobile_size: 178,
+							is_lazy: true
+						-%}
+					</div>
+				{%- endfor -%}
+			</div>
+		</div>
+	{%- endif -%}
+</div>

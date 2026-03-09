@@ -1,0 +1,254 @@
+{%- comment -%}
+	------------------------------------------------------------------------------
+	Snippet: Header menu
+	Render header menu
+	- menu: Menu object (required)
+	- menu_type_desktop: type of rendered menu, dropdown menu or mega menu
+	- blocks: transfer block object for mega menu
+
+	Usage:
+	{%- render 'header-menu', menu: menu, menu_type_desktop: menu_type_desktop, blocks: blocks -%}
+	------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- assign show_dropdown_arrows	= section.settings.show_dropdown_arrows -%}
+
+<nav class="header-menu" aria-label="{{- "layout.navigation.main_menu" | t | escape -}}">
+	<ul class="header-menu__list header-menu__list--main">
+		{%- for first_level_link in menu.links -%}
+			{%- assign has_megamenu = false -%}
+			{%- assign megamenu_object = "" -%}
+
+			{%- for block in blocks -%}
+				{%- assign menu_handle = block.settings.menu_handle | handleize -%}
+
+				{%- if first_level_link.handle == menu_handle -%}
+					{%- if block.type == 'megamenu' or block.type == 'megamenu-row-menus' -%}
+						{%- if first_level_link.links != blank -%}
+							{%- assign has_megamenu = true -%}
+							{%- assign megamenu_object = block -%}
+
+							{%- break -%}
+						{%- endif -%}
+					{%- else -%}
+						{%- assign has_megamenu = true -%}
+						{%- assign megamenu_object = block -%}
+
+						{%- break -%}
+					{%- endif -%}
+				{%- endif -%}
+			{%- endfor -%}
+
+			<li {% if has_megamenu == true or first_level_link.links != blank %}class="js-header-dropdown-menu-element"{% endif %}>
+				{%- capture megamenu -%}
+					{%- if megamenu_object.type == 'megamenu' and has_megamenu == true -%}
+						{%- render 'header-mega-menu', menu: first_level_link, megamenu_object: megamenu_object -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-grid-images' and has_megamenu == true -%}
+						{%- render 'header-mega-menu-grid-images', menu: first_level_link, megamenu_object: megamenu_object -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-banner-links' and has_megamenu == true -%}
+						{%- render 'header-mega-menu-banner-links', menu: first_level_link, megamenu_object: megamenu_object -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-row-menus' and has_megamenu == true -%}
+						{%- render 'header-mega-menu-row-menus', menu: first_level_link, megamenu_object: megamenu_object -%}
+					{%- endif -%}
+
+					{%- if megamenu_object.type == 'megamenu-half-to-half' and has_megamenu == true -%}
+						{%- if megamenu_object.settings.heading == blank and megamenu_object.settings.subheading == blank and megamenu_object.settings.image == blank -%}
+							{%- assign has_megamenu = false -%}
+						{%- else -%}
+							{%- render 'header-mega-menu-half-to-half', menu: first_level_link, megamenu_object: megamenu_object -%}
+						{%- endif -%}
+					{%- endif -%}
+				{%- endcapture -%}
+
+				{%- if megamenu != blank and menu_type_desktop == "megamenu" or menu_type_desktop == "both" -%}
+					<a
+						class="header-menu__item header-menu__item--first-level{% if first_level_link.active %} header-menu__item--active{% endif %} no-js"
+						href="{{- first_level_link.url -}}"
+						{% if first_level_link.current %}
+							aria-current="page"
+						{% endif %}
+					>
+						<span class="header-menu__item-text">
+							{{ first_level_link.title | escape }}
+						</span>
+					</a>
+
+					{%- assign highlight_icon							= megamenu_object.settings.highlight_icon -%}
+					{%- assign highlight_color							= megamenu_object.settings.highlight_color -%}
+					{%- assign highlight_background_color_transparent	= megamenu_object.settings.highlight_background_color_transparent -%}
+					{%- assign highlight_color_transparent				= megamenu_object.settings.highlight_color_transparent -%}
+					{%- assign highlight_background_color				= megamenu_object.settings.highlight_background_color -%}
+
+					{% if display_link_on_first_lvl and first_level_link.url != '#' %}
+						<a
+							href="{{- first_level_link.url -}}"
+							class="header-menu__item header-menu__item--first-level{% if first_level_link.child_active %} header-menu__item--active{% endif %}{% if highlight_background_color != blank and highlight_background_color != 'rgba(0,0,0,0)' %} header-menu__item--highlighted{% endif %} js-header-mega-menu-toggler"
+							data-target="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+							aria-controls="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+							aria-expanded="false"
+							style="--highlight-color: {{ highlight_color }}; --highlight-background-color: {{ highlight_background_color }}; --highlight-color-transparent: {{ highlight_color_transparent }}; --highlight-background-color-transparent: {{ highlight_background_color_transparent }};"
+						>
+							{%- if highlight_icon -%}
+								{{- highlight_icon | image_url: width: 16, height: 16 | image_tag: alt: highlight_icon.alt, class: "header-menu__item-highlighted-icon" -}}
+							{%- endif -%}
+
+							<span
+								class="header-menu__item-text"
+							>
+								{{ first_level_link.title | escape }}
+							</span>
+
+							{%- if show_dropdown_arrows -%}
+								<span class="header-menu__item-toggle-icon">
+									{%- render 'icons', icon: 'arrow-down' -%}
+								</span>
+							{%- endif -%}
+						</a>
+					{% else %}
+						<button
+							class="header-menu__item header-menu__item--first-level{% if first_level_link.child_active %} header-menu__item--active{% endif %}{% if highlight_background_color != blank and highlight_background_color != 'rgba(0,0,0,0)' %} header-menu__item--highlighted{% endif %} js-header-mega-menu-toggler"
+							type="button"
+							data-target="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+							aria-controls="headerMegaMenu:{{- first_level_link.title | handleize -}}"
+							aria-expanded="false"
+							style="--highlight-color: {{ highlight_color }}; --highlight-background-color: {{ highlight_background_color }}; --highlight-color-transparent: {{ highlight_color_transparent }}; --highlight-background-color-transparent: {{ highlight_background_color_transparent }};"
+						>
+							{%- if highlight_icon -%}
+								{{- highlight_icon | image_url: width: 16, height: 16 | image_tag: alt: highlight_icon.alt, class: "header-menu__item-highlighted-icon" -}}
+							{%- endif -%}
+
+							<span
+								class="header-menu__item-text"
+							>
+								{{ first_level_link.title | escape }}
+							</span>
+
+							{%- if show_dropdown_arrows -%}
+								<span class="header-menu__item-toggle-icon">
+									{%- render 'icons', icon: 'arrow-down' -%}
+								</span>
+							{%- endif -%}
+						</button>
+					{% endif %}
+
+					{{- megamenu -}}
+				{%- elsif first_level_link.links != blank and menu_type_desktop == "dropdown" or menu_type_desktop == "both" -%}
+					<a
+						class="header-menu__item header-menu__item--first-level{% if first_level_link.active %} header-menu__item--active{% endif %} no-js"
+						href="{{- first_level_link.url -}}"
+						{% if first_level_link.current %}
+							aria-current="page"
+						{% endif %}
+					>
+						<span class="header-menu__item-text">
+							{{ first_level_link.title | escape }}
+						</span>
+					</a>
+
+					{% if display_link_on_first_lvl and first_level_link.url != '#' %}
+						<a
+							href="{{- first_level_link.url -}}"
+							class="header-menu__item header-menu__item--first-level{% if first_level_link.child_active %} header-menu__item--active{% endif %} js-header-dropdown-menu-toggler"
+							data-target="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+							aria-controls="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+							aria-expanded="false"
+						>
+								<span class="header-menu__item-text">
+									{{ first_level_link.title | escape }}
+								</span>
+
+							{%- if show_dropdown_arrows -%}
+								<span class="header-menu__item-toggle-icon">
+										{%- render 'icons', icon: 'arrow-down' -%}
+									</span>
+							{%- endif -%}
+						</a>
+					{% else %}
+						<button
+							class="header-menu__item header-menu__item--first-level{% if first_level_link.child_active %} header-menu__item--active{% endif %} js-header-dropdown-menu-toggler"
+							type="button"
+							data-target="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+							aria-controls="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+							aria-expanded="false"
+						>
+								<span class="header-menu__item-text">
+									{{ first_level_link.title | escape }}
+								</span>
+
+								{%- if show_dropdown_arrows -%}
+									<span class="header-menu__item-toggle-icon">
+										{%- render 'icons', icon: 'arrow-down' -%}
+									</span>
+								{%- endif -%}
+						</button>
+					{% endif %}
+
+					<ul
+						id="headerDesktopMenu:{{- first_level_link.title | handleize -}}"
+						class="header-menu__list header-menu__list--nested js-header-dropdown-menu {% if first_level_link.levels == 2 %}js-accordion-container{% endif %}"
+					>
+						{%- for second_level_link in first_level_link.links -%}
+							<li class="accordion__item {% if second_level_link.links != blank %}js-accordion-item{%- endif -%}">
+								{%- if second_level_link.links != blank -%}
+									<button class="header-menu__item js-accordion-control">
+										{{- second_level_link.title | escape -}}
+
+										<span class="header-menu__item-toggle-icon">
+												{%- render 'icons', icon: 'arrow-down' -%}
+											</span>
+									</button>
+
+									<div class="accordion__content accordion__content--animate js-accordion-content">
+										<ul class="header-menu__list header-menu__list--collapsible js-accordion-inner">
+											{%- for third_level_link in second_level_link.links -%}
+												<li>
+													<a
+														class="header-menu__item"
+														href="{{- third_level_link.url -}}"
+														{% if third_level_link.current %}
+															aria-current="page"
+														{% endif %}
+													>
+														{{- third_level_link.title -}}
+													</a>
+												</li>
+											{%- endfor -%}
+										</ul>
+									</div>
+								{%- else -%}
+									<a
+										class="header-menu__item"
+										href="{{- second_level_link.url -}}"
+										{% if second_level_link.current %}
+											aria-current="page"
+										{% endif %}
+									>
+										{{- second_level_link.title -}}
+									</a>
+								{%- endif -%}
+							</li>
+						{%- endfor -%}
+					</ul>
+				{%- else -%}
+					<a
+						class="header-menu__item header-menu__item--first-level{% if first_level_link.active %} header-menu__item--active{% endif %}"
+						href="{{- first_level_link.url -}}"
+						{% if first_level_link.current %}
+							aria-current="page"
+						{% endif %}
+					>
+						<span class="header-menu__item-text">
+							{{ first_level_link.title | escape }}
+						</span>
+					</a>
+				{%- endif -%}
+			</li>
+		{%- endfor -%}
+	</ul>
+</nav>

@@ -1,0 +1,513 @@
+{%- comment -%}
+------------------------------------------------------------------------------
+	Section: Login template
+------------------------------------------------------------------------------
+{%- endcomment -%}
+
+{%- render "adastra" with "/src/styles/account-entrance.scss" -%}
+
+{%- assign big_image 			= section.settings.big_image -%}
+{%- assign small_image  		= section.settings.small_image -%}
+{%- assign button_style  		= section.settings.button_style -%}
+{%- assign section_background   = section.settings.section_background -%}
+{%- assign color_text   		= section.settings.color_text -%}
+
+{%- capture styles -%}
+	--section-background: {{- section_background -}};
+	--color-text: {{- color_text -}};
+{%- endcapture -%}
+
+{%- capture account_entrance_container -%}
+	<div class="account-entrance__container need-animate tr-dur-1 {% if big_image != blank or small_image != blank %}tr-del-1{% endif %}">
+		<div class="is-hidden js-recover-password-form" id="RecoverPasswordForm">
+			<div class="account-entrance__heading-wrapper">
+				<h2 id="recover-password-title" class="h1 account-entrance__subtitle" tabindex="-1">
+					{{- "customer.recover_password.title" | t -}}
+				</h2>
+
+				<p class="account-entrance__text">
+					{{- "customer.recover_password.subtext" | t -}}
+				</p>
+			</div>
+
+			{%- form "recover_customer_password" -%}
+				{%- if form.errors -%}
+					{{- form.errors | default_errors -}}
+				{%- endif -%}
+
+				{%- if form.posted_successfully? -%}
+					<span class="is-hidden reset-password-success"></span>
+				{%- endif -%}
+
+				<div class="account-entrance__input-wrapper">
+					<label class="label-input label-input--required" for="RecoverEmail">
+						{{- "customer.login.email" | t -}}
+					</label>
+
+					<input
+						class="input account-entrance__input"
+						id="RecoverEmail"
+						name="email"
+						type="email"
+						autocapitalize="off"
+						placeholder="{{- 'customer.login.email_placeholder' | t -}}"
+						aria-label="{{- 'customer.login.email_aria_label' | t | escape -}}"
+						required
+					/>
+				</div>
+
+				<div class="account-entrance__buttons">
+					<button
+						class="button account-entrance__button button--{{ button_style }}"
+						type="submit"
+					>{{- 'customer.recover_password.submit' | t -}}</button>
+
+					<a
+						class="button-link account-entrance__link js-hide-recover-password-link"
+						href="#CustomerLoginForm"
+						aria-label="{{- 'customer.recover_password.cancel_aria_label' | t | escape -}}"
+					>
+						{{- "customer.recover_password.cancel" | t -}}
+					</a>
+				</div>
+			{%- endform -%}
+		</div>
+
+		<div class="js-customer-login-form" id="CustomerLoginForm">
+			{%- form "customer_login", class: "account-entrance__form" -%}
+				<div class="account-entrance__heading-wrapper">
+					<h1 id="login-title" class="account-entrance__heading h2" tabindex="-1">
+						{{- "customer.login.title" | t -}}
+					</h1>
+
+					<div class="is-hidden account-entrance__text js-reset-success">
+						{{- "customer.recover_password.success" | t -}}
+					</div>
+
+					{%- if form.errors -%}
+						<h2 class="account-entrance__error-title h3" tabindex="-1" autofocus>
+							<span class="visually-hidden">{{ 'general.accessibility.error' | t }}</span>
+
+							{{ 'general.accessibility.form_error_title' | t }}
+						</h2>
+
+						{{- form.errors | default_errors -}}
+					{%- endif -%}
+				</div>
+
+				<div class="account-entrance__input-wrapper">
+					<label class="label-input label-input--required" for="CustomerEmail">
+						{{- "customer.login.email" | t -}}
+					</label>
+
+					<input
+						class="input account-entrance__input"
+						id="CustomerEmail"
+						name="customer[email]"
+						type="email"
+						placeholder="{{- 'customer.login.email_placeholder' | t -}}"
+						autocapitalize="off"
+						aria-label="{{- 'customer.login.email_aria_label' | t | escape -}}"
+						required
+					/>
+				</div>
+
+				{%- if form.password_needed -%}
+					<div class="account-entrance__input-wrapper">
+						<label class="label-input label-input--required" for="CustomerPassword">
+							{{- "customer.login.password" | t -}}
+						</label>
+
+						<div class="account-entrance__password-wrapper">
+							<input
+								class="input account-entrance__input account-entrance__input--password js-input-password"
+								id="CustomerPassword"
+								name="customer[password]"
+								type="password"
+								aria-label="{{- 'customer.login.password_aria_label' | t | escape -}}"
+								placeholder="{{- 'customer.login.password_placeholder' | t -}}"
+								required
+								autocomplete="off"
+							/>
+
+							<button
+								class="focus-visible-outline account-entrance__password-icon js-show-password"
+								type="button"
+								aria-label="{{- 'customer.account.show_password' | t -}}"
+							>
+								<span class="account-entrance__password-icon-content">
+									{%- render "icons", icon: "password-eye" -%}
+								</span>
+							</button>
+						</div>
+					</div>
+				{%- endif -%}
+
+				{%- if form.password_needed -%}
+					<a
+						class="account-entrance__link account-entrance__link--recover button-link js-recover-password-link"
+						href="#RecoverPasswordForm"
+						aria-label="{{- 'customer.login.recover_aria_label' | t | escape -}}"
+					>
+						{{- "customer.login.recover_password" | t -}}
+					</a>
+				{%- endif -%}
+
+				<button
+					class="button account-entrance__button button--{{ button_style }}"
+					type="submit"
+				>{{- 'customer.login.sign_in' | t -}}</button>
+
+				<div class="account-entrance__create">
+					<span class="account-entrance__new-customer">
+						{{- "customer.login.new_customer" | t -}}
+					</span>
+
+					<a
+						class="account-entrance__link button-link"
+						href="{{- routes.account_register_url -}}"
+						aria-label="{{- 'customer.login.sign_up_aria_label' | t | escape -}}"
+					>
+						{{- "customer.login.signup" | t -}}
+					</a>
+				</div>
+			{%- endform -%}
+		</div>
+	</div>
+{%- endcapture -%}
+
+{%- capture account_entrance_content -%}
+	{%- if big_image != blank or small_image != blank -%}
+		{%- assign image_full_width = '' -%}
+
+		{%- if big_image == blank and small_image != blank -%}
+			{%- assign big_image 			= small_image -%}
+			{%- assign image_full_width 	= 'account-entrance__image-box--full-width' -%}
+		{% elsif big_image != blank and small_image == blank %}
+			{%- assign image_full_width 	= 'account-entrance__image-box--full-width' -%}
+		{%- endif -%}
+
+		{%- assign image_size_big_width 			= 820 -%}
+		{%- assign image_size_big_height 			= 745 -%}
+		{%- assign image_size_big_width_2x 			= image_size_big_width | times: 2 -%}
+		{%- assign image_size_big_height_2x 		= image_size_big_height | times: 2 -%}
+		{%- assign image_size_big_width_1440 		= 611 -%}
+		{%- assign image_size_big_height_1440 		= 556 -%}
+		{%- assign image_size_big_width_1440_2x 	= image_size_big_width_1440 | times: 2 -%}
+		{%- assign image_size_big_height_1440_2x 	= image_size_big_height_1440 | times: 2 -%}
+		{%- assign image_size_big_width_991 		= 768 -%}
+		{%- assign image_size_big_height_991 		= 698 -%}
+		{%- assign image_size_big_width_991_2x 		= image_size_big_width_991 | times: 2 -%}
+		{%- assign image_size_big_height_991_2x 	= image_size_big_height_991 | times: 2 -%}
+		{%- assign image_size_big_width_767 		= 589 -%}
+		{%- assign image_size_big_height_767 		= 535 -%}
+		{%- assign image_size_big_width_767_2x 		= image_size_big_width_767 | times: 2 -%}
+		{%- assign image_size_big_height_767_2x 	= image_size_big_height_767 | times: 2 -%}
+		{%- assign image_size_big_width_420 		= 311 -%}
+		{%- assign image_size_big_height_420 		= 282 -%}
+		{%- assign image_size_big_width_420_2x 		= image_size_big_width_420 | times: 2 -%}
+		{%- assign image_size_big_height_420_2x 	= image_size_big_height_420 | times: 2 -%}
+		{%- assign image_size_big_width_375 		= 275 -%}
+		{%- assign image_size_big_height_375 		= 250 -%}
+		{%- assign image_size_big_width_375_2x 		= image_size_big_width_375 | times: 2 -%}
+		{%- assign image_size_big_height_375_2x 	= image_size_big_height_375 | times: 2 -%}
+
+		{%- assign image_size_small_width 			= 348 -%}
+		{%- assign image_size_small_height 			= 497 -%}
+		{%- assign image_size_small_width_2x 		= image_size_small_width | times: 2 -%}
+		{%- assign image_size_small_height_2x 		= image_size_small_height | times: 2 -%}
+		{%- assign image_size_small_width_1440 		= 359 -%}
+		{%- assign image_size_small_height_1440 	= 371 -%}
+		{%- assign image_size_small_width_1440_2x 	= image_size_small_width_1440 | times: 2 -%}
+		{%- assign image_size_small_height_1440_2x 	= image_size_small_height_1440 | times: 2 -%}
+		{%- assign image_size_small_width_991 		= 326 -%}
+		{%- assign image_size_small_height_991 		= 466 -%}
+		{%- assign image_size_small_width_991_2x 	= image_size_small_width_991 | times: 2 -%}
+		{%- assign image_size_small_height_991_2x 	= image_size_small_height_991 | times: 2 -%}
+		{%- assign image_size_small_width_767 		= 250 -%}
+		{%- assign image_size_small_height_767 		= 357 -%}
+		{%- assign image_size_small_width_767_2x 	= image_size_small_width_767 | times: 2 -%}
+		{%- assign image_size_small_height_767_2x 	= image_size_small_height_767 | times: 2 -%}
+		{%- assign image_size_small_width_420 		= 132 -%}
+		{%- assign image_size_small_height_420 		= 188 -%}
+		{%- assign image_size_small_width_420_2x 	= image_size_small_width_420 | times: 2 -%}
+		{%- assign image_size_small_height_420_2x 	= image_size_small_height_420 | times: 2 -%}
+		{%- assign image_size_small_width_375 		= 117 -%}
+		{%- assign image_size_small_height_375 		= 167 -%}
+		{%- assign image_size_small_width_375_2x 	= image_size_small_width_375 | times: 2 -%}
+		{%- assign image_size_small_height_375_2x 	= image_size_small_height_375 | times: 2 -%}
+
+		{%- if image_full_width != blank -%}
+			{%- assign image_size_big_width 			= 1024 -%}
+			{%- assign image_size_big_width_2x 			= image_size_big_width | times: 2 -%}
+			{%- assign image_size_big_width_1440 		= 763 -%}
+			{%- assign image_size_big_width_1440_2x 	= image_size_big_width_1440 | times: 2 -%}
+			{%- assign image_size_big_width_991 		= 959 -%}
+			{%- assign image_size_big_width_991_2x 		= image_size_big_width_991 | times: 2 -%}
+			{%- assign image_size_big_width_767 		= 735 -%}
+			{%- assign image_size_big_width_767_2x 		= image_size_big_width_767 | times: 2 -%}
+			{%- assign image_size_big_width_420 		= 388 -%}
+			{%- assign image_size_big_width_420_2x 		= image_size_big_width_420 | times: 2 -%}
+			{%- assign image_size_big_width_375 		= 343 -%}
+			{%- assign image_size_big_width_375_2x 		= image_size_big_width_375 | times: 2 -%}
+		{%- endif -%}
+
+		<div class="account-entrance__grid-row">
+			<div class="account-entrance__grid-column account-entrance__grid-column--main">
+				{{- account_entrance_container -}}
+			</div>
+
+			<div class="account-entrance__grid-column account-entrance__grid-column--image">
+				{% if big_image != blank %}
+					{%- capture img_focal -%}
+						--img-pos: {{- big_image.presentation.focal_point -}};
+					{%- endcapture -%}
+
+					<div class="account-entrance__image-box-big {{ image_full_width }}">
+						<div class="account-entrance__image-wrapper-big">
+							<picture>
+								<source
+									srcset="{{ big_image | image_url: width: image_size_big_width_375, height: image_size_big_height_375 }} 1x,
+											{{ big_image | image_url: width: image_size_big_width_375_2x, height: image_size_big_height_375_2x }} 2x"
+									media="(max-width: 375px)"
+									width="{{ image_size_big_width_375 }}"
+									height="{{ image_size_big_height_375 }}"
+								/>
+
+								<source
+									srcset="{{ big_image | image_url: width: image_size_big_width_420, height: image_size_big_height_420 }} 1x,
+											{{ big_image | image_url: width: image_size_big_width_420_2x, height: image_size_big_height_420_2x }} 2x"
+									media="(max-width: 420px)"
+									width="{{ image_size_big_width_420 }}"
+									height="{{ image_size_big_height_420 }}"
+								/>
+
+								<source
+									srcset="{{ big_image | image_url: width: image_size_big_width_767, height: image_size_big_height_767 }} 1x,
+											{{ big_image | image_url: width: image_size_big_width_767_2x, height: image_size_big_height_767_2x }} 2x"
+									media="(max-width: 767px)"
+									width="{{ image_size_big_width_767 }}"
+									height="{{ image_size_big_height_767 }}"
+								/>
+
+								<source
+									srcset="{{ big_image | image_url: width: image_size_big_width_991, height: image_size_big_height_991 }} 1x,
+											{{ big_image | image_url: width: image_size_big_width_991_2x, height: image_size_big_height_991_2x }} 2x"
+									media="(max-width: 991px)"
+									width="{{ image_size_big_width_991 }}"
+									height="{{ image_size_big_height_991 }}"
+								/>
+
+								<source
+									srcset="{{ big_image | image_url: width: image_size_big_width_1440, height: image_size_big_height_1440 }} 1x,
+            								{{ big_image | image_url: width: image_size_big_width_1440_2x, height: image_size_big_height_1440_2x }} 2x"
+									media="(max-width: 1440px)"
+									width="{{ image_size_big_width_1440 }}"
+									height="{{ image_size_big_height_1440 }}"
+								/>
+
+								<img
+									class="account-entrance__image need-animate tr-dur-1-5"
+									srcset="{{ big_image | image_url: width: image_size_big_width, height: image_size_big_height }} 1x,
+											{{ big_image | image_url: width: image_size_big_width_2x, height: image_size_big_height_2x }} 2x"
+									src="{{- big_image | image_url: width: image_size_big_width, height: image_size_big_height -}}"
+									alt="{{- big_image.alt | escape -}}"
+									style="{{- img_focal -}}"
+									width="{{- image_size_big_width -}}"
+									height="{{- image_size_big_height -}}"
+								/>
+							</picture>
+						</div>
+					</div>
+				{% endif %}
+
+				{% if section.settings.big_image != blank and small_image != blank %}
+					{%- capture img_focal -%}
+						--img-pos: {{- small_image.presentation.focal_point -}};
+					{%- endcapture -%}
+
+					<div class="account-entrance__image-box-small">
+						<div class="account-entrance__image-wrapper-small">
+							<picture>
+								<source
+									srcset="{{ small_image | image_url: width: image_size_small_width_375, height: image_size_small_height_375 }} 1x,
+											{{ small_image | image_url: width: image_size_small_width_375_2x, height: image_size_small_height_375_2x }} 2x"
+									media="(max-width: 375px)"
+									width="{{ image_size_small_width_375 }}"
+									height="{{ image_size_small_height_375 }}"
+								/>
+
+								<source
+									srcset="{{ small_image | image_url: width: image_size_small_width_420, height: image_size_small_height_420 }} 1x,
+											{{ small_image | image_url: width: image_size_small_width_420_2x, height: image_size_small_height_420_2x }} 2x"
+									media="(max-width: 420px)"
+									width="{{ image_size_small_width_420 }}"
+									height="{{ image_size_small_height_420 }}"
+								/>
+
+								<source
+									srcset="{{ small_image | image_url: width: image_size_small_width_767, height: image_size_small_height_767 }} 1x,
+											{{ small_image | image_url: width: image_size_small_width_767_2x, height: image_size_small_height_767_2x }} 2x"
+									media="(max-width: 767px)"
+									width="{{ image_size_small_width_767 }}"
+									height="{{ image_size_small_height_767 }}"
+								/>
+
+								<source
+									srcset="{{ small_image | image_url: width: image_size_small_width_991, height: image_size_small_height_991 }} 1x,
+											{{ small_image | image_url: width: image_size_small_width_991_2x, height: image_size_small_height_991_2x }} 2x"
+									media="(max-width: 991px)"
+									width="{{ image_size_small_width_991 }}"
+									height="{{ image_size_small_height_991 }}"
+								/>
+
+								<source
+									srcset="{{ small_image | image_url: width: image_size_small_width_1440, height: image_size_small_height_1440 }} 1x,
+            								{{ small_image | image_url: width: image_size_small_width_1440_2x, height: image_size_small_height_1440_2x }} 2x"
+									media="(max-width: 1440px)"
+									width="{{ image_size_small_width_1440 }}"
+									height="{{ image_size_small_height_1440 }}"
+								/>
+
+								<img
+									class="account-entrance__image need-animate tr-dur-1-5 tr-del-0-5"
+									srcset="{{ small_image | image_url: width: image_size_small_width, height: image_size_small_height }} 1x,
+										{{ small_image | image_url: width: image_size_small_width_2x, height: image_size_small_height_2x }} 2x"
+									src="{{- small_image | image_url: width: image_size_small_width, height: image_size_small_height -}}"
+									alt="{{- small_image.alt | escape -}}"
+									style="{{- img_focal -}}"
+									width="{{- image_size_small_width -}}"
+									height="{{- image_size_small_height -}}"
+								/>
+							</picture>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{%- else -%}
+		{{- account_entrance_container -}}
+	{%- endif -%}
+{%- endcapture -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 768px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+<section class="account-entrance need-animate js-animate" style="{{- styles -}}">
+	{{- account_entrance_content -}}
+</section>
+
+{%- render 'adastra' with '/src/scripts/template-customers-login.js' -%}
+
+{% schema %}
+{
+	"name": "Login template",
+	"settings": [
+		{
+			"type": "image_picker",
+			"id": "big_image",
+			"label": "Big image"
+		},
+		{
+			"type": "image_picker",
+			"id": "small_image",
+			"label": "Small image"
+		},
+		{
+			"id": "button_style",
+			"type": "select",
+			"label": "Button style",
+			"options": [
+				{
+					"value": "primary",
+					"label": "Primary"
+				},
+				{
+					"value": "secondary",
+					"label": "Secondary"
+				},
+				{
+					"value": "primary-border",
+					"label": "Primary with border"
+				},
+				{
+					"value": "secondary-border",
+					"label": "Secondary with border"
+				}
+			],
+			"default": "secondary"
+		},
+		{
+			"type": "header",
+			"content": "Colors"
+		},
+		{
+			"type": "color",
+			"id": "section_background",
+			"label": "Section background",
+			"default": "#ffffff"
+		},
+		{
+			"type": "color",
+			"id": "color_text",
+			"label": "Text",
+			"default": "#000000"
+		},
+		{
+			"type": "header",
+			"content": "Layout"
+		},
+		{
+			"type": "range",
+			"id": "offset_top_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset top",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_desktop",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Desktop offset bottom",
+			"default": 40
+		},
+		{
+			"type": "range",
+			"id": "offset_top_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset top",
+			"default": 25
+		},
+		{
+			"type": "range",
+			"id": "offset_bottom_mobile",
+			"min": 0,
+			"max": 100,
+			"step": 1,
+			"unit": "px",
+			"label": "Mobile offset bottom",
+			"default": 25
+		}
+	]
+}
+{%- endschema -%}

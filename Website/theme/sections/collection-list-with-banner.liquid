@@ -1,0 +1,518 @@
+{% if collections_layout == 'carousel' %}
+	{%- render 'adastra' with '/src/styles/carousel.scss' -%}
+{% endif %}
+
+{%- render 'adastra' with '/src/styles/collection-list-with-banner.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+		padding-top: {{- section.settings.offset_top_mobile -}}px;
+		padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen (min-width: 767px) {
+		#shopify-section-{{- section.id -}} {
+			padding-top: {{- section.settings.offset_top_desktop -}}px;
+			padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+		}
+	}
+{%- endstyle -%}
+
+{%- assign image 					= section.settings.image -%}
+{%- assign title 					= section.settings.title -%}
+{%- assign label 					= section.settings.label -%}
+{%- assign text 					= section.settings.text -%}
+{%- assign button_label 			= section.settings.button_label -%}
+{%- assign button_aria_label 		= section.settings.button_aria_label -%}
+{%- assign button_link 				= section.settings.button_link -%}
+{%- assign button_style 			= section.settings.button_style -%}
+{%- assign collections_layout 		= section.settings.collections_layout -%}
+{%- assign container 				= section.settings.container_width -%}
+{%- assign is_lazy 					= false -%}
+
+{%- if section.index > 1 -%}
+	{%- assign is_lazy = true -%}
+{%- endif -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--container-width: {{- container_width -}};
+{%- endcapture -%}
+
+{%- if image != blank -%}
+	{%- capture img_focal -%}
+		--img-desktop-pos: {{- image.presentation.focal_point -}};
+	{%- endcapture -%}
+{%- endif -%}
+
+{%- capture image_container -%}
+	{%- if image != blank -%}
+		<div class="collection-list-with-banner__box-image need-animate tr-dur-1-2">
+			<div class="collection-list-with-banner__box-image-inner">
+				{%- assign size_height_375		= 260 -%}
+				{%- assign size_width_375 		= 343 -%}
+				{%- assign size_height_375_2x 	= size_height_375 | times: 2 -%}
+				{%- assign size_width_375_2x 	= size_width_375 | times: 2 -%}
+				{%- assign size_height_420		= 294 -%}
+				{%- assign size_width_420 		= 388 -%}
+				{%- assign size_height_420_2x 	= size_height_420 | times: 2 -%}
+				{%- assign size_width_420_2x 	= size_width_420 | times: 2 -%}
+				{%- assign size_height_767		= 557 -%}
+				{%- assign size_width_767 		= 735 -%}
+				{%- assign size_height_767_2x 	= size_height_767 | times: 2 -%}
+				{%- assign size_width_767_2x 	= size_width_767_2x | times: 2 -%}
+				{%- assign size_height_991		= 727 -%}
+				{%- assign size_width_991 		= 959 -%}
+				{%- assign size_height_991_2x 	= size_height_991 | times: 2 -%}
+				{%- assign size_width_991_2x 	= size_width_991 | times: 2 -%}
+				{%- assign size_height_1199		= 717 -%}
+				{%- assign size_width_1199 		= 576 -%}
+				{%- assign size_height_1199_2x 	= size_height_1199 | times: 2 -%}
+				{%- assign size_width_1199_2x 	= size_width_1199 | times: 2 -%}
+				{%- assign size_height_1500		= 732 -%}
+				{%- assign size_width_1500 		= 726 -%}
+				{%- assign size_height_1500_2x 	= size_height_1500 | times: 2 -%}
+				{%- assign size_width_1500_2x 	= size_width_1500 | times: 2 -%}
+				{%- assign size_height 			= 732 -%}
+				{%- assign size_width 			= 936 -%}
+				{%- assign size_height_2x 		= size_height | times: 2 -%}
+				{%- assign size_width_2x 		= size_width | times: 2 -%}
+
+				<picture class="{%- if is_lazy -%}lazy{% endif %}">
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_375, height: size_height_375 }} 1x,
+							 			 {{ image | image_url: width: size_width_375_2x, height: size_height_375_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_375, height: size_height_375 }} 1x,
+									{{ image | image_url: width: size_width_375_2x, height: size_height_375_2x }} 2x"
+						{% endif %}
+						media="(max-width: 375px)"
+						width="{{- size_width_375 -}}"
+						height="{{- size_height_375 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_420, height: size_height_420 }} 1x,
+							 			 {{ image | image_url: width: size_width_420_2x, height: size_height_420_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_420, height: size_height_420 }} 1x,
+									{{ image | image_url: width: size_width_420_2x, height: size_height_420_2x }} 2x"
+						{% endif %}
+						media="(max-width: 420px)"
+						width="{{- size_width_420 -}}"
+						height="{{- size_height_420 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_767, height: size_height_767 }} 1x,
+							 			 {{ image | image_url: width: size_width_767_2x, height: size_height_767_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_767, height: size_height_767 }} 1x,
+									{{ image | image_url: width: size_width_767_2x, height: size_height_767_2x }} 2x"
+						{% endif %}
+						media="(max-width: 767px)"
+						width="{{- size_width_767 -}}"
+						height="{{- size_height_767 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_991, height: size_height_991 }} 1x,
+										 {{ image | image_url: width: size_width_991_2x, height: size_height_991_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_991, height: size_height_991 }} 1x,
+									{{ image | image_url: width: size_width_991_2x, height: size_height_991_2x }} 2x"
+						{% endif %}
+						media="(max-width: 991px)"
+						width="{{- size_width_991 -}}"
+						height="{{- size_height_991 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_1199, height: size_height_1199 }} 1x,
+							 			 {{ image | image_url: width: size_width_1199_2x, height: size_height_1199_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_1199, height: size_height_1199 }} 1x,
+									{{ image | image_url: width: size_width_1199_2x, height: size_height_1199_2x }} 2x"
+						{% endif %}
+						media="(max-width: 1199px)"
+						width="{{- size_width_1199 -}}"
+						height="{{- size_height_1199 -}}"
+					>
+
+					<source
+						{% if is_lazy %}
+							srcset="{{ image | image_url: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-srcset="{{ image | image_url: width: size_width_1500, height: size_height_1500 }} 1x,
+							 			 {{ image | image_url: width: size_width_1500_2x, height: size_height_1500_2x }} 2x"
+						{% else %}
+							srcset="{{ image | image_url: width: size_width_1500, height: size_height_1500 }} 1x,
+									{{ image | image_url: width: size_width_1500_2x, height: size_height_1500_2x }} 2x"
+						{% endif %}
+						media="(max-width: 1500px)"
+						width="{{- size_width_1500 -}}"
+						height="{{- size_height_1500 -}}"
+					>
+
+					<img
+						class="collection-list-with-banner__image"
+						{%- if is_lazy -%}
+							src="{{ image | image_url: width: 10, height: 10 }}"
+							srcset="{{ image | image_url: width: 10, height: 10 }} 1x,
+									{{ image | image_url: width: 20, height: 20 }} 2x"
+							data-src="{{ image | image_url: width: size_width, height: size_height }}"
+							data-srcset="{{ image | image_url: width: size_width, height: size_height }} 1x,
+							 			 {{ image | image_url: width: size_width_2x, height: size_height_2x }} 2x"
+						{%- else -%}
+							src="{{ image | image_url: width: size_width, height: size_height }}"
+							srcset="{{ image | image_url: width: size_width, height: size_height }} 1x,
+									{{ image | image_url: width: size_width_2x, height: size_height_2x }} 2x"
+						{%- endif -%}
+						width="{{- size_width -}}"
+						height="{{- size_height -}}"
+						alt="{{- image.alt | escape -}}"
+						{% if img_focal != blank %}
+							style="{{- img_focal -}}"
+						{% endif %}
+					>
+				</picture>
+			</div>
+		</div>
+	{%- endif -%}
+{%- endcapture -%}
+
+<section class="collection-list-with-banner js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{- styles -}}">
+	<div class="collection-list-with-banner__container {% if collections_layout == 'carousel' %}collection-list-with-banner__container--carousel{% endif %}">
+		{{- image_container -}}
+
+		<div class="collection-list-with-banner__box-text {% if image == blank %}no-image-grid{% endif %} {% if collections_layout == 'carousel' %} collection-list-with-banner__box-text--carousel{% endif %}">
+			<div class="collection-list-with-banner__box-text-inner need-animate tr-dur-1 tr-del-0-5">
+				{%- if label != blank -%}
+					<p class="collection-list-with-banner__label">
+						{{- label -}}
+					</p>
+				{%- endif -%}
+
+				{%- if title != blank -%}
+					<h2 class="h2 collection-list-with-banner__title">
+						{{- title -}}
+					</h2>
+				{%- endif -%}
+
+				{%- if text != blank -%}
+					<div class="collection-list-with-banner__text rte">
+						{{- text -}}
+					</div>
+				{%- endif -%}
+
+				{%- if button_label != blank and button_link != blank -%}
+					<a
+						href="{{- button_link -}}"
+						class="collection-list-with-banner__button button button--{{- button_style -}}"
+						{%- if button_aria_label != blank -%}
+							aria-label="{{- button_aria_label | escape -}}"
+						{%- endif -%}
+					>
+						{{- button_label -}}
+					</a>
+				{%- endif -%}
+			</div>
+
+			{%- if section.blocks.size > 0 -%}
+				{% assign delay_step = 0.8 %}
+
+				{% if collections_layout == 'carousel' %}
+					{% assign slider_class = 'collection-list-with-banner__slider swiper-wrapper' %}
+				{% endif %}
+
+				{% if collections_layout != 'carousel' %}
+					{% assign slider_class = 'collection-list-with-banner__collections' %}
+				{% endif %}
+
+				{% if title == blank and label == blank and text == blank and button_label == blank %}
+					{% assign remove_margin_class = "mt-0" %}
+				{% endif %}
+
+				<div class="{% if collections_layout == 'carousel' %}collection-list-with-banner__swiper {{ remove_margin_class }} swiper js-collection-list-tiny-container{% else %}collection-list-with-banner__grid-wrapper{% endif %}"
+					 data-layout="{% if collections_layout == 'carousel' and image == blank %}slider-full{% endif %}"
+				>
+					<div class="{{ slider_class }} {% if image == blank and collections_layout != 'carousel' %}no-image-grid{% endif %}">
+						{%- for block in section.blocks -%}
+							{% assign collection 		= block.settings.collection %}
+							{% assign collection_image 	= block.settings.collection_image | default: collection.featured_image %}
+							{% assign delay_step 		= delay_step | plus: 0.2 %}
+
+							{%- assign size_width_420 		= 178 -%}
+							{%- assign size_height_420 		= 178 -%}
+							{%- assign size_width_575 		= 256 -%}
+							{%- assign size_height_575 		= 256 -%}
+							{%- assign size_width_991 		= 224 -%}
+							{%- assign size_height_991 		= 224 -%}
+							{%- assign size_width 			= 134 -%}
+							{%- assign size_height 			= 138 -%}
+
+							{%- if collections_layout == 'carousel' -%}
+								{%- assign size_width_420 		= 112 -%}
+								{%- assign size_height_420 		= 112 -%}
+								{%- assign size_width_575 		= size_width_420 -%}
+								{%- assign size_height_575 		= size_height_420 -%}
+								{%- assign size_width_991 		= 208 -%}
+								{%- assign size_height_991 		= 208 -%}
+							{%- endif -%}
+
+							<div class="collection-list-with-banner__collections-item {%  if collections_layout == 'carousel' %}swiper-slide{% endif %} {% if image == blank and collections_layout != 'carousel' %}no-image-grid{% endif %} need-animate tr-dur-0-5" style="transition-delay: {{ delay_step }}s;">
+								{%- render 'collection-card-mini',
+									collection: collection,
+									image: collection_image,
+									is_lazy: true,
+									size_width_420: size_width_420,
+									size_height_420: size_height_420,
+									size_width_575: size_width_575,
+									size_height_575: size_height_575,
+									size_width_991: size_width_991,
+									size_height_991: size_height_991,
+									size_width: size_width,
+									size_height: size_height
+								-%}
+							</div>
+						{%- endfor -%}
+					</div>
+
+					{%- if collections_layout == 'carousel' -%}
+						<button class="swiper-button swiper-button--prev collection-list-with-banner__button-slider js-collection-list-tiny-button-prev">
+							{%- render 'icons', icon: 'arrow-left' -%}
+						</button>
+
+						<button class="swiper-button swiper-button--next collection-list-with-banner__button-slider js-collection-list-tiny-button-next">
+							{%- render 'icons', icon: 'arrow-right' -%}
+						</button>
+					{%- endif -%}
+				</div>
+			{%- endif -%}
+		</div>
+	</div>
+</section>
+
+{% if collections_layout == 'carousel' %}
+	{%- render 'adastra' with '/src/scripts/collection-list-tiny.js' -%}
+{% endif %}
+
+{% schema %}
+	{
+		"name": "Collection list banner",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"settings": [
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Heading",
+				"default": "Collection list with banner"
+			},
+			{
+				"type": "text",
+				"id": "label",
+				"label": "Label",
+				"default": "Label"
+			},
+			{
+				"type": "richtext",
+				"id": "text",
+				"label": "Text",
+				"default": "<p>Add a short description to the section so the customer can better understand what it's about.</p>"
+			},
+			{
+				"type": "url",
+				"id": "button_link",
+				"label": "Button link",
+				"default": "/"
+			},
+			{
+				"type": "text",
+				"id": "button_label",
+				"label": "Button label",
+				"default": "Shop Now"
+			},
+			{
+				"type": "text",
+				"id": "button_aria_label",
+				"label": "Button aria-label",
+				"default": "Button aria-label"
+			},
+			{
+				"type": "select",
+				"id": "button_style",
+				"label": "Button style",
+				"options": [
+					{
+						"value": "primary",
+						"label": "Primary"
+					},
+					{
+						"value": "secondary",
+						"label": "Secondary"
+					},
+					{
+						"value": "primary-border",
+						"label": "Primary with border"
+					},
+					{
+						"value": "secondary-border",
+						"label": "Secondary with border"
+					}
+				],
+				"default": "secondary-border"
+			},
+			{
+				"type": "image_picker",
+				"id": "image",
+				"label": "Image"
+			},
+			{
+				"type": "select",
+				"id": "collections_layout",
+				"label": "Collections layout",
+				"options": [
+					{
+						"value": "grid",
+						"label": "Grid"
+					},
+					{
+						"value": "carousel",
+						"label": "Carousel"
+					}
+				],
+				"default": "grid"
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+		],
+		"blocks": [
+			{
+				"name": "Collection",
+				"type": "collection",
+				"limit": 20,
+				"settings": [
+					{
+						"type": "collection",
+						"id": "collection",
+						"label": "Collection"
+					},
+					{
+						"type": "image_picker",
+						"id": "collection_image",
+						"label": "Image"
+					}
+
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Collection list with banner",
+				"blocks": [
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					},
+					{
+						"type": "collection"
+					}
+				]
+			}
+		]
+	}
+{% endschema %}

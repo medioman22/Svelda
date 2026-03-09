@@ -1,0 +1,156 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+	"sections": {
+		"banner": {
+			"type": "banner",
+			"blocks": {
+				"block-1": {
+					"type": "full_width",
+					"settings": {
+						"desktop_image_height": "350px",
+						"mobile_image_height": "350px",
+						"media_type": "image",
+						"button_text": "",
+						"button_url": "/",
+						"button_aria": "",
+						"image_border_width": 0,
+						"image_border_indent": 10,
+						"external_video_url_desktop": "",
+						"external_video_url_mobile": "",
+						"content_alignment": "center",
+						"content_alignment_mobile": "center",
+						"block_alignment": "center"
+					}
+				}
+			},
+			"block_order": [
+				"block-1"
+			],
+			"settings": {
+				"section_background": "#222222",
+				"content_background": "",
+				"enable_glass_effect": false,
+				"text_color": "#ffffff",
+				"link_color": "#d33636",
+				"button_background": "#ffffff",
+				"button_color": "#000000",
+				"button_border": "#ffffff",
+				"button_background_hover": "#000000",
+				"button_color_hover": "#ffffff",
+				"button_border_hover": "#ffffff",
+				"overlay": "",
+				"image_border_color": "#ffffff",
+				"container_width": "1952px",
+				"offset_top_desktop": 25,
+				"offset_bottom_desktop": 0,
+				"offset_top_mobile": 25,
+				"offset_bottom_mobile": 0
+			}
+		},
+		"contact-page-template": {
+			"type": "contact-page-template",
+			"settings": {
+				"map_api_key": "",
+				"map_query": "Eiffel+Tower,Paris+France",
+				"map_url": "",
+				"form_heading": "Contact",
+				"name_label": "Name",
+				"name_placeholder": "Your name...",
+				"email_label": "Email",
+				"email_placeholder": "Your email...",
+				"phone_label": "Subject",
+				"phone_placeholder": "Enter your subject",
+				"message_label": "Message",
+				"message_placeholder": "Your message...",
+				"submit_label": "SUBMIT",
+				"offset_top_desktop": 60,
+				"offset_bottom_desktop": 60,
+				"offset_top_mobile": 30,
+				"offset_bottom_mobile": 30
+			}
+		},
+		"store-location": {
+			"type": "store-location",
+			"blocks": {
+				"store_information_1": {
+					"type": "store_information",
+					"settings": {
+						"title": "Adress:",
+						"text": "<p>Kopernyka St 11,04116 Kyiv, Ukraine</p>"
+					}
+				},
+				"store_information_2": {
+					"type": "store_information",
+					"settings": {
+						"title": "Email:",
+						"text": "<p><a href=\"mailto:info@noom-home.com\" target=\"_blank\" title=\"mailto:info@noom-home.com\">info@noom-home.com</a></p>"
+					}
+				},
+				"store_information_3": {
+					"type": "store_information",
+					"settings": {
+						"title": "Sales Email:",
+						"text": "<p><a href=\"mailto:sales@noom-home.com\" target=\"_blank\" title=\"mailto:sales@noom-home.com\">sales@noom-home.com</a></p>"
+					}
+				},
+				"store_information_4": {
+					"type": "store_information",
+					"settings": {
+						"title": "Sales Phone:",
+						"text": "<p><a href=\"tel:+380 96 999 70 14\" target=\"_blank\" title=\"tel:+380 96 999 70 14\">+380 96 999 70 14</a></p>"
+					}
+				},
+				"store_information_5": {
+					"type": "store_information",
+					"settings": {
+						"title": "Export Email:",
+						"text": "<p><a href=\"mailto:export@noom-home.com\" target=\"_blank\" title=\"mailto:export@noom-home.com\">export@noom-home.com</a></p>"
+					}
+				},
+				"store_information_6": {
+					"type": "store_information",
+					"settings": {
+						"title": "Export Phone:",
+						"text": "<p><a href=\"tel:+380 98 463 86 28\" target=\"_blank\" title=\"tel:+380 98 463 86 28\">+380 98 463 86 28</a></p>"
+					}
+				}
+			},
+			"block_order": [
+				"store_information_1",
+				"store_information_2",
+				"store_information_3",
+				"store_information_4",
+				"store_information_5",
+				"store_information_6"
+			],
+			"settings": {
+				"title": "Our Contacts",
+				"subtitle": "GENERAL INQUIRIES:",
+				"newsletter_input_placeholder": "",
+				"newsletter_button_label": "",
+				"newsletter_button_style": "secondary-border",
+				"reverse_content": false,
+				"google_map_api_key": "",
+				"map_query": "Eiffel+Tower,Paris+France",
+				"container_width": "inherit",
+				"offset_top_desktop": 50,
+				"offset_bottom_desktop": 80,
+				"offset_top_mobile": 40,
+				"offset_bottom_mobile": 40
+			}
+		}
+	},
+	"order": [
+		"banner",
+		"contact-page-template",
+		"store-location"
+	]
+}

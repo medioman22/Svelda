@@ -1,0 +1,185 @@
+{%- render 'adastra' with '/src/styles/horizontal-products.scss' -%}
+
+{%- style -%}
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_mobile -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_mobile -}}px;
+	}
+
+	@media screen and (min-width: 767px) {
+	#shopify-section-{{- section.id -}} {
+	padding-top: {{- section.settings.offset_top_desktop -}}px;
+	padding-bottom: {{- section.settings.offset_bottom_desktop -}}px;
+	}
+	}
+{%- endstyle -%}
+
+{%- assign title 						= section.settings.title -%}
+{%- assign show_product_description 	= section.settings.show_product_description -%}
+{%- assign container 					= section.settings.container_width -%}
+{%- assign is_lazy 						= true -%}
+
+{%- if section.index == 1 -%}
+	{%- assign is_lazy = false -%}
+{%- endif -%}
+
+{%- if container == 'inherit' -%}
+	{%- assign container_width = settings.container_width -%}
+{%- else -%}
+	{%- assign container_width = container -%}
+{%- endif -%}
+
+{%- capture styles -%}
+	--container-width: {{- container_width -}};
+{%- endcapture -%}
+
+<section class="horizontal-products js-animate {% if request.visual_preview_mode or section.index == 1 %}animated{% endif %}" style="{{- styles -}}">
+	{%- if title != blank -%}
+		<h2 class="horizontal-products__title h2 need-animate tr-dur-0-8">
+			{{- title -}}
+		</h2>
+	{%- endif -%}
+
+	{%- if section.blocks.size > 0 -%}
+		{% assign delay_step = 0.2 %}
+
+		<div class="horizontal-products__wrapper">
+			{%- for block in section.blocks -%}
+				{%- assign product 		= block.settings.product -%}
+				{%- assign image 		= product.featured_image -%}
+				{%- assign delay_step 	= delay_step | plus: 0.4 -%}
+
+				<div class="horizontal-products__product need-animate tr-dur-0-8" style="transition-delay: {{ delay_step }}s;">
+					{%- render 'product-card',
+						product: product,
+						size: 475,
+						tablet_size: 373,
+						mobile_size: 200,
+						is_lazy: is_lazy,
+						is_horizontal_layout: true,
+						show_product_description: show_product_description
+					-%}
+				</div>
+			{%- endfor -%}
+		</div>
+	{%- endif -%}
+</section>
+
+{% schema %}
+	{
+		"name": "Horizontal products",
+		"disabled_on": {
+			"groups": ["header", "footer", "custom.popup"]
+		},
+		"max_blocks": 2,
+		"settings": [
+			{
+				"type": "text",
+				"id": "title",
+				"label": "Heading",
+				"default": "Horizontal products"
+			},
+			{
+				"type": "checkbox",
+				"id": "show_product_description",
+				"label": "Show product description",
+				"default": true
+			},
+			{
+				"type": "header",
+				"content": "Layout"
+			},
+			{
+				"type": "select",
+				"id": "container_width",
+				"label": "Container width",
+				"options": [
+					{
+						"value": "1432px",
+						"label": "Default - 1400px"
+					},
+					{
+						"value": "1952px",
+						"label": "Large - 1920px"
+					},
+					{
+						"value": "100%",
+						"label": "Full width"
+					},
+					{
+						"value": "inherit",
+						"label": "Inherit of general setting"
+					}
+				],
+				"default": "inherit",
+				"info": "if you select 'Inherit of general setting', then container width will be used from the Theme settings/Layout"
+			},
+			{
+				"type": "range",
+				"id": "offset_top_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset top",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_desktop",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Desktop offset bottom",
+				"default": 40
+			},
+			{
+				"type": "range",
+				"id": "offset_top_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset top",
+				"default": 25
+			},
+			{
+				"type": "range",
+				"id": "offset_bottom_mobile",
+				"min": 0,
+				"max": 100,
+				"step": 1,
+				"unit": "px",
+				"label": "Mobile offset bottom",
+				"default": 25
+			}
+			],
+			"blocks": [
+				{
+				"name": "Product",
+				"type": "product",
+				"settings": [
+					{
+						"type": "product",
+						"id": "product",
+						"label": "Product"
+					}
+				]
+			}
+		],
+		"presets": [
+			{
+				"name": "Horizontal products",
+				"blocks": [
+					{
+						"type": "product"
+					},
+					{
+						"type": "product"
+					}
+				]
+			}
+		]
+	}
+{% endschema %}
