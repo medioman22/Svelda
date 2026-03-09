@@ -351,7 +351,7 @@
       "settings": {
         "label": "FEATURED PRODUCTS",
         "title": "The SVELDA Collection",
-        "text": "Explore our curated selection of premium objects, thoughtfully designed to bring harmony to your living space.",
+        "text": "<p>Explore our curated selection of premium objects, thoughtfully designed to bring harmony to your living space.</p>",
         "button_label": "Explore All Products",
         "button_link": "shopify://collections",
         "button_style": "secondary-border",
