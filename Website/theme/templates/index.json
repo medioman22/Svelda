@@ -143,9 +143,9 @@
             "image_desktop_col_1": "shopify://shop_images/Generated_Image_February_01_2026_-_6_17PM_f3e571fb-3585-49c8-a79c-51978fb10fad.jpg",
             "video_url_desktop_col_1": "",
             "video_url_mobile_col_1": "",
-            "heading": "Heading",
-            "description": "Text",
-            "button_text": "Button label",
+            "heading": "Our Story",
+            "description": "Discover the passion and craftsmanship behind Svelda.",
+            "button_text": "Read more",
             "button_aria_label": "",
             "button_link": "/",
             "open_in_new_tab": false,
@@ -174,9 +174,9 @@
             "image_desktop_col_1": "shopify://shop_images/Generated_Image_January_31_2026_-_3_46PM.jpg",
             "video_url_desktop_col_1": "",
             "video_url_mobile_col_1": "",
-            "heading": "Heading",
-            "description": "Text",
-            "button_text": "Button label",
+            "heading": "Craftsmanship",
+            "description": "Meticulously crafted from natural materials for your companion.",
+            "button_text": "Learn more",
             "button_aria_label": "",
             "button_link": "/",
             "open_in_new_tab": false,
@@ -490,8 +490,8 @@
         "two_images_layout": "double_horizontal",
         "first_desktop_image": "shopify://shop_images/Copy_of_ciotolsbassa-518_1.jpg",
         "heading": "THE PERFECT GIFT",
-        "subheading": "Bablablabalbalablabla",
-        "text_content": "<p>Bla? blablablabla!</p>",
+        "subheading": "For those who love their pets and their home",
+        "text_content": "<p>Our collections are packaged with care, making them the perfect gift for any design-conscious pet owner.</p>",
         "button_label": "Packaging and Accessories",
         "button_aria_label": "Follow Home Page",
         "button_url": "shopify://pages/fabrics",
@@ -616,7 +616,7 @@
         "block-1": {
           "type": "content",
           "settings": {
-            "text": "NOOM is a place where design meets art."
+            "text": "SVELDA is a place where design meets art."
           }
         },
         "block-2": {
@@ -628,7 +628,7 @@
         "block-3": {
           "type": "content",
           "settings": {
-            "text": "NOOM is a place where design meets art."
+            "text": "SVELDA is a place where design meets art."
           }
         }
       },
